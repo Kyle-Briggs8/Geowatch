@@ -122,36 +122,30 @@ def get_newsapi_news(location: str, days: int) -> tuple[list[dict], int]:
 def _gdelt_window(
     location: str, win_start: datetime, win_end: datetime
 ) -> list[dict]:
-    """One GDELT request for a specific time window. Retries once on 429."""
-    query      = f"{location} sourcelang:eng"
-    start_str  = win_start.strftime("%Y%m%d%H%M%S")
-    end_str    = win_end.strftime("%Y%m%d%H%M%S")
-
-    for attempt in range(2):
-        try:
-            r = requests.get(
-                "https://api.gdeltproject.org/api/v2/doc/doc",
-                params={
-                    "query":         query,
-                    "mode":          "artlist",
-                    "maxrecords":    _GDELT_PER_DAY,
-                    "format":        "json",
-                    "startdatetime": start_str,
-                    "enddatetime":   end_str,
-                },
-                timeout=25,
-            )
-            if r.status_code == 429 and attempt == 0:
-                time.sleep(6)
-                continue
-            r.raise_for_status()
-            data = r.json()
-            break
-        except Exception as exc:
-            print(f"  [WARN] GDELT window {start_str[:8]}–{end_str[:8]} failed: {exc}",
-                  file=sys.stderr)
-            return []
-    else:
+    """One GDELT request for a specific time window. Fails fast on 429 (no retry sleep)."""
+    query     = f"{location} sourcelang:eng"
+    start_str = win_start.strftime("%Y%m%d%H%M%S")
+    end_str   = win_end.strftime("%Y%m%d%H%M%S")
+    try:
+        r = requests.get(
+            "https://api.gdeltproject.org/api/v2/doc/doc",
+            params={
+                "query":         query,
+                "mode":          "artlist",
+                "maxrecords":    _GDELT_PER_DAY,
+                "format":        "json",
+                "startdatetime": start_str,
+                "enddatetime":   end_str,
+            },
+            timeout=10,
+        )
+        if r.status_code == 429:
+            return []   # rate-limited — skip this window, don't sleep
+        r.raise_for_status()
+        data = r.json()
+    except Exception as exc:
+        print(f"  [WARN] GDELT window {start_str[:8]}–{end_str[:8]} failed: {exc}",
+              file=sys.stderr)
         return []
 
     out = []
@@ -198,9 +192,9 @@ def get_gdelt_news(location: str, days: int) -> tuple[list[dict], int]:
     seen: set[str] = set()
     articles: list[dict] = []
 
-    # Limit concurrency to avoid GDELT rate-limiting
+    # Limit concurrency to avoid GDELT rate-limiting (especially on shared production IPs)
     try:
-        with ThreadPoolExecutor(max_workers=4) as ex:
+        with ThreadPoolExecutor(max_workers=2) as ex:
             futs = [ex.submit(_gdelt_window, location, ws, we) for ws, we in windows]
             for f in as_completed(futs):
                 for art in f.result():
