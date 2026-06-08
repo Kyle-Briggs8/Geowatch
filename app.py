@@ -1,11 +1,13 @@
 import os
-import sys
+
+from concurrent.futures import ThreadPoolExecutor
 
 from flask import Flask, render_template_string, request
 
 from analyzer import analyze_article
 from fetcher import get_news
-from mapper import REGION_COORDS, _SEVERITY_COLOR, build_map
+from mapper import REGION_COORDS
+from visualizer import build_dashboard, build_comparison_dashboard
 
 app = Flask(__name__)
 
@@ -27,10 +29,7 @@ _INDEX_HTML = """<!DOCTYPE html>
       align-items: center;
       padding: 48px 16px;
     }
-    header {
-      text-align: center;
-      margin-bottom: 40px;
-    }
+    header { text-align: center; margin-bottom: 40px; }
     h1 {
       font-size: 2.2rem;
       letter-spacing: 6px;
@@ -72,25 +71,38 @@ _INDEX_HTML = """<!DOCTYPE html>
       transition: border-color 0.2s;
     }
     input[type="text"]:focus { border-color: #4af; }
-    .slider-row {
-      margin-top: 24px;
-    }
+    .slider-row { margin-top: 24px; }
     .slider-label-row {
       display: flex;
       justify-content: space-between;
       margin-bottom: 8px;
     }
-    .slider-val {
-      color: #4af;
-      font-size: 0.95rem;
+    .slider-val { color: #4af; font-size: 0.95rem; }
+    input[type="range"] { width: 100%; accent-color: #4af; }
+    .mode-toggle {
+      display: flex;
+      margin-bottom: 20px;
+      border: 1px solid #263040;
+      border-radius: 3px;
+      overflow: hidden;
     }
-    input[type="range"] {
-      width: 100%;
-      accent-color: #4af;
+    .mode-btn {
+      flex: 1;
+      background: #0d1117;
+      border: none;
+      color: #556;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      margin-top: 0;
+      padding: 7px 0;
+      text-transform: uppercase;
+      transition: background 0.15s, color 0.15s;
+      width: auto;
     }
-    .max-row {
-      margin-top: 24px;
-    }
+    .mode-btn.active { background: #1a3a5c; color: #4af; }
+    .max-row { margin-top: 24px; }
     input[type="number"] {
       width: 100%;
       background: #0d1117;
@@ -135,14 +147,50 @@ _INDEX_HTML = """<!DOCTYPE html>
       width: 100%;
       max-width: 520px;
     }
-  </style>
-  <script>
-    function updateSlider(val) {
-      document.getElementById('daysVal').textContent = val + ' days';
+
+    /* ── Loading overlay ──────────────────────────── */
+    #loader {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 12, 16, 0.96);
+      z-index: 9999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
     }
-  </script>
+    .spinner {
+      width: 52px;
+      height: 52px;
+      border: 3px solid #1e2535;
+      border-top-color: #4af;
+      border-radius: 50%;
+      animation: spin 0.85s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loader-title {
+      color: #4af;
+      font-size: 1rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+    #loader-sub {
+      color: #3a4a5a;
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+    }
+  </style>
 </head>
 <body>
+
+  <!-- Loading overlay — shown by JS before form submit -->
+  <div id="loader">
+    <div class="spinner"></div>
+    <div id="loader-title">Analyzing...</div>
+    <div id="loader-sub">fetching articles &middot; running llm &middot; building dashboard</div>
+  </div>
+
   <header>
     <h1>GeoWatch</h1>
     <div class="subtitle">open-source geospatial intelligence</div>
@@ -152,11 +200,27 @@ _INDEX_HTML = """<!DOCTYPE html>
   <div class="error">&#9888; {{ error }}</div>
   {% endif %}
 
-  <form method="POST" action="/analyze">
+  <form id="watchForm" method="POST" action="/analyze">
+    <!-- Mode toggle -->
+    <div class="mode-toggle">
+      <button type="button" class="mode-btn active" id="btnSingle"
+              onclick="setMode('single')">&#9632; Single</button>
+      <button type="button" class="mode-btn" id="btnCompare"
+              onclick="setMode('compare')">&#9707; Compare</button>
+    </div>
+    <input type="hidden" id="mode" name="mode" value="single">
+
     <label for="location">Location</label>
     <input type="text" id="location" name="location"
            placeholder="e.g. Beirut, Ukraine, Gaza"
            value="{{ location or '' }}" required autofocus>
+
+    <div id="loc2row" style="display:none;margin-top:16px;">
+      <label for="location2">Second Location</label>
+      <input type="text" id="location2" name="location2"
+             placeholder="e.g. Taiwan, Gaza, Yemen"
+             value="{{ location2 or '' }}">
+    </div>
 
     <div class="slider-row">
       <div class="slider-label-row">
@@ -165,7 +229,7 @@ _INDEX_HTML = """<!DOCTYPE html>
       </div>
       <input type="range" id="days" name="days"
              min="7" max="90" value="{{ days or 30 }}"
-             oninput="updateSlider(this.value)">
+             oninput="document.getElementById('daysVal').textContent=this.value+' days'">
     </div>
 
     <div class="max-row">
@@ -174,119 +238,46 @@ _INDEX_HTML = """<!DOCTYPE html>
              min="1" max="100" value="{{ max_articles or 20 }}">
     </div>
 
-    <button type="submit">&#9654; Run Analysis</button>
+    <button type="button" id="submitBtn" onclick="submitWithLoader()">&#9654; Run Analysis</button>
 
-    <div class="known">
-      Pre-mapped regions: {{ regions }}
-    </div>
+    <div class="known">Pre-mapped regions: {{ regions }}</div>
   </form>
-</body>
-</html>
-"""
 
-_RESULT_HTML = """<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GeoWatch — {{ location }}</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: #0a0c10;
-      color: #c8d6e5;
-      font-family: 'Courier New', Courier, monospace;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+  <script>
+    function setMode(m) {
+      document.getElementById('mode').value = m;
+      var isCmp = m === 'compare';
+      document.getElementById('loc2row').style.display  = isCmp ? 'block' : 'none';
+      document.getElementById('btnSingle').classList.toggle('active', !isCmp);
+      document.getElementById('btnCompare').classList.toggle('active',  isCmp);
+      document.getElementById('submitBtn').textContent =
+        isCmp ? '▷ Run Comparison' : '▶ Run Analysis';
+      document.getElementById('location2').required = isCmp;
     }
-    nav {
-      background: #11151c;
-      border-bottom: 1px solid #1e2535;
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      padding: 12px 24px;
+
+    function submitWithLoader() {
+      var loc  = document.getElementById('location').value.trim();
+      var loc2 = document.getElementById('location2').value.trim();
+      var mode = document.getElementById('mode').value;
+      var arts = document.getElementById('max_articles').value || '20';
+      if (!loc) { document.getElementById('location').focus(); return; }
+      if (mode === 'compare' && !loc2) { document.getElementById('location2').focus(); return; }
+
+      var title = mode === 'compare'
+        ? loc.toUpperCase() + ' vs ' + loc2.toUpperCase()
+        : loc.toUpperCase();
+      var sub = mode === 'compare'
+        ? 'fetching both regions · running llm analysis · building comparison dashboard'
+        : 'fetching up to ' + arts + ' articles · running llm analysis · building dashboard';
+
+      document.getElementById('loader-title').textContent = title;
+      document.getElementById('loader-sub').textContent   = sub;
+      document.getElementById('loader').style.display     = 'flex';
+
+      document.getElementById('watchForm').action = mode === 'compare' ? '/compare' : '/analyze';
+      setTimeout(function() { document.getElementById('watchForm').submit(); }, 60);
     }
-    nav a {
-      color: #4af;
-      font-size: 0.8rem;
-      letter-spacing: 2px;
-      text-decoration: none;
-      text-transform: uppercase;
-    }
-    nav a:hover { text-decoration: underline; }
-    .title { color: #e0eaf5; font-size: 1rem; letter-spacing: 3px; }
-    .stats {
-      background: #11151c;
-      border-bottom: 1px solid #1e2535;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0;
-      padding: 0;
-    }
-    .stat {
-      border-right: 1px solid #1e2535;
-      padding: 14px 28px;
-      min-width: 150px;
-    }
-    .stat-label {
-      color: #4a6080;
-      font-size: 0.68rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-    .stat-value {
-      color: #4af;
-      font-size: 1.4rem;
-      margin-top: 4px;
-    }
-    .map-container {
-      flex: 1;
-      position: relative;
-    }
-    iframe {
-      border: none;
-      display: block;
-      height: calc(100vh - 130px);
-      width: 100%;
-    }
-  </style>
-</head>
-<body>
-  <nav>
-    <span class="title">GeoWatch</span>
-    <a href="/">&#8592; New Query</a>
-  </nav>
-  <div class="stats">
-    <div class="stat">
-      <div class="stat-label">Location</div>
-      <div class="stat-value" style="font-size:1rem;letter-spacing:2px;">{{ location }}</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">Articles</div>
-      <div class="stat-value">{{ total }}</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">Critical</div>
-      <div class="stat-value" style="color:red;">{{ critical }}</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">High</div>
-      <div class="stat-value" style="color:orange;">{{ high }}</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">Medium</div>
-      <div class="stat-value" style="color:gold;">{{ medium }}</div>
-    </div>
-    <div class="stat">
-      <div class="stat-label">Low</div>
-      <div class="stat-value" style="color:green;">{{ low }}</div>
-    </div>
-  </div>
-  <div class="map-container">
-    <iframe srcdoc="{{ map_html | e }}"></iframe>
-  </div>
+  </script>
 </body>
 </html>
 """
@@ -300,10 +291,10 @@ def index():
 
 @app.route("/analyze", methods=["POST"])
 def analyze():
-    location = (request.form.get("location") or "").strip()
-    days = int(request.form.get("days") or 30)
+    location     = (request.form.get("location") or "").strip()
+    days         = int(request.form.get("days") or 30)
     max_articles = max(1, min(int(request.form.get("max_articles") or 20), 100))
-    regions = ", ".join(sorted(REGION_COORDS.keys()))
+    regions      = ", ".join(sorted(REGION_COORDS.keys()))
 
     if not location:
         return render_template_string(
@@ -314,77 +305,55 @@ def analyze():
         raw_articles = get_news(location, days)
     except (EnvironmentError, RuntimeError) as exc:
         return render_template_string(
-            _INDEX_HTML, error=str(exc), location=location, days=days,
-            max_articles=max_articles, regions=regions
+            _INDEX_HTML, error=str(exc), location=location,
+            days=days, max_articles=max_articles, regions=regions,
         )
 
-    articles = raw_articles[:max_articles]
+    if len(raw_articles) > max_articles:
+        step = len(raw_articles) / max_articles
+        articles = [raw_articles[int(i * step)] for i in range(max_articles)]
+    else:
+        articles = raw_articles
+    events = [{"article": art, "analysis": analyze_article(art)} for art in articles]
 
-    events: list[dict] = []
-    for art in articles:
-        analysis = analyze_article(art)
-        events.append({"article": art, "analysis": analysis})
+    return build_dashboard(events, location, days)
 
-    from mapper import REGION_COORDS as RC, _SEVERITY_COLOR as SC
-    import folium
-    from folium import Element
-    from mapper import _LEGEND_HTML
 
-    center = RC.get(location, (20.0, 0.0))
-    zoom = 6 if location in RC else 2
-    m = folium.Map(location=center, zoom_start=zoom, tiles="CartoDB dark_matter")
+@app.route("/compare", methods=["POST"])
+def compare():
+    loc_a        = (request.form.get("location")  or "").strip()
+    loc_b        = (request.form.get("location2") or "").strip()
+    days         = int(request.form.get("days") or 30)
+    max_articles = max(1, min(int(request.form.get("max_articles") or 20), 100))
+    regions      = ", ".join(sorted(REGION_COORDS.keys()))
 
-    for event in events:
-        analysis = event.get("analysis")
-        article = event.get("article", {})
-        if not analysis:
-            continue
-        severity = analysis.get("severity", "low").lower()
-        color = SC.get(severity, "blue")
-        entities = analysis.get("entities") or []
-        entity_str = ", ".join(entities) if entities else "—"
-        popup_html = f"""
-        <div style="font-family:monospace;font-size:12px;max-width:320px;line-height:1.6;">
-          <b>{analysis.get('one_line_summary', '')}</b><br><br>
-          <b>Type:</b> {analysis.get('event_type', '—')}<br>
-          <b>Severity:</b> <span style="color:{color};font-weight:bold;">{severity.upper()}</span><br>
-          <b>Entities:</b> {entity_str}<br>
-          <b>Source:</b> {article.get('source', '—')}<br>
-          <b>Date:</b> {article.get('date', '—')}<br><br>
-          <a href="{article.get('url', '#')}" target="_blank"
-             style="color:#4af;text-decoration:none;">&#x1F517; Read article</a>
-        </div>
-        """
-        folium.CircleMarker(
-            location=center,
-            radius=8,
-            color=color,
-            fill=True,
-            fill_color=color,
-            fill_opacity=0.75,
-            popup=folium.Popup(popup_html, max_width=340),
-            tooltip=analysis.get("one_line_summary", article.get("title", "")),
-        ).add_to(m)
+    if not loc_a or not loc_b:
+        return render_template_string(
+            _INDEX_HTML, error="Please enter both locations for comparison.", regions=regions
+        )
 
-    m.get_root().html.add_child(Element(_LEGEND_HTML))
-    map_html = m._repr_html_()
+    def _pipeline(location: str):
+        raw = get_news(location, days)
+        if len(raw) > max_articles:
+            step = len(raw) / max_articles
+            articles = [raw[int(i * step)] for i in range(max_articles)]
+        else:
+            articles = raw
+        return [{"article": art, "analysis": analyze_article(art)} for art in articles]
 
-    from collections import Counter
-    analyzed = [e for e in events if e.get("analysis")]
-    sev_counts: Counter = Counter(
-        e["analysis"]["severity"] for e in analyzed if e["analysis"].get("severity")
-    )
+    try:
+        with ThreadPoolExecutor(max_workers=2) as ex:
+            fut_a = ex.submit(_pipeline, loc_a)
+            fut_b = ex.submit(_pipeline, loc_b)
+            events_a = fut_a.result()
+            events_b = fut_b.result()
+    except (EnvironmentError, RuntimeError) as exc:
+        return render_template_string(
+            _INDEX_HTML, error=str(exc), location=loc_a, location2=loc_b,
+            days=days, max_articles=max_articles, regions=regions,
+        )
 
-    return render_template_string(
-        _RESULT_HTML,
-        location=location,
-        total=len(analyzed),
-        critical=sev_counts.get("critical", 0),
-        high=sev_counts.get("high", 0),
-        medium=sev_counts.get("medium", 0),
-        low=sev_counts.get("low", 0),
-        map_html=map_html,
-    )
+    return build_comparison_dashboard(loc_a, events_a, loc_b, events_b, days)
 
 
 if __name__ == "__main__":

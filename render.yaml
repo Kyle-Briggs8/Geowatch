@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: geowatch
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: NEWSAPI_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
