@@ -1,8 +1,10 @@
 import os
+import threading
+import uuid
 
 from concurrent.futures import ThreadPoolExecutor
 
-from flask import Flask, render_template_string, request
+from flask import Flask, jsonify, render_template_string, request
 
 from analyzer import analyze_article
 from fetcher import get_news
@@ -283,6 +285,141 @@ _INDEX_HTML = """<!DOCTYPE html>
 """
 
 
+# ── Background job store ──────────────────────────────────────────────────────
+# Each job: {"status": "running"|"done"|"error", "html": str, "error": str}
+_jobs: dict[str, dict] = {}
+
+
+def _start_job(fn, *args) -> str:
+    """Spawn fn(*args) in a daemon thread. Returns job_id immediately."""
+    job_id = str(uuid.uuid4())
+    _jobs[job_id] = {"status": "running"}
+
+    def _run():
+        try:
+            _jobs[job_id]["html"]   = fn(*args)
+            _jobs[job_id]["status"] = "done"
+        except Exception as exc:
+            _jobs[job_id]["status"] = "error"
+            _jobs[job_id]["error"]  = str(exc)
+
+    t = threading.Thread(target=_run, daemon=True)
+    t.start()
+    return job_id
+
+
+_WAITING_HTML = """<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GeoWatch — Analyzing {{ title }}...</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0a0c10;
+      color: #c8d6e5;
+      font-family: 'Courier New', Courier, monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+    }
+    .spinner {
+      width: 56px; height: 56px;
+      border: 3px solid #1e2535;
+      border-top-color: #4af;
+      border-radius: 50%;
+      animation: spin 0.85s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .title { color: #4af; font-size: 1rem; letter-spacing: 4px; text-transform: uppercase; }
+    .sub   { color: #3a4a5a; font-size: 0.72rem; letter-spacing: 1px; }
+    .elapsed { color: #556; font-size: 0.68rem; margin-top: 6px; letter-spacing: 1px; }
+    .error-box {
+      background: #1c0a0a; border: 1px solid #7a2020; border-radius: 6px;
+      color: #e05050; font-size: 0.85rem; padding: 14px 18px;
+      max-width: 480px; text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="spinner" id="spinner"></div>
+  <div>
+    <div class="title" id="msg">Analyzing {{ title }}</div>
+    <div class="sub">fetching articles &middot; running llm &middot; building dashboard</div>
+    <div class="elapsed" id="elapsed"></div>
+  </div>
+  <script>
+    var start = Date.now();
+    var jobId = "{{ job_id }}";
+
+    var timer = setInterval(function() {
+      var s = Math.round((Date.now() - start) / 1000);
+      document.getElementById('elapsed').textContent = s + 's elapsed';
+    }, 1000);
+
+    function poll() {
+      fetch('/status/' + jobId)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.status === 'done') {
+            clearInterval(timer);
+            window.location.href = '/result/' + jobId;
+          } else if (data.status === 'error') {
+            clearInterval(timer);
+            document.getElementById('spinner').style.display = 'none';
+            document.getElementById('msg').textContent = 'Analysis failed';
+            var el = document.createElement('div');
+            el.className = 'error-box';
+            el.textContent = data.error || 'Unknown error';
+            document.body.appendChild(el);
+          } else {
+            setTimeout(poll, 2000);
+          }
+        })
+        .catch(function() { setTimeout(poll, 3000); });
+    }
+    setTimeout(poll, 2000);
+  </script>
+</body>
+</html>"""
+
+
+# ── Pipeline helpers ──────────────────────────────────────────────────────────
+
+def _subsample(raw: list, max_n: int) -> list:
+    if len(raw) <= max_n:
+        return raw
+    step = len(raw) / max_n
+    return [raw[int(i * step)] for i in range(max_n)]
+
+
+def _do_analyze(location: str, days: int, max_articles: int) -> str:
+    raw      = get_news(location, days)
+    articles = _subsample(raw, max_articles)
+    events   = [{"article": art, "analysis": analyze_article(art)} for art in articles]
+    return build_dashboard(events, location, days)
+
+
+def _do_compare(loc_a: str, loc_b: str, days: int, max_articles: int) -> str:
+    def _pipeline(loc: str) -> list:
+        raw = get_news(loc, days)
+        return [{"article": art, "analysis": analyze_article(art)}
+                for art in _subsample(raw, max_articles)]
+
+    with ThreadPoolExecutor(max_workers=2) as ex:
+        fut_a = ex.submit(_pipeline, loc_a)
+        fut_b = ex.submit(_pipeline, loc_b)
+        events_a = fut_a.result()
+        events_b = fut_b.result()
+
+    return build_comparison_dashboard(loc_a, events_a, loc_b, events_b, days)
+
+
+# ── Routes ────────────────────────────────────────────────────────────────────
+
 @app.route("/", methods=["GET"])
 def index():
     regions = ", ".join(sorted(REGION_COORDS.keys()))
@@ -293,7 +430,7 @@ def index():
 def analyze():
     location     = (request.form.get("location") or "").strip()
     days         = int(request.form.get("days") or 30)
-    max_articles = max(1, min(int(request.form.get("max_articles") or 20), 100))
+    max_articles = max(1, min(int(request.form.get("max_articles") or 5), 100))
     regions      = ", ".join(sorted(REGION_COORDS.keys()))
 
     if not location:
@@ -301,22 +438,8 @@ def analyze():
             _INDEX_HTML, error="Please enter a location.", regions=regions
         )
 
-    try:
-        raw_articles = get_news(location, days)
-    except (EnvironmentError, RuntimeError) as exc:
-        return render_template_string(
-            _INDEX_HTML, error=str(exc), location=location,
-            days=days, max_articles=max_articles, regions=regions,
-        )
-
-    if len(raw_articles) > max_articles:
-        step = len(raw_articles) / max_articles
-        articles = [raw_articles[int(i * step)] for i in range(max_articles)]
-    else:
-        articles = raw_articles
-    events = [{"article": art, "analysis": analyze_article(art)} for art in articles]
-
-    return build_dashboard(events, location, days)
+    job_id = _start_job(_do_analyze, location, days, max_articles)
+    return render_template_string(_WAITING_HTML, job_id=job_id, title=location)
 
 
 @app.route("/compare", methods=["POST"])
@@ -324,7 +447,7 @@ def compare():
     loc_a        = (request.form.get("location")  or "").strip()
     loc_b        = (request.form.get("location2") or "").strip()
     days         = int(request.form.get("days") or 30)
-    max_articles = max(1, min(int(request.form.get("max_articles") or 20), 100))
+    max_articles = max(1, min(int(request.form.get("max_articles") or 5), 100))
     regions      = ", ".join(sorted(REGION_COORDS.keys()))
 
     if not loc_a or not loc_b:
@@ -332,28 +455,27 @@ def compare():
             _INDEX_HTML, error="Please enter both locations for comparison.", regions=regions
         )
 
-    def _pipeline(location: str):
-        raw = get_news(location, days)
-        if len(raw) > max_articles:
-            step = len(raw) / max_articles
-            articles = [raw[int(i * step)] for i in range(max_articles)]
-        else:
-            articles = raw
-        return [{"article": art, "analysis": analyze_article(art)} for art in articles]
+    job_id = _start_job(_do_compare, loc_a, loc_b, days, max_articles)
+    return render_template_string(_WAITING_HTML, job_id=job_id,
+                                  title=f"{loc_a} vs {loc_b}")
 
-    try:
-        with ThreadPoolExecutor(max_workers=2) as ex:
-            fut_a = ex.submit(_pipeline, loc_a)
-            fut_b = ex.submit(_pipeline, loc_b)
-            events_a = fut_a.result()
-            events_b = fut_b.result()
-    except (EnvironmentError, RuntimeError) as exc:
-        return render_template_string(
-            _INDEX_HTML, error=str(exc), location=loc_a, location2=loc_b,
-            days=days, max_articles=max_articles, regions=regions,
-        )
 
-    return build_comparison_dashboard(loc_a, events_a, loc_b, events_b, days)
+@app.route("/status/<job_id>")
+def job_status(job_id):
+    job = _jobs.get(job_id)
+    if not job:
+        return jsonify({"status": "error", "error": "Job not found"}), 404
+    if job["status"] == "error":
+        return jsonify({"status": "error", "error": job.get("error", "Unknown error")})
+    return jsonify({"status": job["status"]})
+
+
+@app.route("/result/<job_id>")
+def job_result(job_id):
+    job = _jobs.pop(job_id, None)
+    if not job or job["status"] != "done":
+        return "Result not ready or expired. Please run the analysis again.", 404
+    return job["html"]
 
 
 if __name__ == "__main__":
