@@ -13,7 +13,7 @@ load_dotenv()
 
 _NEWSAPI_MAX_DAYS   = 30
 _GDELT_MAX_DAYS     = 90
-_NEWSAPI_PER_DAY    = 5   # articles fetched per day from NewsAPI
+_NEWSAPI_PER_DAY    = 20  # articles fetched per day from NewsAPI
 _GDELT_PER_DAY      = 5   # articles fetched per day from GDELT
 
 
