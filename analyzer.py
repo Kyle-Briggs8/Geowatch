@@ -56,6 +56,6 @@ def analyze_article(article: dict) -> dict | None:
     except Exception:
         return None
     finally:
-        time.sleep(0.5)
+        time.sleep(0.1)
 
     return result

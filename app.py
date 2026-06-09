@@ -235,7 +235,7 @@ _INDEX_HTML = """<!DOCTYPE html>
     <div class="max-row">
       <label for="max_articles">Max articles</label>
       <input type="number" id="max_articles" name="max_articles"
-             min="1" max="100" value="{{ max_articles or 10 }}">
+             min="1" max="100" value="{{ max_articles or 5 }}">
     </div>
 
     <button type="button" id="submitBtn" onclick="submitWithLoader()">&#9654; Run Analysis</button>
