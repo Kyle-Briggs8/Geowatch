@@ -1,16 +1,27 @@
 # GeoWatch
 
-GeoWatch is a CLI and web tool for open-source geospatial intelligence. It fetches recent news for any world location, uses a Groq-hosted LLM to classify each story by event type, involved entities, and severity, then renders the results as an interactive map you can open in any browser.
+Open-source geospatial intelligence from live news. GeoWatch fetches recent news for any world location, uses a Groq-hosted LLM to classify each story by event type, severity, and key entities, then renders the results as an interactive dashboard with maps, charts, and a scrollable event timeline.
 
-It was built to demonstrate how public news data can be transformed into structured, map-ready intelligence — the kind of triage workflow used in OSINT analysis and national security research — using only open APIs and a few hundred lines of Python.
+**Live demo**: https://geowatch-ej66.onrender.com
+
+---
+
+## Features
+
+- **Interactive Folium map** — severity-colored markers with cluster expansion and article popups
+- **Severity escalation chart** — weekly stacked bar chart (green → red) with trend label
+- **Event swimlane** — scrollable timeline by event type, click any dot for article details
+- **Comparison mode** — run two locations in parallel on a single combined map with side-by-side charts and swimlanes
+- **Daily brief** (`--brief`) — generates a one-page markdown intelligence report
+- **Alert threshold** (`--alert-threshold`) — prints a terminal alert and injects a dashboard banner if >30% of recent events hit the threshold
 
 ---
 
 ## Installation
 
 ```bash
-git clone <repo-url>
-cd geowatch
+git clone https://github.com/Kyle-Briggs8/Geowatch.git
+cd Geowatch
 pip install -r requirements.txt
 ```
 
@@ -26,29 +37,6 @@ GROQ_API_KEY=your_key_here
 
 ---
 
-## CLI Usage
-
-```bash
-# Basic — last 30 days
-python main.py --location "Ukraine"
-
-# Shorter window, more articles
-python main.py --location "Gaza" --days 7 --max-articles 50
-
-# Custom output filename
-python main.py --location "Beirut" --days 14 --output beirut.html
-
-# Flags
-#   --location       Required. Location name to search (e.g. "Somalia")
-#   --days           Days back to search (default: 30)
-#   --max-articles   Max articles to analyze (default: 20, max: 100)
-#   --output         Output HTML filename (default: <location>_map.html)
-```
-
-The map opens as a standalone HTML file — no server needed.
-
----
-
 ## Web UI
 
 ```bash
@@ -56,13 +44,40 @@ python app.py
 # → open http://localhost:5000
 ```
 
-Fill in a location and days slider, hit **Run Analysis**, and the map embeds inline in your browser.
+Select **Single** or **Compare** mode, enter a location, adjust the days slider and article count, then click **Run Analysis**. A loading page shows elapsed time while the pipeline runs, then redirects to the dashboard automatically.
 
 ---
 
-## Screenshot
+## CLI Usage
 
-![GeoWatch Map](screenshot.png)
+```bash
+# Single location — last 30 days
+python main.py --location "Ukraine"
+
+# Custom window and article count
+python main.py --location "Gaza" --days 7 --max-articles 30
+
+# Compare two locations
+python main.py --compare "Ukraine" "Taiwan" --days 14
+
+# Generate a markdown intelligence brief alongside the dashboard
+python main.py --location "Syria" --days 7 --brief
+
+# Alert if >30% of last-7-day events are HIGH or above
+python main.py --location "Yemen" --days 14 --alert-threshold high
+```
+
+### CLI flags
+
+| Flag | Default | Description |
+|---|---|---|
+| `--location` | — | Location to query (mutually exclusive with `--compare`) |
+| `--compare LOC_A LOC_B` | — | Two locations to compare in parallel |
+| `--days` | 30 | Days back to search (max 90) |
+| `--max-articles` | 20 | Articles to analyze per location (max 100) |
+| `--output` | auto | Output HTML filename |
+| `--brief` | off | Write a markdown intelligence briefing |
+| `--alert-threshold` | off | `low` / `medium` / `high` / `critical` |
 
 ---
 
@@ -70,18 +85,26 @@ Fill in a location and days slider, hit **Run Analysis**, and the map embeds inl
 
 | Layer | Tool |
 |---|---|
-| Language | Python 3.10+ |
-| News data | NewsAPI `/v2/everything` |
-| LLM | Groq API — `llama3-70b-8192` |
-| Maps | Folium (Leaflet.js wrapper) |
-| Web UI | Flask |
+| Language | Python 3.11+ |
+| News data | NewsAPI + GDELT (dual-source, parallel fetch) |
+| LLM | Groq API — `llama-3.3-70b-versatile` |
+| Maps | Folium (Leaflet.js) |
+| Charts | Matplotlib |
+| Web UI | Flask + background thread polling |
+| Deployment | Render (gunicorn) |
 | Env | python-dotenv |
 
 ---
 
-## Roadmap
+## Deployment
 
-- **Satellite imagery overlay** — Pull recent Sentinel-2 or Planet imagery tiles for the queried region and toggle them as a Folium layer
-- **Entity relationship graph** — Use NetworkX to visualize connections between people and organizations extracted across all articles
-- **Alert system** — Poll NewsAPI on a schedule and push a notification (email or webhook) when a new critical-severity event appears for a watched location
-- **Multi-location comparison** — Accept a list of locations and generate a single combined map for regional trend analysis
+The app is configured for one-click deploy on [Render](https://render.com) via `render.yaml`.
+
+Set the following environment variables in the Render dashboard:
+
+| Key | Description |
+|---|---|
+| `NEWSAPI_KEY` | From https://newsapi.org/register |
+| `GROQ_API_KEY` | From https://console.groq.com |
+
+The analysis pipeline runs in a background thread so long-running requests never hit gunicorn's timeout.
