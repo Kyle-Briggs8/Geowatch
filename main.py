@@ -10,6 +10,7 @@ if hasattr(sys.stdout, "reconfigure"):
 
 from analyzer import analyze_article
 from briefer import generate_brief
+from entities import build_entity_cooccurrence
 from fetcher import get_news
 from visualizer import build_dashboard, build_comparison_dashboard, _compute_trend
 
@@ -103,6 +104,19 @@ def _print_summary(location: str, days: int, events: list[dict], output: str) ->
                 parts.append(f"{n} {sev}")
         print(f"  Severity: {', '.join(parts)}")
     print(f"  Dashboard saved to → {output}")
+
+    cooc = build_entity_cooccurrence(analyzed)
+    if cooc["nodes"]:
+        print()
+        print("  Top entities:")
+        for node in cooc["nodes"][:8]:
+            print(f"    {node['name']:<24} {node['freq']} mentions")
+    if cooc["edges"]:
+        print()
+        print("  Co-occurrences:")
+        for edge in sorted(cooc["edges"], key=lambda e: -e["weight"])[:6]:
+            label = f"  {edge['source']} — {edge['target']}"
+            print(f"    {label:<40} {edge['weight']} articles")
     print("═" * 43)
 
 

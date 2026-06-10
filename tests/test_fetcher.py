@@ -2,6 +2,7 @@
 import os
 from datetime import datetime
 from unittest.mock import MagicMock, patch
+import requests
 
 import pytest
 
@@ -73,7 +74,7 @@ class TestGetNewsapiNews:
              patch.dict(os.environ, {"NEWSAPI_KEY": "test-key-123"}):
             mock_resp = MagicMock()
             mock_resp.status_code = 500
-            mock_resp.raise_for_status.side_effect = Exception("Server Error")
+            mock_resp.raise_for_status.side_effect = requests.exceptions.HTTPError("Server Error")
             mock_get.return_value = mock_resp
 
             import fetcher
