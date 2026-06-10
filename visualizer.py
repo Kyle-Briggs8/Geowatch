@@ -724,15 +724,49 @@ _DASH_TMPL = """\
 </html>"""
 
 
-def _entity_section_html(events: list[dict], title: str = "") -> str:
+def _entity_section_html(events: list[dict], title: str = "",
+                         graph_id: str = "eg") -> str:
     """Return the entity graph section HTML, or empty string if too few entities."""
     cooc = build_entity_cooccurrence(events)
     if len(cooc["nodes"]) < 3:
         return ""
-    graph = render_entity_graph_html(cooc, title)
+    graph = render_entity_graph_html(cooc, title, graph_id=graph_id)
     return (
         '<div class="section-label">Entity Co-occurrence Network</div>'
         f'<div style="background:#0d1117;padding:0 0 8px;">{graph}</div>'
+    )
+
+
+def _entity_grid_html(
+    events_a: list[dict], loc_a: str,
+    events_b: list[dict], loc_b: str,
+) -> str:
+    """Return a two-column entity graph grid for comparison mode, or empty string if
+    neither location has enough entities to render a graph."""
+    cooc_a = build_entity_cooccurrence(events_a)
+    cooc_b = build_entity_cooccurrence(events_b)
+    has_a  = len(cooc_a["nodes"]) >= 3
+    has_b  = len(cooc_b["nodes"]) >= 3
+
+    if not has_a and not has_b:
+        return ""
+
+    graph_a = render_entity_graph_html(cooc_a, loc_a, graph_id="ega") if has_a else (
+        f'<div style="color:#3a4a5a;font-size:11px;padding:24px;text-align:center;">'
+        f'Not enough entity data for {loc_a}</div>'
+    )
+    graph_b = render_entity_graph_html(cooc_b, loc_b, graph_id="egb") if has_b else (
+        f'<div style="color:#3a4a5a;font-size:11px;padding:24px;text-align:center;">'
+        f'Not enough entity data for {loc_b}</div>'
+    )
+
+    return (
+        '<div class="section-label">Entity Co-occurrence Networks</div>'
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;'
+        'background:#1e2535;">'
+        f'<div style="background:#0d1117;">{graph_a}</div>'
+        f'<div style="background:#0d1117;">{graph_b}</div>'
+        '</div>'
     )
 
 
@@ -1327,8 +1361,7 @@ _COMP_TMPL = """\
   <div class="section-label"><span class="loc-b">__LOC_B__</span> &mdash; Event Swimlane</div>
   __SWIMLANE_B__
 
-  __ENTITY_A__
-  __ENTITY_B__
+  __ENTITY_GRID__
 
   <div class="summary-wrap">__COMPARISON_SUMMARY__</div>
 
@@ -1369,8 +1402,7 @@ def build_comparison_dashboard(
         .replace("__TREND_B__",            _trend_label(trend_b))
         .replace("__SWIMLANE_A__",         swimlane_a)
         .replace("__SWIMLANE_B__",         swimlane_b)
-        .replace("__ENTITY_A__",           _entity_section_html(events_a, loc_a))
-        .replace("__ENTITY_B__",           _entity_section_html(events_b, loc_b))
+        .replace("__ENTITY_GRID__",         _entity_grid_html(events_a, loc_a, events_b, loc_b))
         .replace("__COMPARISON_SUMMARY__", _comparison_summary_html(
                                                events_a, events_b, loc_a, loc_b, days))
         .replace("__TIMESTAMP__",          timestamp)
