@@ -5,3 +5,5 @@ folium
 flask
 gunicorn
 matplotlib
+pytest
+pytest-mock
