@@ -8,7 +8,7 @@ _SEV_WEIGHT = {"low": 1, "medium": 2, "high": 3, "critical": 4}
 
 
 def _coverage_gaps(events: list[dict], days: int) -> list[str]:
-    """Return dates in the window that have zero articles."""
+    """Return formatted date strings for days in the window that have zero articles."""
     end   = datetime.utcnow().date()
     start = end - timedelta(days=days - 1)
     covered: set[str] = set()
@@ -28,6 +28,7 @@ def _coverage_gaps(events: list[dict], days: int) -> list[str]:
 
 
 def _fmt_date(ds: str) -> str:
+    """Format a YYYY-MM-DD date string as 'Mon D' (e.g. 'Jun 6')."""
     try:
         dt = datetime.strptime(ds, "%Y-%m-%d")
         return dt.strftime("%b ") + str(dt.day)
@@ -46,7 +47,7 @@ def generate_brief(events: list[dict], location: str, days: int) -> str:
 
     # ── Trend (one sentence) ─────────────────────────────────────────────────
     end_w = now
-    start_w = start_w_orig = end_w - timedelta(days=days)
+    start_w = end_w - timedelta(days=days)
     weeks: list = []
     cur = start_w
     while cur < end_w:

@@ -60,11 +60,11 @@ def _newsapi_window(
                 "pageSize": _NEWSAPI_PER_DAY,
             },
             headers={"X-Api-Key": api_key},
-            timeout=15,
+            timeout=10,
         )
         r.raise_for_status()
         data = r.json()
-    except Exception:
+    except (requests.RequestException, ValueError):
         return []
 
     if data.get("status") != "ok":
@@ -143,7 +143,7 @@ def _gdelt_window(
             return []   # rate-limited — skip this window, don't sleep
         r.raise_for_status()
         data = r.json()
-    except Exception as exc:
+    except (requests.RequestException, ValueError) as exc:
         print(f"  [WARN] GDELT window {start_str[:8]}–{end_str[:8]} failed: {exc}",
               file=sys.stderr)
         return []
@@ -202,7 +202,7 @@ def get_gdelt_news(location: str, days: int) -> tuple[list[dict], int]:
                     if url and url not in seen:
                         seen.add(url)
                         articles.append(art)
-    except Exception as exc:
+    except Exception as exc:  # broad: catches ThreadPoolExecutor/futures errors too
         print(f"  [WARN] GDELT fetch failed: {exc}", file=sys.stderr)
 
     return articles[:200], actual_days
@@ -245,7 +245,7 @@ def _get_location_synonyms(location: str) -> set[str]:
             result = {t.lower() for t in terms if isinstance(t, str) and t.strip()}
             result.update(base)
             return result
-    except Exception as exc:
+    except Exception as exc:  # broad: Groq SDK raises multiple exception types (APIError, AuthError, etc.)
         print(f"  [WARN] Synonym expansion failed: {exc}", file=sys.stderr)
     return base
 
@@ -274,7 +274,7 @@ def get_news(location: str, days: int) -> list[dict]:
         newsapi_articles, newsapi_days = newsapi_fut.result()   # propagates EnvironmentError
         try:
             gdelt_articles, gdelt_days = gdelt_fut.result()
-        except Exception as exc:
+        except Exception as exc:  # broad: GDELT failure must not crash the pipeline
             print(f"  [WARN] GDELT unavailable: {exc}", file=sys.stderr)
 
     # Merge: NewsAPI first so richer articles win on URL collision

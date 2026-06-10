@@ -48,12 +48,13 @@ def analyze_article(article: dict) -> dict | None:
             ],
             temperature=0.1,
             max_tokens=512,
+            timeout=30,
         )
         raw = response.choices[0].message.content.strip()
         result = json.loads(raw)
     except json.JSONDecodeError:
         return None
-    except Exception:
+    except Exception:  # broad: Groq SDK raises multiple exception types (APIError, RateLimitError, etc.)
         return None
     finally:
         time.sleep(0.1)

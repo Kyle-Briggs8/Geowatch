@@ -50,7 +50,7 @@ _LEGEND_HTML = """
 """
 
 
-def build_map(events: list[dict], location: str, output: str = "map.html") -> None:
+def build_map(events: list[dict], location: str, output: str = "map.html") -> int:
     """Build a Folium map of analyzed events and save it to disk.
 
     Each event dict must have keys: article (the original article dict) and

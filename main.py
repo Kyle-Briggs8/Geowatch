@@ -17,11 +17,13 @@ _SEV_VALUE = {"low": 1, "medium": 2, "high": 3, "critical": 4}
 
 
 def _bar(count: int, total: int, width: int = 10) -> str:
+    """Return a block-character progress bar string for count out of total."""
     filled = round((count / total) * width) if total else 0
     return "█" * filled + "░" * (width - filled)
 
 
 def _subsample(articles: list[dict], max_n: int) -> list[dict]:
+    """Return up to max_n evenly-spaced articles from the list."""
     if len(articles) <= max_n:
         return articles
     step = len(articles) / max_n
@@ -57,6 +59,7 @@ def _check_alert(events: list[dict], threshold: str) -> dict | None:
 
 
 def _print_alert_box(alert: dict, location: str) -> None:
+    """Print a formatted terminal alert box for elevated activity."""
     pct_str = f"{alert['pct'] * 100:.0f}%"
     thr     = alert["threshold"].upper()
     width   = 58
@@ -72,6 +75,7 @@ def _print_alert_box(alert: dict, location: str) -> None:
 
 
 def _print_summary(location: str, days: int, events: list[dict], output: str) -> None:
+    """Print a terminal summary table of event counts, severity, and output path."""
     analyzed = [a for a in events if a.get("analysis")]
     event_counts: Counter = Counter(
         a["analysis"]["event_type"] for a in analyzed if a["analysis"].get("event_type")
@@ -103,6 +107,7 @@ def _print_summary(location: str, days: int, events: list[dict], output: str) ->
 
 
 def _run_single(args: argparse.Namespace) -> None:
+    """Run the full single-location pipeline: fetch, analyze, build dashboard, optional brief."""
     max_articles    = max(1, min(args.max_articles, 100))
     alert_threshold = args.alert_threshold
     output = args.output or f"{args.location.lower().replace(' ', '_')}_dashboard.html"
@@ -175,6 +180,7 @@ def _run_single(args: argparse.Namespace) -> None:
 
 
 def _run_compare(args: argparse.Namespace) -> None:
+    """Run the two-location comparison pipeline in parallel and build the comparison dashboard."""
     loc_a, loc_b = args.compare
     max_articles = max(1, min(args.max_articles, 100))
     output = args.output or "comparison_dashboard.html"
@@ -193,7 +199,7 @@ def _run_compare(args: argparse.Namespace) -> None:
                 for art in articles
             ]
             return location, evts
-        except Exception as exc:
+        except Exception as exc:  # broad: one location failing must not cancel the other
             return location, exc
 
     with ThreadPoolExecutor(max_workers=2) as ex:
@@ -252,6 +258,7 @@ def _run_compare(args: argparse.Namespace) -> None:
 
 
 def main() -> None:
+    """Parse CLI arguments and dispatch to the single or comparison pipeline."""
     parser = argparse.ArgumentParser(
         description="GeoWatch — Geospatial intelligence from live news"
     )

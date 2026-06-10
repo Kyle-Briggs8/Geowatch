@@ -38,6 +38,7 @@ _GRID  = "#1e2535"
 
 
 def _fig_to_b64(fig: plt.Figure) -> str:
+    """Serialize a Matplotlib figure to a base64-encoded PNG string."""
     buf = io.BytesIO()
     fig.savefig(buf, format="png", bbox_inches="tight", dpi=150, facecolor=_BG)
     buf.seek(0)
@@ -452,7 +453,7 @@ def event_swimlane_html(events: list[dict], days: int) -> str:
 # ── Folium map (MarkerCluster spiderifies on click) ──────────────────────────
 
 def _map_iframe(events: list[dict], location: str) -> str:
-    """Build folium map with MarkerCluster. Returns a self-contained <iframe> string."""
+    """Build a Folium map with MarkerCluster. Returns a self-contained <iframe> string."""
     center = REGION_COORDS.get(location, (20.0, 0.0))
     zoom   = 6 if location in REGION_COORDS else 2
 
@@ -764,7 +765,7 @@ _COLOR_B = "#fb923c"   # orange — used in summary/CSS
 
 
 def _ns_swimlane(html: str, ns: str) -> str:
-    """Replace all 'sw' namespaced IDs / classes / function names in swimlane HTML."""
+    """Replace all sw-prefixed IDs, classes, and function names with a namespaced prefix."""
     for old, new in [
         # Hyphenated element IDs — longer match first so sw-svg-line beats sw-svg
         ("sw-svg-line",     f"{ns}-svg-line"),

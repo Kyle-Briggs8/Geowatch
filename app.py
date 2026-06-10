@@ -1,10 +1,11 @@
 import os
 import threading
 import uuid
+from typing import Any
 
 from concurrent.futures import ThreadPoolExecutor
 
-from flask import Flask, jsonify, render_template_string, request
+from flask import Flask, Response, jsonify, render_template_string, request
 
 from analyzer import analyze_article
 from fetcher import get_news
@@ -290,7 +291,7 @@ _INDEX_HTML = """<!DOCTYPE html>
 _jobs: dict[str, dict] = {}
 
 
-def _start_job(fn, *args) -> str:
+def _start_job(fn: Any, *args: Any) -> str:
     """Spawn fn(*args) in a daemon thread. Returns job_id immediately."""
     job_id = str(uuid.uuid4())
     _jobs[job_id] = {"status": "running"}
@@ -390,6 +391,7 @@ _WAITING_HTML = """<!DOCTYPE html>
 # ── Pipeline helpers ──────────────────────────────────────────────────────────
 
 def _subsample(raw: list, max_n: int) -> list:
+    """Return up to max_n evenly-spaced items from raw."""
     if len(raw) <= max_n:
         return raw
     step = len(raw) / max_n
@@ -397,6 +399,7 @@ def _subsample(raw: list, max_n: int) -> list:
 
 
 def _do_analyze(location: str, days: int, max_articles: int) -> str:
+    """Fetch, analyze, and render a single-location dashboard. Returns HTML string."""
     raw      = get_news(location, days)
     articles = _subsample(raw, max_articles)
     events   = [{"article": art, "analysis": analyze_article(art)} for art in articles]
@@ -404,6 +407,7 @@ def _do_analyze(location: str, days: int, max_articles: int) -> str:
 
 
 def _do_compare(loc_a: str, loc_b: str, days: int, max_articles: int) -> str:
+    """Fetch, analyze, and render a two-location comparison dashboard. Returns HTML string."""
     def _pipeline(loc: str) -> list:
         raw = get_news(loc, days)
         return [{"article": art, "analysis": analyze_article(art)}
@@ -421,13 +425,15 @@ def _do_compare(loc_a: str, loc_b: str, days: int, max_articles: int) -> str:
 # ── Routes ────────────────────────────────────────────────────────────────────
 
 @app.route("/", methods=["GET"])
-def index():
+def index() -> str:
+    """Render the GeoWatch home page."""
     regions = ", ".join(sorted(REGION_COORDS.keys()))
     return render_template_string(_INDEX_HTML, regions=regions)
 
 
 @app.route("/analyze", methods=["POST"])
-def analyze():
+def analyze() -> str:
+    """Start a single-location analysis job and return the waiting page."""
     location     = (request.form.get("location") or "").strip()
     days         = int(request.form.get("days") or 30)
     max_articles = max(1, min(int(request.form.get("max_articles") or 5), 100))
@@ -443,7 +449,8 @@ def analyze():
 
 
 @app.route("/compare", methods=["POST"])
-def compare():
+def compare() -> str:
+    """Start a two-location comparison job and return the waiting page."""
     loc_a        = (request.form.get("location")  or "").strip()
     loc_b        = (request.form.get("location2") or "").strip()
     days         = int(request.form.get("days") or 30)
@@ -461,7 +468,8 @@ def compare():
 
 
 @app.route("/status/<job_id>")
-def job_status(job_id):
+def job_status(job_id: str) -> Response:
+    """Return JSON job status for polling: {status, error?}."""
     job = _jobs.get(job_id)
     if not job:
         return jsonify({"status": "error", "error": "Job not found"}), 404
@@ -471,7 +479,8 @@ def job_status(job_id):
 
 
 @app.route("/result/<job_id>")
-def job_result(job_id):
+def job_result(job_id: str) -> str | tuple[str, int]:
+    """Return the completed dashboard HTML, or a 404 error string if not ready."""
     job = _jobs.pop(job_id, None)
     if not job or job["status"] != "done":
         return "Result not ready or expired. Please run the analysis again.", 404
