@@ -9,9 +9,9 @@ Open-source geospatial intelligence from live news. GeoWatch fetches recent news
 ## Features
 
 - **Interactive Folium map** — severity-colored markers with cluster expansion and article popups
-- **Severity escalation chart** — weekly stacked bar chart (green → red) with trend label
-- **Event swimlane** — scrollable timeline by event type, click any dot for article details
-- **Comparison mode** — run two locations in parallel on a single combined map with side-by-side charts and swimlanes
+- **Interactive event timeline** — weekly severity-stacked bars; click a week to expand its daily breakdown and filter the chronological event log
+- **Situation at a glance** — headline stats (events, high/critical count, outlets, best source grade) and event-type breakdown
+- **Comparison mode** — run two locations in parallel on a single combined map with side-by-side charts and event logs
 - **Daily brief** (`--brief`) — generates a one-page markdown intelligence report
 - **Alert threshold** (`--alert-threshold`) — prints a terminal alert and injects a dashboard banner if >30% of recent events hit the threshold
 - **IC tradecraft grading** — every event carries a NATO Admiralty System code (source reliability A–F from a curated outlet table, information credibility 1–6 assessed per-article by the LLM); briefings and the dashboard assessment strip use ICD 203 estimative language, with analytic confidence derived from breadth and quality of sourcing

@@ -18,25 +18,46 @@ from grading import assess_confidence, describe_grade, grade_event
 
 _SEV_ORDER = ["low", "medium", "high", "critical"]
 _SEV_WEIGHT = {"low": 1, "medium": 2, "high": 3, "critical": 4}
+# Light editorial theme — severity fills tuned for white backgrounds
 _SEV_MPL = {
-    "low": "#2ea44f",
-    "medium": "#e3b341",
-    "high": "#f97316",
-    "critical": "#ef4444",
+    "low": "#1a7f37",
+    "medium": "#d4a72c",
+    "high": "#ea7317",
+    "critical": "#dc2626",
 }
 _SEV_CSS = {
-    "low": "#2ea44f",
-    "medium": "#e3b341",
-    "high": "#f97316",
-    "critical": "#ef4444",
+    "low": "#1a7f37",
+    "medium": "#d4a72c",
+    "high": "#ea7317",
+    "critical": "#dc2626",
+}
+# Severity pill colors: (text, background)
+_SEV_PILL = {
+    "low":      ("#1a7f37", "#d3f2dd"),
+    "medium":   ("#9a6700", "#fbedc0"),
+    "high":     ("#c2410c", "#ffe0cc"),
+    "critical": ("#b91c1c", "#fcd9d9"),
 }
 _EVENT_TYPES = [
     "conflict", "political", "natural_disaster", "economic",
     "protest", "terrorism", "other",
 ]
-_BG    = "#0d1117"
-_TEXT  = "#c8d6e5"
-_GRID  = "#1e2535"
+_TYPE_COLOR = {
+    "conflict": "#ea7317", "terrorism": "#dc2626", "political": "#d4a72c",
+    "protest": "#0e7490", "natural_disaster": "#2563eb",
+    "economic": "#1a7f37", "other": "#c9c6c0",
+}
+_BG    = "#ffffff"
+_PAPER = "#faf9f7"
+_TEXT  = "#55606c"
+_INK   = "#1c2024"
+_MUTED = "#98a1ab"
+_RULE  = "#e7e5e0"
+_NAVY  = "#16365c"
+_BLUE  = "#2563eb"
+_SERIF = "'Iowan Old Style','Palatino Linotype',Georgia,serif"
+_SANS  = "'Segoe UI',system-ui,-apple-system,sans-serif"
+_MONO  = "'Cascadia Mono',Consolas,monospace"
 
 
 def _fig_to_b64(fig: plt.Figure) -> str:
@@ -49,417 +70,284 @@ def _fig_to_b64(fig: plt.Figure) -> str:
     return encoded
 
 
-# ── Chart 1: Severity Escalation Timeline ────────────────────────────────────
+# ── Timeline: weekly stacked bars → daily drill-down → filtered event log ────
 
-def severity_timeline_b64(events: list[dict], days: int) -> str:
-    """Weekly stacked severity bar chart with trend label. Returns base64 PNG."""
-    end = datetime.utcnow()
+def _fmt_day(d) -> str:
+    """Format a date as 'Aug 8' (no zero-padding)."""
+    return f"{d.strftime('%b')} {d.day}"
+
+
+def _parse_event_date(ev: dict):
+    """Return the event's article date as a date, or None."""
+    try:
+        return datetime.strptime(ev.get("article", {}).get("date", ""), "%Y-%m-%d").date()
+    except (ValueError, TypeError):
+        return None
+
+
+def _week_day_lists(days: int) -> list[list]:
+    """Split the reporting window into weeks; return a list of per-week day lists."""
+    end   = datetime.utcnow()
     start = end - timedelta(days=days)
-
-    weeks: list[tuple] = []
+    weeks = []
     cur = start
     while cur < end:
         nxt = min(cur + timedelta(days=7), end)
         weeks.append((cur, nxt))
         cur = nxt
 
-    week_labels = [w[0].strftime("%b %d") for w in weeks]
-    counts = {s: [0] * len(weeks) for s in _SEV_ORDER}
+    day_lists = []
+    for i, (ws, we) in enumerate(weeks):
+        if i < len(weeks) - 1:
+            day_lists.append([(ws + timedelta(days=j)).date()
+                              for j in range(max(1, (we - ws).days))])
+        else:
+            lst, d = [], ws.date()
+            while d <= end.date():
+                lst.append(d)
+                d += timedelta(days=1)
+            day_lists.append(lst)
+    return day_lists
 
-    for ev in events:
-        analysis = ev.get("analysis")
-        if not analysis:
-            continue
-        try:
-            dt = datetime.strptime(ev.get("article", {}).get("date", ""), "%Y-%m-%d")
-        except (ValueError, TypeError):
-            continue
-        sev = analysis.get("severity", "low").lower()
-        if sev not in counts:
+
+def _event_log_rows(events: list[dict], day_to_week: dict) -> str:
+    """Render the chronological event log rows (newest first), tagged by week id."""
+    analyzed = [(e, _parse_event_date(e)) for e in events if e.get("analysis")]
+    analyzed.sort(key=lambda t: (t[1] is None, t[1]), reverse=True)
+
+    rows = ""
+    for ev, d in analyzed:
+        a     = ev["analysis"]
+        art   = ev["article"]
+        sev   = (a.get("severity") or "low").lower()
+        if sev not in _SEV_PILL:
             sev = "low"
-        for i, (ws, we) in enumerate(weeks):
-            if ws <= dt < we or (i == len(weeks) - 1 and dt >= ws):
-                counts[sev][i] += 1
-                break
-
-    # Weighted severity score: first half vs second half
-    mid = max(1, len(weeks) // 2)
-    first  = sum(_SEV_WEIGHT[s] * sum(counts[s][:mid]) for s in _SEV_ORDER)
-    second = sum(_SEV_WEIGHT[s] * sum(counts[s][mid:]) for s in _SEV_ORDER)
-
-    if first == 0 and second == 0:
-        trend = "No data to assess trend"
-    elif first == 0:
-        trend = "Situation escalating"
-    elif (second - first) / first > 0.20:
-        trend = "Situation escalating"
-    elif (first - second) / first > 0.20:
-        trend = "Situation stabilizing"
-    else:
-        trend = "Situation stable"
-
-    fig, ax = plt.subplots(figsize=(14, 4.5))
-    fig.patch.set_facecolor(_BG)
-    ax.set_facecolor(_BG)
-
-    x = np.arange(len(weeks))
-    bottom = np.zeros(len(weeks))
-    for sev in _SEV_ORDER:
-        vals = np.array(counts[sev], dtype=float)
-        if vals.sum() > 0:
-            ax.bar(x, vals, bottom=bottom, color=_SEV_MPL[sev],
-                   label=sev.capitalize(), width=0.65, zorder=2)
-        bottom += vals
-
-    ax.set_xticks(x)
-    ax.set_xticklabels(week_labels, color=_TEXT, fontsize=9)
-    ax.tick_params(axis="both", colors=_TEXT, length=0)
-    ax.set_ylabel("Events", color=_TEXT, fontsize=10)
-    ax.yaxis.set_tick_params(labelcolor=_TEXT)
-    for sp in ax.spines.values():
-        sp.set_visible(False)
-    ax.spines["bottom"].set_visible(True)
-    ax.spines["bottom"].set_color(_GRID)
-    ax.set_axisbelow(True)
-    ax.yaxis.grid(True, color=_GRID, linewidth=0.8)
-    ax.set_title(trend, color=_TEXT, fontsize=13, fontweight="bold", pad=14)
-    ax.legend(loc="upper right", framealpha=0.15, facecolor="#1a2030",
-              edgecolor=_GRID, labelcolor=_TEXT, fontsize=9)
-
-    fig.tight_layout()
-    return _fig_to_b64(fig)
+        pt, pb = _SEV_PILL[sev]
+        etype  = (a.get("event_type") or "other").replace("_", " ").capitalize()
+        title  = _html.escape(a.get("one_line_summary") or art.get("title", ""))
+        src    = _html.escape(art.get("source") or "Unknown")
+        url    = _html.escape(art.get("url") or "#")
+        grade  = grade_event(ev)
+        gdesc  = _html.escape(describe_grade(grade))
+        wk     = day_to_week.get(d, "none")
+        date_s = _fmt_day(d) if d else "—"
+        rows += f"""
+      <a class="ev" data-wk="{wk}" href="{url}" target="_blank" rel="noopener">
+        <span class="ev-date">{date_s}</span>
+        <span class="ev-mark" style="background:{_SEV_CSS[sev]}"></span>
+        <span class="ev-main">
+          <span class="ev-title">{title}</span>
+          <span class="ev-tags"><span class="sev-pill" style="color:{pt};background:{pb}">{sev.upper()}</span><span class="type-tag">{etype}</span></span>
+        </span>
+        <span class="ev-meta">{src} <span class="grade" title="{gdesc}">{grade}</span></span>
+      </a>"""
+    return rows
 
 
-# ── Chart 2: Event Type Swimlane (interactive HTML/JS) ───────────────────────
+def _timeline_html(events: list[dict], days: int) -> str:
+    """Weekly stacked-severity bars with click-to-expand daily breakdown and a
+    chronological event log that filters to the selected week. Self-contained HTML/JS."""
+    day_lists = _week_day_lists(days)
+    day_to_week = {d: f"w{i}" for i, lst in enumerate(day_lists) for d in lst}
 
-_SWIMLANE_JS = """\
-<script>
-(function(){
-  var popup  = document.getElementById('sw-popup');
-  var svgLn  = document.getElementById('sw-svg-line');
-  var curUrl = '', activeDot = null;
-  var SEV = {low:'#2ea44f', medium:'#e3b341', high:'#f97316', critical:'#ef4444'};
-  var PW = 200, M = 12, GAP = 14;
-
-  function hide() {
-    popup.style.display = 'none';
-    svgLn.setAttribute('display', 'none');
-    activeDot = null;
-  }
-
-  window.swImgErr = function() { document.getElementById('sw-img').style.display = 'none'; };
-  window.swOpen   = function(e) { if (e) e.stopPropagation(); if (curUrl) window.open(curUrl,'_blank'); };
-
-  /* Close on outside click */
-  document.addEventListener('click', hide);
-
-  /* Close when the page is scrolled (card is fixed, dots move) */
-  window.addEventListener('scroll', hide, {passive: true});
-
-  /* Close when swimlane is scrolled horizontally so the dot leaves the visible area */
-  var swScroll = document.querySelector('.sw-scroll');
-  if (swScroll) {
-    swScroll.addEventListener('scroll', function() {
-      if (!activeDot) return;
-      var dr = activeDot.getBoundingClientRect();
-      var cr = swScroll.getBoundingClientRect();
-      if (dr.right < cr.left || dr.left > cr.right) hide();
-    }, {passive: true});
-  }
-
-  /* Pick the card position (right/left/below/above) that overlaps fewest other dots */
-  function bestPos(cx, cy, dotR, popH) {
-    var candidates = [
-      {left: cx + dotR + GAP,       top: cy - popH / 2},
-      {left: cx - dotR - GAP - PW,  top: cy - popH / 2},
-      {left: cx - PW / 2,           top: cy + dotR + GAP},
-      {left: cx - PW / 2,           top: cy - dotR - GAP - popH},
-    ];
-    var dots = document.querySelectorAll('.sw-dot');
-    function penalty(c) {
-      var p = 0;
-      if (c.left < M || c.left + PW > window.innerWidth  - M) p += 40;
-      if (c.top  < M || c.top + popH > window.innerHeight - M) p += 40;
-      dots.forEach(function(d) {
-        if (d === activeDot) return;
-        var r  = d.getBoundingClientRect();
-        var dx = r.left + r.width / 2, dy = r.top + r.height / 2;
-        if (dx > c.left && dx < c.left + PW && dy > c.top && dy < c.top + popH) p += 6;
-      });
-      return p;
-    }
-    var best = candidates.reduce(function(a, b) { return penalty(a) <= penalty(b) ? a : b; });
-    best.left = Math.max(M, Math.min(best.left, window.innerWidth  - PW - M));
-    best.top  = Math.max(M, Math.min(best.top,  window.innerHeight - popH - M));
-    return best;
-  }
-
-  window.swShow = function(dot, e) {
-    if (e) e.stopPropagation();
-    if (dot === activeDot) { hide(); return; }   /* same dot → toggle off */
-    activeDot = dot;
-    var d = dot.dataset;
-    curUrl = d.url || '';
-
-    var img = document.getElementById('sw-img');
-    if (d.image) { img.style.display = 'block'; img.src = d.image; }
-    else          { img.style.display = 'none'; }
-
-    var badge = document.getElementById('sw-badge');
-    badge.textContent = (d.etype || '').replace(/_/g, ' ');
-    badge.style.color = SEV[d.severity] || '#888';
-
-    document.getElementById('sw-title').textContent = d.title   || '';
-    document.getElementById('sw-sum').textContent   = d.summary || '';
-    document.getElementById('sw-meta').textContent  =
-      (d.source || '') + (d.date ? ' · ' + d.date : '');
-
-    var col = SEV[d.severity] || '#888';
-    popup.style.display = 'block'; popup.style.visibility = 'hidden';
-    var popH = popup.offsetHeight;
-
-    var dr   = dot.getBoundingClientRect();
-    var cx   = dr.left + dr.width / 2;
-    var cy   = dr.top  + dr.height / 2;
-    var dotR = dr.width / 2;
-
-    var pos    = bestPos(cx, cy, dotR, popH);
-    var lineX2 = (cx > pos.left + PW / 2) ? pos.left : pos.left + PW;
-    var lineY2 = pos.top + popH / 2;
-
-    popup.style.top  = pos.top  + 'px';
-    popup.style.left = pos.left + 'px';
-    popup.style.visibility = 'visible';
-
-    svgLn.setAttribute('stroke', col);
-    svgLn.setAttribute('x1', cx);     svgLn.setAttribute('y1', cy);
-    svgLn.setAttribute('x2', lineX2); svgLn.setAttribute('y2', lineY2);
-    svgLn.setAttribute('display', 'block');
-  };
-})();
-</script>"""
-
-# SVG overlay for the connecting line + the card itself.
-# Card always appears on the opposite side of the viewport from the clicked dot,
-# so the dot and its neighbours stay fully clickable.
-_SWIMLANE_POPUP = (
-    # Full-viewport SVG layer for the connecting line (pointer-events:none so it
-    # never blocks clicks on dots or the rest of the page)
-    '<svg id="sw-svg" style="position:fixed;top:0;left:0;'
-    'width:100vw;height:100vh;pointer-events:none;z-index:9997;overflow:visible;">'
-    '<line id="sw-svg-line" x1="0" y1="0" x2="0" y2="0"'
-    ' stroke-width="1.5" stroke-opacity="0.7" display="none"/>'
-    '</svg>'
-    # Card
-    '<div id="sw-popup" style="display:none;position:fixed;z-index:9999;width:200px;'
-    'background:#fff;border-radius:8px;'
-    "box-shadow:0 4px 20px rgba(0,0,0,0.22),0 0 0 1px rgba(0,0,0,0.07);"
-    "overflow:hidden;font-family:'Courier New',monospace;"
-    '" onclick="swOpen(event)">'
-    '<div style="position:relative;width:100%;height:100px;">'
-    '<div style="position:absolute;top:0;left:0;right:0;bottom:0;background:#f0f2f5;'
-    'display:flex;align-items:center;justify-content:center;'
-    'color:#aaa;font-size:9px;letter-spacing:1px;">NO IMAGE AVAILABLE</div>'
-    '<img id="sw-img" alt="" referrerpolicy="no-referrer" onerror="swImgErr()"'
-    ' style="position:absolute;top:0;left:0;width:100%;height:100%;'
-    'object-fit:cover;display:none;z-index:1;">'
-    '<div id="sw-badge" style="position:absolute;top:6px;left:6px;z-index:2;'
-    'border-radius:3px;padding:2px 5px;font-size:8px;letter-spacing:1px;'
-    'text-transform:uppercase;background:rgba(0,0,0,0.65);color:#fff;"></div>'
-    '</div>'
-    '<div style="padding:8px 10px 10px;cursor:pointer;">'
-    '<div id="sw-title" style="color:#111;font-weight:bold;font-size:10.5px;'
-    'line-height:1.4;margin-bottom:4px;"></div>'
-    '<div id="sw-sum" style="color:#555;font-size:9.5px;line-height:1.35;'
-    'margin-bottom:6px;"></div>'
-    '<div id="sw-meta" style="color:#999;font-size:9px;"></div>'
-    '</div></div>'
-)
-
-
-def event_swimlane_html(events: list[dict], days: int) -> str:
-    """Interactive swimlane chart — HTML/JS with hover popups. Returns an HTML string."""
-    end        = datetime.utcnow()
-    start      = end - timedelta(days=days)
-    total_days = max(1, days)
-
-    _DOT_R = {"low": 8, "medium": 12, "high": 17, "critical": 23}
-
-    type_date: dict = defaultdict(lambda: defaultdict(list))
+    # Per-day severity counts
+    day_counts: dict = defaultdict(Counter)
     for ev in events:
-        analysis = ev.get("analysis")
-        if not analysis:
+        if not ev.get("analysis"):
             continue
-        etype    = analysis.get("event_type", "other").lower()
-        sev      = analysis.get("severity",   "low").lower()
-        date_str = ev.get("article", {}).get("date", "")
-        if etype not in _EVENT_TYPES:
-            etype = "other"
-        art = ev.get("article", {})
-        type_date[etype][date_str].append({
-            "sev":     sev,
-            "title":   art.get("title", ""),
-            "summary": analysis.get("one_line_summary", ""),
-            "source":  art.get("source", ""),
-            "date":    date_str,
-            "url":     art.get("url", ""),
-            "image":   art.get("image_url") or "",
-            "etype":   etype,
-        })
+        d = _parse_event_date(ev)
+        if d in day_to_week:
+            sev = (ev["analysis"].get("severity") or "low").lower()
+            day_counts[d][sev if sev in _SEV_CSS else "low"] += 1
 
-    active = [t for t in _EVENT_TYPES if type_date[t]]
+    week_counts = []
+    for lst in day_lists:
+        c = Counter()
+        for d in lst:
+            c.update(day_counts[d])
+        week_counts.append(c)
 
-    if not active:
-        return (
-            '<div style="color:#3a4a5a;padding:24px 28px;font-size:11px;'
-            'letter-spacing:1px;font-family:monospace;text-align:center;">'
-            'No events to display</div>'
-        )
+    max_total = max((sum(c.values()) for c in week_counts), default=0) or 1
+    unit = max(6, min(16, round(112 / max_total)))
 
-    ROW_H      = 120
-    LEFT_PAD   = 140
-    BOTTOM_PAD = 40
-    TOP_PAD    = 20
-    RIGHT_PAD  = 20
-    px_per_day = max(40, min(80, 1100 // total_days))
-    chart_iw   = total_days * px_per_day
-    chart_w    = LEFT_PAD + chart_iw + RIGHT_PAD
-    chart_h    = TOP_PAD + len(active) * ROW_H + BOTTOM_PAD
+    bars_html, labels_html, panels_html = "", "", ""
+    for i, (lst, wc) in enumerate(zip(day_lists, week_counts)):
+        wid   = f"w{i}"
+        total = sum(wc.values())
+        label = f"{_fmt_day(lst[0])}–{lst[-1].day}" if len(lst) > 1 else _fmt_day(lst[0])
+        crit  = wc.get("critical", 0)
+        sub   = f"{total} event{'s' if total != 1 else ''}" + (f" · {crit} critical" if crit else "")
+        segs  = "".join(
+            f'<i style="background:{_SEV_CSS[s]};height:{wc[s] * unit}px"></i>'
+            for s in _SEV_ORDER if wc.get(s)
+        ) or '<i style="background:#e7e5e0;height:3px"></i>'
+        tip   = ", ".join(f"{wc[s]} {s}" for s in _SEV_ORDER if wc.get(s)) or "no coverage"
+        bars_html   += f'<div class="wk" data-wk="{wid}" title="{label} · {tip}">{segs}</div>'
+        labels_html += f'<div class="wk-label"><b>{label}</b><span>{sub}</span></div>'
 
-    parts: list[str] = []
-
-    # Alternating row backgrounds + labels + divider lines
-    for row_i, etype in enumerate(active):
-        row_y = TOP_PAD + row_i * ROW_H
-        bg = "rgba(255,255,255,0.02)" if row_i % 2 == 0 else "transparent"
-        parts.append(
-            f'<div style="position:absolute;left:0;top:{row_y}px;'
-            f'width:{chart_w}px;height:{ROW_H}px;background:{bg};pointer-events:none;"></div>'
-        )
-        parts.append(
-            f'<div style="position:absolute;left:0;top:{row_y}px;'
-            f'width:{LEFT_PAD - 12}px;height:{ROW_H}px;display:flex;'
-            f'align-items:center;justify-content:flex-end;padding-right:14px;'
-            f'color:#8aa0ba;font-size:11px;font-weight:600;letter-spacing:0.5px;'
-            f'text-transform:uppercase;white-space:nowrap;user-select:none;">'
-            f'{etype.replace("_", " ")}</div>'
-        )
-        parts.append(
-            f'<div style="position:absolute;left:{LEFT_PAD}px;top:{row_y + ROW_H - 1}px;'
-            f'width:{chart_iw}px;height:1px;background:#1e2535;pointer-events:none;"></div>'
-        )
-
-    # X-axis date labels + vertical tick lines
-    tick_every = max(1, total_days // 10)
-    for d in range(0, total_days + 1, tick_every):
-        lbl = (start + timedelta(days=d)).strftime("%b %d")
-        x   = LEFT_PAD + d * px_per_day
-        parts.append(
-            f'<div style="position:absolute;left:{x}px;bottom:4px;'
-            f'transform:translateX(-50%);color:#4a6080;font-size:10px;'
-            f'white-space:nowrap;user-select:none;">{lbl}</div>'
-        )
-        parts.append(
-            f'<div style="position:absolute;left:{x}px;top:{TOP_PAD}px;'
-            f'width:1px;height:{len(active) * ROW_H}px;background:#1a2030;"></div>'
-        )
-
-    # Dots
-    for row_i, etype in enumerate(active):
-        row_cy = TOP_PAD + row_i * ROW_H + ROW_H // 2
-        for date_str, items in sorted(type_date[etype].items()):
-            try:
-                dt = datetime.strptime(date_str, "%Y-%m-%d")
-            except (ValueError, TypeError):
-                continue
-            day_off = (dt - start).days
-            if not (0 <= day_off <= total_days):
-                continue
-            x = LEFT_PAD + day_off * px_per_day
-            sorted_items = sorted(
-                items,
-                key=lambda x: _SEV_ORDER.index(x["sev"] if x["sev"] in _SEV_ORDER else "low"),
-                reverse=True,
-            )
-            n = len(sorted_items)
-            for si, item in enumerate(sorted_items):
-                sev = item["sev"] if item["sev"] in _SEV_ORDER else "low"
-                r   = _DOT_R[sev]
-                col = _SEV_CSS.get(sev, "#4af")
-                y   = row_cy + (si - (n - 1) / 2) * 32
-                data_str = " ".join(
-                    f'data-{k}="{_html.escape(str(v))}"'
-                    for k, v in {
-                        "title":    item["title"],
-                        "summary":  item["summary"],
-                        "source":   item["source"],
-                        "date":     item["date"],
-                        "url":      item["url"],
-                        "image":    item["image"],
-                        "severity": sev,
-                        "etype":    item["etype"],
-                    }.items()
+        day_bars, day_axis = "", ""
+        for d in lst:
+            dc = day_counts[d]
+            if dc:
+                dsegs = "".join(
+                    f'<i style="background:{_SEV_CSS[s]};height:{dc[s] * 12 + (dc[s] - 1)}px"></i>'
+                    for s in _SEV_ORDER if dc.get(s)
                 )
-                # Tooltip: abbreviated title so it's readable on hover
-                tooltip = _html.escape((item["title"] or item["summary"] or "")[:80])
-                parts.append(
-                    f'<div class="sw-dot" {data_str} title="{tooltip}" '
-                    f'style="position:absolute;'
-                    f'left:{x}px;top:{y}px;'
-                    f'width:{r*2}px;height:{r*2}px;'
-                    f'margin-left:-{r}px;margin-top:-{r}px;'
-                    f'border-radius:50%;background:{col};'
-                    f'border:2px solid rgba(255,255,255,0.35);'
-                    f'box-shadow:0 0 8px {col}66;'
-                    f'cursor:pointer;z-index:2;'
-                    f'transition:transform .12s,box-shadow .12s;" '
-                    f'onclick="swShow(this,event)" '
-                    f'onmouseenter="this.style.transform=\'scale(1.35)\'" '
-                    f'onmouseleave="this.style.transform=\'scale(1)\'"></div>'
-                )
+                dtip = _fmt_day(d) + " · " + ", ".join(f"{dc[s]} {s}" for s in _SEV_ORDER if dc.get(s))
+                day_bars += f'<div class="day" title="{dtip}">{dsegs}</div>'
+            else:
+                day_bars += f'<div class="day empty" title="{_fmt_day(d)} · no coverage"><i></i></div>'
+            day_axis += f"<span>{d.day}</span>"
+        panels_html += f"""
+      <div class="wk-days" id="days-{wid}">
+        <div class="wk-days-title">Week of {label} — daily breakdown <a data-close>&#x2715; close</a></div>
+        <div class="day-strip">{day_bars}</div>
+        <div class="day-axis">{day_axis}</div>
+      </div>"""
 
-    # Separate legend bar above the scrollable chart area
-    leg_items = []
-    for sev in _SEV_ORDER:
-        r   = _DOT_R[sev]
-        col = _SEV_CSS[sev]
-        leg_items.append(
-            f'<span style="display:inline-flex;align-items:center;gap:6px;">'
-            f'<span style="display:inline-block;width:{r*2}px;height:{r*2}px;'
-            f'border-radius:50%;background:{col};flex-shrink:0;'
-            f'border:1.5px solid rgba(255,255,255,0.3);box-shadow:0 0 5px {col}66;"></span>'
-            f'<span style="color:#8aa0ba;font-size:10px;letter-spacing:0.3px;">'
-            f'{sev.capitalize()}</span>'
-            f'</span>'
+    log_rows = _event_log_rows(events, day_to_week)
+    if not log_rows:
+        log_rows = '<div style="padding:18px 22px;color:#98a1ab;font-size:12px;">No analyzed events in this window.</div>'
+
+    return f"""
+    <div class="density">
+      <div class="weeks">{bars_html}</div>
+      <div class="wk-labels">{labels_html}</div>
+      {panels_html}
+      <div class="density-legend">
+        <span><i style="background:{_SEV_CSS['low']}"></i>Low</span>
+        <span><i style="background:{_SEV_CSS['medium']}"></i>Medium</span>
+        <span><i style="background:{_SEV_CSS['high']}"></i>High</span>
+        <span><i style="background:{_SEV_CSS['critical']}"></i>Critical</span>
+        <span style="margin-left:auto;color:#98a1ab">Gray stubs = days with no coverage</span>
+      </div>
+    </div>
+    <div class="feed" id="feed">{log_rows}</div>
+    <script>
+    (function(){{
+      var current = null;
+      var weeks = document.querySelectorAll('.wk');
+      var feed  = document.getElementById('feed');
+      function close(){{
+        document.querySelectorAll('.wk-days.open').forEach(function(p){{ p.classList.remove('open'); }});
+        weeks.forEach(function(w){{ w.classList.remove('sel'); }});
+        feed.classList.remove('filtered');
+        feed.querySelectorAll('.ev').forEach(function(e){{ e.classList.remove('show'); }});
+        current = null;
+      }}
+      function open(id, wkEl){{
+        close();
+        current = id;
+        wkEl.classList.add('sel');
+        var panel = document.getElementById('days-' + id);
+        if (panel) panel.classList.add('open');
+        feed.classList.add('filtered');
+        feed.querySelectorAll('.ev[data-wk="' + id + '"]').forEach(function(e){{ e.classList.add('show'); }});
+      }}
+      weeks.forEach(function(w){{
+        w.addEventListener('click', function(){{
+          var id = w.getAttribute('data-wk');
+          if (current === id) {{ close(); }} else {{ open(id, w); }}
+        }});
+      }});
+      document.querySelectorAll('[data-close]').forEach(function(a){{
+        a.addEventListener('click', function(ev){{ ev.stopPropagation(); ev.preventDefault(); close(); }});
+      }});
+    }})();
+    </script>"""
+
+
+def _event_log_html(events: list[dict], days: int) -> str:
+    """Standalone (unfiltered) chronological event log — used in comparison mode."""
+    day_lists = _week_day_lists(days)
+    day_to_week = {d: f"w{i}" for i, lst in enumerate(day_lists) for d in lst}
+    rows = _event_log_rows(events, day_to_week)
+    if not rows:
+        return '<div style="padding:18px 22px;color:#98a1ab;font-size:12px;">No analyzed events.</div>'
+    return f'<div class="feed">{rows}</div>'
+
+
+# ── Situation at a glance ────────────────────────────────────────────────────
+
+def _glance_html(events: list[dict]) -> str:
+    """Headline stats plus event-type breakdown bars for the reporting period."""
+    analyzed = [e for e in events if e.get("analysis")]
+    sev_c = Counter((e["analysis"].get("severity") or "low").lower() for e in analyzed)
+    high_crit = sev_c.get("high", 0) + sev_c.get("critical", 0)
+    sources = {
+        (e.get("article", {}).get("source") or "").strip()
+        for e in analyzed if e.get("article", {}).get("source")
+    }
+    from grading import source_reliability
+    best = min((source_reliability(s) for s in sources), default="F")
+
+    evt_c = Counter(
+        (e["analysis"].get("event_type") or "other") for e in analyzed
+    )
+    total = sum(evt_c.values()) or 1
+    type_rows = ""
+    for etype, cnt in evt_c.most_common(7):
+        color = _TYPE_COLOR.get(etype, _TYPE_COLOR["other"])
+        label = etype.replace("_", " ").capitalize()
+        pct   = max(4, round(cnt / total * 100))
+        type_rows += (
+            f'<div class="type-row"><span class="type-name">{label}</span>'
+            f'<div class="type-bar"><i style="width:{pct}%;background:{color}"></i></div>'
+            f'<span class="type-n">{cnt}</span></div>'
         )
-    legend_bar = (
-        f'<div style="display:flex;align-items:center;gap:20px;'
-        f'padding:8px 16px 10px;background:{_BG};'
-        f'border-bottom:1px solid #1e2535;">'
-        f'<span style="color:#4a6080;font-size:9px;letter-spacing:1px;'
-        f'text-transform:uppercase;margin-right:4px;">Severity</span>'
-        + "".join(leg_items) +
-        f'</div>'
+
+    return f"""
+    <div class="stats">
+      <div class="stat"><div class="stat-num">{len(analyzed)}</div><div class="stat-label">Events analyzed</div></div>
+      <div class="stat"><div class="stat-num" style="color:#c2410c">{high_crit}</div><div class="stat-label">High or critical</div></div>
+      <div class="stat"><div class="stat-num">{len(sources)}</div><div class="stat-label">Distinct outlets</div></div>
+      <div class="stat"><div class="stat-num" style="color:#1a7f37">{best}</div><div class="stat-label">Best sourcing grade</div></div>
+    </div>
+    <div class="types">{type_rows or '<div style="color:#98a1ab;font-size:12px;">No data</div>'}</div>"""
+
+
+# ── Sourcing & reliability table ─────────────────────────────────────────────
+
+_REL_PILL = {
+    "A": ("#1a7f37", "#d3f2dd"), "B": ("#1a7f37", "#d3f2dd"),
+    "C": ("#9a6700", "#fbedc0"), "D": ("#c2410c", "#ffe0cc"),
+    "E": ("#b91c1c", "#fcd9d9"), "F": ("#55606c", "#f0efec"),
+}
+
+
+def _sourcing_table_html(events: list[dict]) -> str:
+    """Admiralty source-reliability table for all analyzed events."""
+    from grading import source_reliability, RELIABILITY_DESC
+    analyzed = [e for e in events if e.get("analysis")]
+    src_c: Counter = Counter(
+        (e["article"].get("source") or "Unknown").strip() for e in analyzed
     )
+    rows = ""
+    for src, cnt in src_c.most_common(10):
+        rel = source_reliability(src)
+        pt, pb = _REL_PILL[rel]
+        rows += (
+            f'<tr><td>{_html.escape(src)}</td>'
+            f'<td><span class="rel" style="color:{pt};background:{pb}">{rel}</span> {RELIABILITY_DESC[rel]}</td>'
+            f'<td class="num">{cnt}</td></tr>'
+        )
+    if not rows:
+        rows = '<tr><td colspan="3" style="color:#98a1ab">No data</td></tr>'
+    return f"""
+    <table>
+      <tr><th>SOURCE</th><th>RELIABILITY</th><th style="text-align:right">REPORTS</th></tr>
+      {rows}
+    </table>
+    <div class="table-note">Grades follow the NATO Admiralty System — letter: source reliability (A–F);
+    digit on individual events: information credibility (1–6). Estimative language per ICD 203.</div>"""
 
-    chart_html = (
-        f'<div class="sw-scroll" style="overflow-x:auto;width:100%;background:{_BG};">'
-        f'<div style="position:relative;width:{chart_w}px;height:{chart_h}px;">'
-        + "".join(parts)
-        + "</div></div>"
-    )
-
-    return legend_bar + chart_html + _SWIMLANE_POPUP + _SWIMLANE_JS
-
-
-# ── Folium map (MarkerCluster spiderifies on click) ──────────────────────────
 
 def _map_iframe(events: list[dict], location: str) -> str:
     """Build a Folium map with MarkerCluster. Returns a self-contained <iframe> string."""
     center = REGION_COORDS.get(location, (20.0, 0.0))
     zoom   = 6 if location in REGION_COORDS else 2
 
-    m = folium.Map(location=center, zoom_start=zoom, tiles="CartoDB dark_matter")
+    m = folium.Map(location=center, zoom_start=zoom, tiles="CartoDB positron")
     cluster = MarkerCluster().add_to(m)
 
     for ev in events:
@@ -469,7 +357,7 @@ def _map_iframe(events: list[dict], location: str) -> str:
             continue
 
         sev   = analysis.get("severity", "low").lower()
-        color = _SEV_CSS.get(sev, "#4af")
+        color = _SEV_CSS.get(sev, _BLUE)
 
         # All article data stored as data-* on the icon div so the injected JS can read them
         data_attrs = " ".join(
@@ -489,8 +377,8 @@ def _map_iframe(events: list[dict], location: str) -> str:
         icon_html = (
             f'<div class="gw-marker" {data_attrs} '
             f'style="width:14px;height:14px;border-radius:50%;cursor:pointer;'
-            f'background:{color};border:2px solid rgba(255,255,255,0.55);'
-            f'box-shadow:0 0 5px {color};"></div>'
+            f'background:{color};border:2px solid #fff;'
+            f'box-shadow:0 1px 4px rgba(28,32,36,0.35);"></div>'
         )
         folium.Marker(
             location=center,
@@ -502,6 +390,15 @@ def _map_iframe(events: list[dict], location: str) -> str:
 
     # Inject pull-out card + SVG line + JS — same interaction pattern as the swimlane
     m.get_root().html.add_child(Element("""
+<style>
+.marker-cluster-small, .marker-cluster-medium, .marker-cluster-large { background: rgba(22,54,92,0.25) !important; }
+.marker-cluster-small div, .marker-cluster-medium div, .marker-cluster-large div {
+  background: rgba(22,54,92,0.9) !important; color: #fff !important;
+  font-family: 'Segoe UI', system-ui, sans-serif !important; font-weight: 600;
+}
+.marker-cluster span { color: #fff !important; }
+.leaflet-container { font-family: 'Segoe UI', system-ui, sans-serif; }
+</style>
 <svg id="gw-svg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;
   pointer-events:none;z-index:9997;overflow:visible;">
   <line id="gw-line" x1="0" y1="0" x2="0" y2="0"
@@ -510,7 +407,7 @@ def _map_iframe(events: list[dict], location: str) -> str:
 <div id="gw-card" style="display:none;position:fixed;z-index:9999;width:200px;
   background:#fff;border-radius:8px;
   box-shadow:0 4px 20px rgba(0,0,0,0.22),0 0 0 1px rgba(0,0,0,0.07);
-  overflow:hidden;font-family:'Courier New',monospace;" onclick="event.stopPropagation()">
+  overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;" onclick="event.stopPropagation()">
   <div style="position:relative;width:100%;height:100px;">
     <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:#f0f2f5;
       display:flex;align-items:center;justify-content:center;
@@ -532,7 +429,7 @@ def _map_iframe(events: list[dict], location: str) -> str:
 </div>
 <script>
 (function(){
-  var SEV={low:'#2ea44f',medium:'#e3b341',high:'#f97316',critical:'#ef4444'};
+  var SEV={low:'#1a7f37',medium:'#d4a72c',high:'#ea7317',critical:'#dc2626'};
   var PW=200,M=12,GAP=14,curUrl='',activeEl=null;
 
   function hide(){
@@ -646,6 +543,119 @@ def _map_iframe(events: list[dict], location: str) -> str:
 
 # ── Dashboard assembly ────────────────────────────────────────────────────────
 
+# Shared light-editorial stylesheet used by both dashboard templates
+_SHARED_CSS = """
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #faf9f7; color: #1c2024; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; }
+    a { color: #2563eb; text-decoration: none; }
+    header { background: #fff; border-bottom: 3px solid #16365c; padding: 20px 32px 16px;
+      display: flex; align-items: baseline; gap: 20px; flex-wrap: wrap; }
+    .brand { font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+      font-size: 24px; font-weight: 700; color: #16365c; }
+    .brand em { font-style: normal; color: #2563eb; }
+    .loc { font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+      font-size: 20px; color: #1c2024; font-style: italic; }
+    .head-meta { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip { font-size: 11px; letter-spacing: 0.5px; padding: 4px 11px; border-radius: 999px;
+      background: #f0efec; color: #55606c; font-weight: 600; white-space: nowrap; }
+    .chip.blue { background: #e4edfb; color: #2563eb; }
+    .alert-strip { background: #fef2f2; border-left: 4px solid #dc2626; border-bottom: 1px solid #e7e5e0;
+      padding: 12px 32px; }
+    .alert-strip b { color: #b91c1c; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; }
+    .alert-strip span { color: #55606c; font-size: 12.5px; margin-left: 10px; }
+    .assess { background: #fff; border-bottom: 1px solid #e7e5e0; padding: 15px 32px;
+      display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+      box-shadow: 0 1px 2px rgba(28,32,36,0.03); }
+    .assess-label { font-size: 10.5px; letter-spacing: 2.5px; color: #98a1ab; font-weight: 700; }
+    .conf-badge { font-size: 10.5px; font-weight: 700; letter-spacing: 1px;
+      padding: 4px 11px; border-radius: 999px; }
+    .assess-text { font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+      font-size: 15.5px; color: #1c2024; }
+    .assess-basis { font-size: 11.5px; color: #98a1ab; }
+    main { padding: 24px 32px; display: grid; grid-template-columns: 1.55fr 1fr; gap: 20px;
+      max-width: 1280px; margin: 0 auto; }
+    .card { background: #fff; border: 1px solid #e7e5e0; border-radius: 10px;
+      box-shadow: 0 1px 3px rgba(28,32,36,0.05), 0 8px 24px rgba(28,32,36,0.04); overflow: hidden; }
+    .card-head { padding: 13px 18px; display: flex; align-items: baseline;
+      justify-content: space-between; gap: 12px; border-bottom: 1px solid #e7e5e0; }
+    .card-title { font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+      font-size: 15.5px; font-weight: 700; color: #16365c; }
+    .card-sub { font-size: 11.5px; color: #98a1ab; text-align: right; }
+    .full { grid-column: 1 / -1; }
+    /* timeline */
+    .density { padding: 16px 22px 6px; }
+    .weeks { display: flex; gap: 16px; align-items: flex-end; height: 136px; padding: 0 6px; }
+    .wk { flex: 1; display: flex; flex-direction: column-reverse; gap: 2px; cursor: pointer;
+      border-radius: 6px; padding: 5px 26px; transition: background .15s, box-shadow .15s; }
+    .wk:hover { background: #f5f4f1; }
+    .wk.sel { background: #eef3fa; box-shadow: inset 0 0 0 1.5px #2563eb; }
+    .wk i { display: block; border-radius: 2px; }
+    .wk-labels { display: flex; gap: 16px; padding: 7px 6px 0; }
+    .wk-label { flex: 1; text-align: center; }
+    .wk-label b { display: block; font-size: 11px; color: #55606c; font-weight: 600; }
+    .wk-label span { font-size: 10px; color: #98a1ab; }
+    .wk-days { display: none; margin-top: 12px; background: #fafbfc; border: 1px solid #e7e5e0;
+      border-radius: 8px; padding: 12px 16px 8px; }
+    .wk-days.open { display: block; animation: openup .2s ease; }
+    @keyframes openup { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+    .wk-days-title { font-size: 11px; font-weight: 700; color: #16365c; margin-bottom: 8px; }
+    .wk-days-title a { float: right; font-size: 11px; font-weight: 600; cursor: pointer; }
+    .day-strip { display: flex; gap: 8px; align-items: flex-end; height: 52px; }
+    .day { flex: 1; display: flex; flex-direction: column-reverse; gap: 1px; }
+    .day i { display: block; border-radius: 1.5px; }
+    .day.empty i { height: 3px; background: #e7e5e0; }
+    .day-axis { display: flex; gap: 8px; padding-top: 5px; }
+    .day-axis span { flex: 1; text-align: center; font-size: 9.5px; color: #98a1ab; }
+    .density-legend { display: flex; gap: 13px; padding: 10px 6px 8px; font-size: 10.5px; color: #55606c; }
+    .density-legend i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; margin-right: 4px; }
+    /* event log */
+    .feed { border-top: 1px solid #e7e5e0; }
+    .feed.filtered .ev { display: none; }
+    .feed.filtered .ev.show { display: grid; }
+    .ev { display: grid; grid-template-columns: 76px 12px 1fr auto; gap: 0 14px; align-items: center;
+      padding: 11px 22px; border-bottom: 1px solid #f1efeb; transition: background .1s; color: inherit; }
+    .ev:last-child { border-bottom: none; }
+    .ev:hover { background: #fafbfc; }
+    .ev-date { font-size: 11px; color: #98a1ab; font-weight: 600; white-space: nowrap; }
+    .ev-mark { width: 10px; height: 10px; border-radius: 50%; border: 2px solid #fff;
+      box-shadow: 0 1px 3px rgba(28,32,36,.25); }
+    .ev-main { min-width: 0; }
+    .ev-title { display: block; font-size: 13px; color: #1c2024; font-weight: 500; line-height: 1.35;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ev-tags { display: flex; gap: 6px; margin-top: 3px; align-items: center; }
+    .sev-pill { font-size: 9.5px; letter-spacing: 1px; font-weight: 700; padding: 1px 8px; border-radius: 999px; }
+    .type-tag { font-size: 10.5px; color: #55606c; background: #f0efec; padding: 1px 9px;
+      border-radius: 999px; font-weight: 600; }
+    .ev-meta { font-size: 11px; color: #98a1ab; white-space: nowrap; display: flex; gap: 8px; align-items: center; }
+    .grade { font-family: 'Cascadia Mono', Consolas, monospace; font-weight: 700; font-size: 10.5px;
+      color: #16365c; background: #e8eef5; border-radius: 4px; padding: 1px 6px; }
+    /* glance */
+    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #e7e5e0;
+      border-bottom: 1px solid #e7e5e0; }
+    .stat { background: #fff; padding: 16px 18px; }
+    .stat-num { font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+      font-size: 30px; font-weight: 700; color: #16365c; line-height: 1.1; }
+    .stat-label { font-size: 11px; color: #98a1ab; margin-top: 3px; }
+    .types { padding: 14px 18px 16px; display: flex; flex-direction: column; gap: 9px; }
+    .type-row { display: grid; grid-template-columns: 96px 1fr 22px; gap: 12px; align-items: center; }
+    .type-name { font-size: 12px; color: #55606c; font-weight: 600; }
+    .type-bar { height: 7px; background: #f0efec; border-radius: 999px; overflow: hidden; }
+    .type-bar i { display: block; height: 100%; border-radius: 999px; }
+    .type-n { font-size: 11.5px; color: #98a1ab; text-align: right; font-weight: 600; }
+    /* tables */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { text-align: left; font-size: 10.5px; letter-spacing: 1.5px; color: #98a1ab; font-weight: 700;
+      padding: 10px 18px; border-bottom: 2px solid #e7e5e0; }
+    td { padding: 9px 18px; border-bottom: 1px solid #f1efeb; color: #55606c; }
+    td:first-child { color: #1c2024; font-weight: 500; }
+    tr:hover td { background: #fafbfc; }
+    .rel { font-family: 'Cascadia Mono', Consolas, monospace; font-weight: 700; font-size: 11px;
+      padding: 2px 8px; border-radius: 999px; }
+    td.num { font-family: 'Cascadia Mono', Consolas, monospace; text-align: right; font-size: 12px; }
+    .table-note { padding: 12px 18px 14px; font-size: 10.5px; color: #98a1ab; line-height: 1.5; }
+    footer { color: #98a1ab; font-size: 11px; padding: 10px 32px 26px; text-align: center; }
+"""
+
 _DASH_TMPL = """\
 <!DOCTYPE html>
 <html lang="en">
@@ -653,80 +663,47 @@ _DASH_TMPL = """\
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GeoWatch — __LOCATION__</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: #0d1117;
-      color: #ffffff;
-      font-family: 'Courier New', Courier, monospace;
-    }
-    header {
-      border-bottom: 1px solid #1e2535;
-      padding: 18px 28px;
-    }
-    h1 {
-      color: #44aaff;
-      font-size: 1.1rem;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-    }
-    .section-label {
-      background: #11151c;
-      border-top: 1px solid #1e2535;
-      border-bottom: 1px solid #1e2535;
-      color: #4a6080;
-      font-size: 0.7rem;
-      letter-spacing: 3px;
-      padding: 8px 28px;
-      text-transform: uppercase;
-    }
-    .chart-wrap {
-      background: #0d1117;
-      padding: 24px 28px;
-    }
-    .chart-wrap img {
-      display: block;
-      max-width: 100%;
-      width: 100%;
-    }
-    footer {
-      border-top: 1px solid #1e2535;
-      color: #2a3a4a;
-      font-size: 0.7rem;
-      letter-spacing: 1px;
-      padding: 14px 28px;
-      text-align: center;
-    }
-  </style>
+  <style>""" + _SHARED_CSS + """</style>
 </head>
 <body>
   __ALERT__
   <header>
-    <h1>GeoWatch &mdash; __LOCATION__ &mdash; last __DAYS__ days</h1>
+    <div class="brand">Geo<em>Watch</em></div>
+    <div class="loc">__LOCATION__ &mdash; last __DAYS__ days</div>
+    <div class="head-meta">
+      <span class="chip">__NREPORTS__ reports</span>
+      <span class="chip">__NOUTLETS__ outlets</span>
+      <span class="chip blue">Generated __TIMESTAMP__</span>
+    </div>
   </header>
 
   __ASSESSMENT__
 
-  <div>
-    <div class="section-label">Interactive Map &mdash; click cluster to expand individual events</div>
-    __MAP__
-  </div>
-
-  <div>
-    <div class="section-label">Severity Escalation Timeline</div>
-    <div class="chart-wrap">
-      <img src="data:image/png;base64,__TIMELINE__" alt="Severity Timeline">
+  <main>
+    <div class="card">
+      <div class="card-head"><span class="card-title">Operational Map</span><span class="card-sub">Clustered &middot; click a marker for the article</span></div>
+      __MAP__
     </div>
-  </div>
 
-  <div>
-    <div class="section-label">Event Type Swimlane &mdash; click a dot to see article details</div>
-    __SWIMLANE__
-  </div>
+    <div class="card">
+      <div class="card-head"><span class="card-title">Situation at a Glance</span><span class="card-sub">This reporting period</span></div>
+      __GLANCE__
+    </div>
 
-  __ENTITY_SECTION__
+    <div class="card full">
+      <div class="card-head"><span class="card-title">Event Timeline</span><span class="card-sub">One bar per week, stacked by severity &middot; click a week to see its days and events</span></div>
+      __TIMELINE__
+    </div>
 
-  <footer>Generated by GeoWatch &mdash; __TIMESTAMP__</footer>
+    __ENTITY_SECTION__
+
+    <div class="card full">
+      <div class="card-head"><span class="card-title">Sourcing &amp; Reliability</span><span class="card-sub">NATO Admiralty System</span></div>
+      __SOURCING__
+    </div>
+  </main>
+
+  <footer>Generated by GeoWatch &mdash; open-source geospatial intelligence &mdash; __TIMESTAMP__</footer>
 </body>
 </html>"""
 
@@ -739,8 +716,11 @@ def _entity_section_html(events: list[dict], title: str = "",
         return ""
     graph = render_entity_graph_html(cooc, title, graph_id=graph_id)
     return (
-        '<div class="section-label">Entity Co-occurrence Network</div>'
-        f'<div style="background:#0d1117;padding:0 0 8px;">{graph}</div>'
+        '<div class="card full">'
+        '<div class="card-head"><span class="card-title">Entity Co-occurrence Network</span>'
+        '<span class="card-sub">Node size = mentions &middot; color = worst associated severity</span></div>'
+        f'<div style="background:#fff;">{graph}</div>'
+        '</div>'
     )
 
 
@@ -759,52 +739,60 @@ def _entity_grid_html(
         return ""
 
     graph_a = render_entity_graph_html(cooc_a, loc_a, graph_id="ega") if has_a else (
-        f'<div style="color:#3a4a5a;font-size:11px;padding:24px;text-align:center;">'
+        f'<div style="color:#98a1ab;font-size:12px;padding:24px;text-align:center;">'
         f'Not enough entity data for {loc_a}</div>'
     )
     graph_b = render_entity_graph_html(cooc_b, loc_b, graph_id="egb") if has_b else (
-        f'<div style="color:#3a4a5a;font-size:11px;padding:24px;text-align:center;">'
+        f'<div style="color:#98a1ab;font-size:12px;padding:24px;text-align:center;">'
         f'Not enough entity data for {loc_b}</div>'
     )
 
     return (
-        '<div class="section-label">Entity Co-occurrence Networks</div>'
-        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;'
-        'background:#1e2535;">'
-        f'<div style="background:#0d1117;">{graph_a}</div>'
-        f'<div style="background:#0d1117;">{graph_b}</div>'
-        '</div>'
+        '<div class="card full">'
+        '<div class="card-head"><span class="card-title">Entity Co-occurrence Networks</span>'
+        '<span class="card-sub">Node size = mentions &middot; color = worst associated severity</span></div>'
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#e7e5e0;">'
+        f'<div style="background:#fff;">{graph_a}</div>'
+        f'<div style="background:#fff;">{graph_b}</div>'
+        '</div></div>'
     )
 
 
 _TREND_OUTLOOK = {
-    "Situation escalating":  ("Continued elevated activity over the near term is likely (55–80%).", "#ef4444"),
-    "Situation stabilizing": ("Renewed near-term escalation is unlikely (20–45%).", "#2ea44f"),
-    "Situation stable":      ("A significant near-term shift in tempo is unlikely (20–45%).", "#e3b341"),
-    "No data":               ("Insufficient reporting to assess trend.", "#4a6080"),
+    "Situation escalating":  "Continued elevated activity over the near term is likely (55–80%).",
+    "Situation stabilizing": "Renewed near-term escalation is unlikely (20–45%).",
+    "Situation stable":      "A significant near-term shift in tempo is unlikely (20–45%).",
+    "No data":               "Insufficient reporting to assess trend.",
+}
+
+_CONF_PILL = {
+    "high":     ("#1a7f37", "#d3f2dd"),
+    "moderate": ("#9a6700", "#fbedc0"),
+    "low":      ("#b91c1c", "#fcd9d9"),
 }
 
 
 def _assessment_html(events: list[dict], days: int) -> str:
     """Return the ICD 203 analytic assessment strip for the dashboard header."""
     trend = _compute_trend(events, days)
-    outlook, color = _TREND_OUTLOOK.get(trend, _TREND_OUTLOOK["No data"])
+    outlook = _TREND_OUTLOOK.get(trend, _TREND_OUTLOOK["No data"])
     confidence, basis = assess_confidence(events)
+    pt, pb = _CONF_PILL.get(confidence, _CONF_PILL["low"])
 
     if trend == "No data":
         assessment = outlook
+        badge = ""
     else:
-        assessment = (
-            f"We assess with {confidence.upper()} confidence: {trend.lower()}. {outlook}"
-        )
+        assessment = f"{trend}. {outlook}"
+        badge = (f'<span class="conf-badge" style="color:{pt};background:{pb}">'
+                 f'{confidence.upper()} CONFIDENCE</span>')
 
     return (
-        '<div style="background:#11151c;border-bottom:1px solid #1e2535;'
-        'padding:14px 28px;display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;">'
-        '<span style="color:#4a6080;font-size:0.7rem;letter-spacing:3px;'
-        'text-transform:uppercase;">Analytic Assessment</span>'
-        f'<span style="color:{color};font-size:0.85rem;">{assessment}</span>'
-        f'<span style="color:#3a4a5a;font-size:0.68rem;">Basis: {basis}. '
+        '<div class="assess">'
+        '<span class="assess-label">ANALYTIC ASSESSMENT</span>'
+        f'{badge}'
+        f'<span class="assess-text">{assessment}</span>'
+        f'<span class="assess-basis">Basis: {basis}. '
         'Estimative language per ICD 203; source grades per NATO Admiralty System.</span>'
         '</div>'
     )
@@ -820,18 +808,18 @@ def build_dashboard(events: list[dict], location: str, days: int,
         pct_str = f"{alert['pct'] * 100:.0f}%"
         thr     = alert["threshold"].upper()
         alert_html = (
-            '<div style="background:#1c0a0a;border-bottom:2px solid #ef4444;'
-            'padding:12px 28px;display:flex;align-items:center;gap:14px;">'
-            '<span style="color:#ef4444;font-size:1.3rem;">&#9888;</span>'
-            '<div>'
-            f'<div style="color:#ef4444;font-size:0.75rem;letter-spacing:2px;'
-            f'text-transform:uppercase;font-weight:bold;">'
-            f'Alert: Elevated Activity — {location}</div>'
-            f'<div style="color:#8aa0ba;font-size:0.72rem;margin-top:2px;">'
-            f'{pct_str} of events in the last 7 days rated {thr} or above '
-            f'({alert["count"]}/{alert["total"]} events)</div>'
-            '</div></div>'
+            '<div class="alert-strip">'
+            f'<b>&#9888; Alert: Elevated Activity — {location}</b>'
+            f'<span>{pct_str} of events in the last 7 days rated {thr} or above '
+            f'({alert["count"]}/{alert["total"]} events)</span>'
+            '</div>'
         )
+
+    analyzed = [e for e in events if e.get("analysis")]
+    outlets  = {
+        (e.get("article", {}).get("source") or "").strip()
+        for e in analyzed if e.get("article", {}).get("source")
+    }
 
     return (
         _DASH_TMPL
@@ -839,9 +827,12 @@ def build_dashboard(events: list[dict], location: str, days: int,
         .replace("__ASSESSMENT__", _assessment_html(events, days))
         .replace("__LOCATION__",   location)
         .replace("__DAYS__",       str(days))
-        .replace("__MAP__",      _map_iframe(events, location))
-        .replace("__TIMELINE__", severity_timeline_b64(events, days))
-        .replace("__SWIMLANE__",        event_swimlane_html(events, days))
+        .replace("__NREPORTS__",   str(len(analyzed)))
+        .replace("__NOUTLETS__",   str(len(outlets)))
+        .replace("__MAP__",             _map_iframe(events, location))
+        .replace("__GLANCE__",          _glance_html(events))
+        .replace("__TIMELINE__",        _timeline_html(events, days))
+        .replace("__SOURCING__",        _sourcing_table_html(events))
         .replace("__ENTITY_SECTION__",  _entity_section_html(events))
         .replace("__TIMESTAMP__",       timestamp)
     )
@@ -849,37 +840,8 @@ def build_dashboard(events: list[dict], location: str, days: int,
 
 # ── Comparison mode ───────────────────────────────────────────────────────────
 
-_BLUES = {"low": "#a5f3fc", "medium": "#22d3ee", "high": "#0891b2", "critical": "#155e75"}
-_REDS  = {"low": "#fed7aa", "medium": "#fb923c", "high": "#ea580c", "critical": "#7c2d12"}
-_COLOR_A = "#22d3ee"   # teal  — used in summary/CSS
-_COLOR_B = "#fb923c"   # orange — used in summary/CSS
-
-
-def _ns_swimlane(html: str, ns: str) -> str:
-    """Replace all sw-prefixed IDs, classes, and function names with a namespaced prefix."""
-    for old, new in [
-        # Hyphenated element IDs — longer match first so sw-svg-line beats sw-svg
-        ("sw-svg-line",     f"{ns}-svg-line"),
-        ("sw-svg",          f"{ns}-svg"),
-        ("sw-popup",        f"{ns}-popup"),
-        ("sw-img",          f"{ns}-img"),
-        ("sw-badge",        f"{ns}-badge"),
-        ("sw-title",        f"{ns}-title"),
-        ("sw-sum",          f"{ns}-sum"),
-        ("sw-meta",         f"{ns}-meta"),
-        ("sw-dot",          f"{ns}-dot"),
-        ("sw-scroll",       f"{ns}-scroll"),
-        # Global function names — replace window.swX before bare swX() call sites
-        ("window.swImgErr", f"window.swImgErr_{ns}"),
-        ("window.swOpen",   f"window.swOpen_{ns}"),
-        ("window.swShow",   f"window.swShow_{ns}"),
-        # Inline call sites in HTML attributes
-        ("swImgErr()",      f"swImgErr_{ns}()"),
-        ("swOpen(event)",   f"swOpen_{ns}(event)"),
-        ("swShow(",         f"swShow_{ns}("),
-    ]:
-        html = html.replace(old, new)
-    return html
+_COLOR_A = "#0e7490"   # teal  — location A accent in summary/CSS
+_COLOR_B = "#c2410c"   # burnt orange — location B accent in summary/CSS
 
 
 def _compute_trend(events: list[dict], days: int) -> str:
@@ -982,15 +944,15 @@ def _comparison_severity_b64(
         for sp in ax.spines.values():
             sp.set_visible(False)
         ax.spines["bottom"].set_visible(True)
-        ax.spines["bottom"].set_color(_GRID)
+        ax.spines["bottom"].set_color(_RULE)
         ax.set_axisbelow(True)
-        ax.yaxis.grid(True, color=_GRID, linewidth=0.8)
+        ax.yaxis.grid(True, color=_RULE, linewidth=0.8)
         ax.text(0.01, 0.94, title, transform=ax.transAxes,
                 color=_TEXT, fontsize=11, fontweight="bold",
                 va="top", ha="left")
 
-    ax_a.legend(loc="upper right", framealpha=0.15, facecolor="#1a2030",
-                edgecolor=_GRID, labelcolor=_TEXT, fontsize=9)
+    ax_a.legend(loc="upper right", framealpha=0.9, facecolor="#ffffff",
+                edgecolor=_RULE, labelcolor=_TEXT, fontsize=9)
     ax_b.set_xticks(x)
     ax_b.set_xticklabels(week_labels, color=_TEXT, fontsize=8)
 
@@ -1027,7 +989,7 @@ def _combined_map_iframe(
         zoom = 2
 
     m = folium.Map(location=(mid_lat, mid_lon), zoom_start=zoom,
-                   tiles="CartoDB dark_matter")
+                   tiles="CartoDB positron")
 
     cluster_a = MarkerCluster(name=loc_a).add_to(m)
     cluster_b = MarkerCluster(name=loc_b).add_to(m)
@@ -1039,7 +1001,7 @@ def _combined_map_iframe(
             if not analysis:
                 continue
             sev   = analysis.get("severity", "low").lower()
-            color = _SEV_CSS.get(sev, "#4af")
+            color = _SEV_CSS.get(sev, _BLUE)
             data_attrs = " ".join(
                 f'data-{k}="{_html.escape(str(v))}"'
                 for k, v in {
@@ -1058,15 +1020,15 @@ def _combined_map_iframe(
                 icon_html = (
                     f'<div class="gw-marker" {data_attrs} '
                     f'style="width:13px;height:13px;border-radius:50%;cursor:pointer;'
-                    f'background:{color};border:2px solid rgba(255,255,255,0.6);'
-                    f'box-shadow:0 0 5px {color};"></div>'
+                    f'background:{color};border:2px solid #fff;'
+                    f'box-shadow:0 1px 4px rgba(28,32,36,0.35);"></div>'
                 )
             else:  # ring
                 icon_html = (
                     f'<div class="gw-marker" {data_attrs} '
                     f'style="width:15px;height:15px;border-radius:50%;cursor:pointer;'
-                    f'background:transparent;border:3px solid {color};'
-                    f'box-shadow:0 0 6px {color};"></div>'
+                    f'background:#fff;border:3px solid {color};'
+                    f'box-shadow:0 1px 4px rgba(28,32,36,0.35);"></div>'
                 )
             folium.Marker(
                 location=center,
@@ -1080,25 +1042,25 @@ def _combined_map_iframe(
     # Legend: severity + location identity key
     legend_html = (
         '<div style="position:fixed;bottom:20px;left:20px;z-index:9998;'
-        'background:rgba(13,17,23,0.92);border:1px solid #263040;border-radius:6px;'
-        'padding:10px 14px;font-family:\'Courier New\',monospace;font-size:10px;'
-        'color:#8aa0ba;line-height:1.9;">'
-        '<div style="color:#4a6080;font-size:9px;letter-spacing:2px;'
-        'text-transform:uppercase;margin-bottom:6px;">Severity</div>'
+        'background:rgba(255,255,255,0.94);border:1px solid #e7e5e0;border-radius:8px;'
+        'padding:10px 14px;font-family:\'Segoe UI\',system-ui,sans-serif;font-size:11px;'
+        'color:#55606c;line-height:1.9;box-shadow:0 2px 8px rgba(28,32,36,0.1);">'
+        '<div style="color:#16365c;font-size:9.5px;letter-spacing:1.5px;font-weight:700;'
+        'text-transform:uppercase;margin-bottom:4px;">Severity</div>'
         + "".join(
             f'<div><span style="display:inline-block;width:10px;height:10px;'
             f'border-radius:50%;background:{_SEV_CSS[s]};margin-right:6px;'
             f'vertical-align:middle;"></span>{s.capitalize()}</div>'
             for s in reversed(_SEV_ORDER)
         )
-        + '<div style="border-top:1px solid #263040;margin:7px 0 5px;"></div>'
-        '<div style="color:#4a6080;font-size:9px;letter-spacing:2px;'
-        'text-transform:uppercase;margin-bottom:5px;">Location</div>'
+        + '<div style="border-top:1px solid #e7e5e0;margin:7px 0 5px;"></div>'
+        '<div style="color:#16365c;font-size:9.5px;letter-spacing:1.5px;font-weight:700;'
+        'text-transform:uppercase;margin-bottom:4px;">Location</div>'
         f'<div><span style="display:inline-block;width:12px;height:12px;'
-        f'border-radius:50%;background:#888;border:2px solid rgba(255,255,255,0.6);'
+        f'border-radius:50%;background:#98a1ab;border:2px solid #fff;'
         f'margin-right:6px;vertical-align:middle;"></span>{loc_a} (solid)</div>'
         f'<div><span style="display:inline-block;width:12px;height:12px;'
-        f'border-radius:50%;background:transparent;border:3px solid #888;'
+        f'border-radius:50%;background:transparent;border:3px solid #98a1ab;'
         f'margin-right:6px;vertical-align:middle;"></span>{loc_b} (ring)</div>'
         '</div>'
     )
@@ -1106,6 +1068,15 @@ def _combined_map_iframe(
 
     # Reuse the same pull-out card + JS from _map_iframe
     m.get_root().html.add_child(Element("""
+<style>
+.marker-cluster-small, .marker-cluster-medium, .marker-cluster-large { background: rgba(22,54,92,0.25) !important; }
+.marker-cluster-small div, .marker-cluster-medium div, .marker-cluster-large div {
+  background: rgba(22,54,92,0.9) !important; color: #fff !important;
+  font-family: 'Segoe UI', system-ui, sans-serif !important; font-weight: 600;
+}
+.marker-cluster span { color: #fff !important; }
+.leaflet-container { font-family: 'Segoe UI', system-ui, sans-serif; }
+</style>
 <svg id="gw-svg" style="position:fixed;top:0;left:0;width:100vw;height:100vh;
   pointer-events:none;z-index:9997;overflow:visible;">
   <line id="gw-line" x1="0" y1="0" x2="0" y2="0"
@@ -1114,7 +1085,7 @@ def _combined_map_iframe(
 <div id="gw-card" style="display:none;position:fixed;z-index:9999;width:200px;
   background:#fff;border-radius:8px;
   box-shadow:0 4px 20px rgba(0,0,0,0.22),0 0 0 1px rgba(0,0,0,0.07);
-  overflow:hidden;font-family:'Courier New',monospace;" onclick="event.stopPropagation()">
+  overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;" onclick="event.stopPropagation()">
   <div style="position:relative;width:100%;height:100px;">
     <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:#f0f2f5;
       display:flex;align-items:center;justify-content:center;
@@ -1136,7 +1107,7 @@ def _combined_map_iframe(
 </div>
 <script>
 (function(){
-  var SEV={low:'#2ea44f',medium:'#e3b341',high:'#f97316',critical:'#ef4444'};
+  var SEV={low:'#1a7f37',medium:'#d4a72c',high:'#ea7317',critical:'#dc2626'};
   var PW=200,M=12,GAP=14,curUrl='',activeEl=null;
   function hide(){
     document.getElementById('gw-card').style.display='none';
@@ -1266,17 +1237,17 @@ def _comparison_summary_html(
         out = ""
         for etype, cnt in sorted(stats["evt"].items(), key=lambda x: -x[1])[:6]:
             pct   = cnt / total * 100
-            label = etype.replace("_", " ")
+            label = etype.replace("_", " ").capitalize()
             out += (
-                f'<div style="margin-bottom:6px;">'
+                f'<div style="margin-bottom:7px;">'
                 f'<div style="display:flex;justify-content:space-between;'
-                f'color:#8aa0ba;font-size:10px;margin-bottom:3px;">'
+                f'color:#55606c;font-size:11px;margin-bottom:3px;">'
                 f'<span>{label}</span><span>{cnt}</span></div>'
-                f'<div style="background:#0d1117;border-radius:3px;height:5px;">'
-                f'<div style="background:{accent};border-radius:3px;height:5px;'
+                f'<div style="background:#f0efec;border-radius:999px;height:6px;">'
+                f'<div style="background:{accent};border-radius:999px;height:6px;'
                 f'width:{pct:.1f}%;"></div></div></div>'
             )
-        return out or '<div style="color:#3a4a5a;font-size:10px;">No data</div>'
+        return out or '<div style="color:#98a1ab;font-size:11px;">No data</div>'
 
     bullets = []
     if sa["avg"] > sb["avg"] + 0.3:
@@ -1315,36 +1286,34 @@ def _comparison_summary_html(
         bullets.append("Both regions show escalating trends")
 
     bullets_html = "".join(
-        f'<li style="margin-bottom:8px;color:#c8d6e5;font-size:11px;">{b}</li>'
+        f'<li style="margin-bottom:8px;color:#55606c;font-size:12.5px;">{b}</li>'
         for b in bullets
     )
 
     return f"""
-<div style="background:#1a1f2e;border:1px solid #30363d;border-radius:8px;
-  padding:24px 28px;margin:0 0 24px;">
-  <div style="color:#44aaff;font-size:0.7rem;letter-spacing:3px;
-    text-transform:uppercase;margin-bottom:20px;">Comparison Summary</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:20px;">
+<div class="card full">
+  <div class="card-head"><span class="card-title">Comparison Summary</span></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;padding:18px 22px;">
     <div>
-      <div style="color:{_COLOR_A};font-size:13px;font-weight:bold;margin-bottom:8px;">{loc_a}</div>
-      <div style="color:#8aa0ba;font-size:11px;margin-bottom:12px;">
+      <div style="color:{_COLOR_A};font-size:14px;font-weight:700;margin-bottom:6px;">{loc_a}</div>
+      <div style="color:#98a1ab;font-size:11.5px;margin-bottom:12px;">
         {sa['total']} articles &middot; {_tag(ta)}</div>
-      <div style="color:#4a6080;font-size:9px;letter-spacing:1px;
-        text-transform:uppercase;margin-bottom:8px;">Event breakdown</div>
+      <div style="color:#98a1ab;font-size:10px;letter-spacing:1.5px;
+        text-transform:uppercase;font-weight:700;margin-bottom:8px;">Event breakdown</div>
       {_bars(sa, _COLOR_A)}
     </div>
     <div>
-      <div style="color:{_COLOR_B};font-size:13px;font-weight:bold;margin-bottom:8px;">{loc_b}</div>
-      <div style="color:#8aa0ba;font-size:11px;margin-bottom:12px;">
+      <div style="color:{_COLOR_B};font-size:14px;font-weight:700;margin-bottom:6px;">{loc_b}</div>
+      <div style="color:#98a1ab;font-size:11.5px;margin-bottom:12px;">
         {sb['total']} articles &middot; {_tag(tb)}</div>
-      <div style="color:#4a6080;font-size:9px;letter-spacing:1px;
-        text-transform:uppercase;margin-bottom:8px;">Event breakdown</div>
+      <div style="color:#98a1ab;font-size:10px;letter-spacing:1.5px;
+        text-transform:uppercase;font-weight:700;margin-bottom:8px;">Event breakdown</div>
       {_bars(sb, _COLOR_B)}
     </div>
   </div>
-  <div style="border-top:1px solid #30363d;padding-top:16px;">
-    <div style="color:#4a6080;font-size:9px;letter-spacing:1px;
-      text-transform:uppercase;margin-bottom:12px;">Key differences</div>
+  <div style="border-top:1px solid #e7e5e0;padding:14px 22px 18px;">
+    <div style="color:#98a1ab;font-size:10px;letter-spacing:1.5px;
+      text-transform:uppercase;font-weight:700;margin-bottom:10px;">Key differences</div>
     <ul style="list-style:disc;padding-left:20px;">{bullets_html}</ul>
   </div>
 </div>"""
@@ -1357,60 +1326,58 @@ _COMP_TMPL = """\
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GeoWatch &mdash; __LOC_A__ vs __LOC_B__</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0d1117; color: #fff;
-           font-family: 'Courier New', Courier, monospace; }
-    header { border-bottom: 1px solid #1e2535; padding: 18px 28px; }
-    h1 { color: #44aaff; font-size: 1.1rem; letter-spacing: 3px;
-         text-transform: uppercase; }
-    .subtitle { color: #4a6080; font-size: 0.75rem; letter-spacing: 2px; margin-top: 4px; }
-    .section-label { background: #11151c; border-top: 1px solid #1e2535;
-                     border-bottom: 1px solid #1e2535; color: #4a6080;
-                     font-size: 0.7rem; letter-spacing: 3px; padding: 8px 28px;
-                     text-transform: uppercase; }
-    .chart-wrap { background: #0d1117; padding: 24px 28px; }
+  <style>""" + _SHARED_CSS + """
+    .loc-a { color: """ + _COLOR_A + """; font-weight: 600; }
+    .loc-b { color: """ + _COLOR_B + """; font-weight: 600; }
+    .chart-wrap { padding: 18px 22px; }
     .chart-wrap img { display: block; max-width: 100%; width: 100%; }
-    .trend-row { display: flex; gap: 40px; padding: 10px 28px 16px;
-                 border-bottom: 1px solid #1e2535; }
-    .trend-cell { color: #8aa0ba; font-size: 0.78rem; letter-spacing: 1px; }
-    .loc-a { color: #22d3ee; }
-    .loc-b { color: #fb923c; }
-    .summary-wrap { padding: 24px 28px 0; }
-    footer { border-top: 1px solid #1e2535; color: #2a3a4a;
-             font-size: 0.7rem; letter-spacing: 1px;
-             padding: 14px 28px; text-align: center; }
+    .trend-row { display: flex; gap: 40px; padding: 0 22px 16px; }
+    .trend-cell { color: #55606c; font-size: 12.5px; }
   </style>
 </head>
 <body>
   <header>
-    <h1>GeoWatch &mdash; Comparative Analysis</h1>
-    <div class="subtitle">__LOC_A__ vs __LOC_B__ &mdash; last __DAYS__ days</div>
+    <div class="brand">Geo<em>Watch</em></div>
+    <div class="loc">__LOC_A__ vs __LOC_B__ &mdash; last __DAYS__ days</div>
+    <div class="head-meta">
+      <span class="chip blue">Comparative analysis &middot; __TIMESTAMP__</span>
+    </div>
   </header>
 
-  <div class="section-label">Combined Map &mdash; <span class="loc-a">__LOC_A__</span> solid &middot; <span class="loc-b">__LOC_B__</span> ring &middot; color = severity</div>
-  __COMBINED_MAP__
+  <main>
+    <div class="card full">
+      <div class="card-head"><span class="card-title">Combined Map</span>
+        <span class="card-sub"><span class="loc-a">__LOC_A__</span> solid &middot; <span class="loc-b">__LOC_B__</span> ring &middot; color = severity</span></div>
+      __COMBINED_MAP__
+    </div>
 
-  <div class="section-label">Severity Escalation &mdash; Overlaid Comparison</div>
-  <div class="chart-wrap">
-    <img src="data:image/png;base64,__COMP_TIMELINE__" alt="Comparison Timeline">
-  </div>
-  <div class="trend-row">
-    <div class="trend-cell"><span class="loc-a">__LOC_A__</span>: __TREND_A__</div>
-    <div class="trend-cell"><span class="loc-b">__LOC_B__</span>: __TREND_B__</div>
-  </div>
+    <div class="card full">
+      <div class="card-head"><span class="card-title">Severity Escalation</span><span class="card-sub">Weekly, stacked &middot; same scale for both</span></div>
+      <div class="chart-wrap">
+        <img src="data:image/png;base64,__COMP_TIMELINE__" alt="Comparison Timeline">
+      </div>
+      <div class="trend-row">
+        <div class="trend-cell"><span class="loc-a">__LOC_A__</span>: __TREND_A__</div>
+        <div class="trend-cell"><span class="loc-b">__LOC_B__</span>: __TREND_B__</div>
+      </div>
+    </div>
 
-  <div class="section-label"><span class="loc-a">__LOC_A__</span> &mdash; Event Swimlane</div>
-  __SWIMLANE_A__
+    <div class="card">
+      <div class="card-head"><span class="card-title"><span class="loc-a">__LOC_A__</span> &mdash; Event Log</span></div>
+      __LOG_A__
+    </div>
 
-  <div class="section-label"><span class="loc-b">__LOC_B__</span> &mdash; Event Swimlane</div>
-  __SWIMLANE_B__
+    <div class="card">
+      <div class="card-head"><span class="card-title"><span class="loc-b">__LOC_B__</span> &mdash; Event Log</span></div>
+      __LOG_B__
+    </div>
 
-  __ENTITY_GRID__
+    __ENTITY_GRID__
 
-  <div class="summary-wrap">__COMPARISON_SUMMARY__</div>
+    __COMPARISON_SUMMARY__
+  </main>
 
-  <footer>Generated by GeoWatch &mdash; __TIMESTAMP__</footer>
+  <footer>Generated by GeoWatch &mdash; open-source geospatial intelligence &mdash; __TIMESTAMP__</footer>
 </body>
 </html>"""
 
@@ -1431,9 +1398,6 @@ def build_comparison_dashboard(
         if "stabiliz" in t.lower(): return f"{t} ▼"
         return f"{t} ●"
 
-    swimlane_a = _ns_swimlane(event_swimlane_html(events_a, days), "swa")
-    swimlane_b = _ns_swimlane(event_swimlane_html(events_b, days), "swb")
-
     return (
         _COMP_TMPL
         .replace("__LOC_A__",              loc_a)
@@ -1445,8 +1409,8 @@ def build_comparison_dashboard(
                                                events_a, events_b, loc_a, loc_b, days))
         .replace("__TREND_A__",            _trend_label(trend_a))
         .replace("__TREND_B__",            _trend_label(trend_b))
-        .replace("__SWIMLANE_A__",         swimlane_a)
-        .replace("__SWIMLANE_B__",         swimlane_b)
+        .replace("__LOG_A__",              _event_log_html(events_a, days))
+        .replace("__LOG_B__",              _event_log_html(events_b, days))
         .replace("__ENTITY_GRID__",         _entity_grid_html(events_a, loc_a, events_b, loc_b))
         .replace("__COMPARISON_SUMMARY__", _comparison_summary_html(
                                                events_a, events_b, loc_a, loc_b, days))

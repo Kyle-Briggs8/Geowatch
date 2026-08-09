@@ -24,140 +24,145 @@ _INDEX_HTML = """<!DOCTYPE html>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: #0a0c10;
-      color: #c8d6e5;
-      font-family: 'Courier New', Courier, monospace;
+      background: #faf9f7;
+      color: #1c2024;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 48px 16px;
+      padding: 56px 16px;
     }
-    header { text-align: center; margin-bottom: 40px; }
+    header { text-align: center; margin-bottom: 36px; }
     h1 {
-      font-size: 2.2rem;
-      letter-spacing: 6px;
-      color: #4af;
-      text-transform: uppercase;
+      font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: #16365c;
     }
+    h1 em { font-style: normal; color: #2563eb; }
     .subtitle {
       margin-top: 6px;
-      font-size: 0.82rem;
-      color: #556;
-      letter-spacing: 2px;
+      font-size: 0.85rem;
+      color: #98a1ab;
+      letter-spacing: 1px;
     }
     form {
-      background: #11151c;
-      border: 1px solid #1e2535;
-      border-radius: 8px;
-      padding: 32px 36px;
+      background: #fff;
+      border: 1px solid #e7e5e0;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(28,32,36,0.05), 0 8px 24px rgba(28,32,36,0.05);
+      padding: 30px 34px;
       width: 100%;
       max-width: 520px;
     }
     label {
       display: block;
-      font-size: 0.78rem;
-      letter-spacing: 1.5px;
-      color: #7a90aa;
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      color: #55606c;
       text-transform: uppercase;
-      margin-bottom: 8px;
+      font-weight: 700;
+      margin-bottom: 7px;
     }
-    input[type="text"] {
+    input[type="text"], input[type="number"] {
       width: 100%;
-      background: #0d1117;
-      border: 1px solid #263040;
-      border-radius: 4px;
-      color: #e0eaf5;
+      background: #fff;
+      border: 1px solid #d8d5cf;
+      border-radius: 8px;
+      color: #1c2024;
       font-family: inherit;
       font-size: 1rem;
       padding: 10px 14px;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
-    input[type="text"]:focus { border-color: #4af; }
-    .slider-row { margin-top: 24px; }
+    input[type="text"]:focus, input[type="number"]:focus {
+      border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
+    .slider-row { margin-top: 22px; }
     .slider-label-row {
       display: flex;
       justify-content: space-between;
       margin-bottom: 8px;
+      align-items: baseline;
     }
-    .slider-val { color: #4af; font-size: 0.95rem; }
-    input[type="range"] { width: 100%; accent-color: #4af; }
+    .slider-val { color: #2563eb; font-size: 0.85rem; font-weight: 700; }
+    input[type="range"] { width: 100%; accent-color: #2563eb; }
     .mode-toggle {
-      display: flex;
-      margin-bottom: 20px;
-      border: 1px solid #263040;
-      border-radius: 3px;
-      overflow: hidden;
+      display: inline-flex;
+      margin-bottom: 22px;
+      background: #f0efec;
+      border-radius: 8px;
+      padding: 3px;
+      gap: 3px;
     }
     .mode-btn {
-      flex: 1;
-      background: #0d1117;
+      background: transparent;
       border: none;
-      color: #556;
+      color: #55606c;
       cursor: pointer;
       font-family: inherit;
-      font-size: 0.72rem;
-      letter-spacing: 1.5px;
+      font-size: 0.82rem;
+      font-weight: 600;
       margin-top: 0;
-      padding: 7px 0;
-      text-transform: uppercase;
+      padding: 7px 20px;
+      border-radius: 6px;
       transition: background 0.15s, color 0.15s;
       width: auto;
     }
-    .mode-btn.active { background: #1a3a5c; color: #4af; }
-    .max-row { margin-top: 24px; }
-    input[type="number"] {
-      width: 100%;
-      background: #0d1117;
-      border: 1px solid #263040;
-      border-radius: 4px;
-      color: #e0eaf5;
-      font-family: inherit;
-      font-size: 1rem;
-      padding: 10px 14px;
-      outline: none;
+    .mode-btn.active { background: #fff; color: #16365c; box-shadow: 0 1px 3px rgba(28,32,36,0.12); }
+    .max-row { margin-top: 22px; }
+    .demo-row {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    button {
-      margin-top: 28px;
+    .demo-row input { accent-color: #2563eb; cursor: pointer; width: 15px; height: 15px; }
+    .demo-row label { margin: 0; cursor: pointer; text-transform: none; font-size: 0.85rem;
+      font-weight: 500; letter-spacing: 0; color: #55606c; }
+    #submitBtn {
+      margin-top: 26px;
       width: 100%;
-      background: #1a3a5c;
-      border: 1px solid #4af;
-      border-radius: 4px;
-      color: #4af;
+      background: #16365c;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
       cursor: pointer;
       font-family: inherit;
-      font-size: 0.9rem;
-      letter-spacing: 2px;
-      padding: 12px;
-      text-transform: uppercase;
-      transition: background 0.2s, color 0.2s;
+      font-size: 0.92rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 13px;
+      transition: background 0.15s, transform 0.1s;
     }
-    button:hover { background: #4af; color: #000; }
+    #submitBtn:hover { background: #1d4675; transform: translateY(-1px); }
     .known {
-      margin-top: 14px;
-      font-size: 0.72rem;
-      color: #3a4a5a;
+      margin-top: 16px;
+      font-size: 0.75rem;
+      color: #98a1ab;
       text-align: center;
+      line-height: 1.6;
     }
     .error {
       margin-top: 20px;
-      background: #1c0a0a;
-      border: 1px solid #7a2020;
-      border-radius: 6px;
-      color: #e05050;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-left: 4px solid #dc2626;
+      border-radius: 8px;
+      color: #b91c1c;
       font-size: 0.85rem;
       padding: 14px 18px;
       width: 100%;
       max-width: 520px;
     }
 
-    /* ── Loading overlay ──────────────────────────── */
+    /* Loading overlay */
     #loader {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(10, 12, 16, 0.96);
+      background: rgba(250, 249, 247, 0.96);
       z-index: 9999;
       flex-direction: column;
       align-items: center;
@@ -167,28 +172,27 @@ _INDEX_HTML = """<!DOCTYPE html>
     .spinner {
       width: 52px;
       height: 52px;
-      border: 3px solid #1e2535;
-      border-top-color: #4af;
+      border: 3px solid #e7e5e0;
+      border-top-color: #2563eb;
       border-radius: 50%;
       animation: spin 0.85s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     #loader-title {
-      color: #4af;
-      font-size: 1rem;
-      letter-spacing: 4px;
-      text-transform: uppercase;
+      font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+      color: #16365c;
+      font-size: 1.3rem;
+      font-weight: 700;
     }
     #loader-sub {
-      color: #3a4a5a;
-      font-size: 0.72rem;
-      letter-spacing: 1px;
+      color: #98a1ab;
+      font-size: 0.78rem;
     }
   </style>
 </head>
 <body>
 
-  <!-- Loading overlay — shown by JS before form submit -->
+  <!-- Loading overlay: shown by JS before form submit -->
   <div id="loader">
     <div class="spinner"></div>
     <div id="loader-title">Analyzing...</div>
@@ -196,7 +200,7 @@ _INDEX_HTML = """<!DOCTYPE html>
   </div>
 
   <header>
-    <h1>GeoWatch</h1>
+    <h1>Geo<em>Watch</em></h1>
     <div class="subtitle">open-source geospatial intelligence</div>
   </header>
 
@@ -208,9 +212,9 @@ _INDEX_HTML = """<!DOCTYPE html>
     <!-- Mode toggle -->
     <div class="mode-toggle">
       <button type="button" class="mode-btn active" id="btnSingle"
-              onclick="setMode('single')">&#9632; Single</button>
+              onclick="setMode('single')">Single</button>
       <button type="button" class="mode-btn" id="btnCompare"
-              onclick="setMode('compare')">&#9707; Compare</button>
+              onclick="setMode('compare')">Compare</button>
     </div>
     <input type="hidden" id="mode" name="mode" value="single">
 
@@ -242,13 +246,12 @@ _INDEX_HTML = """<!DOCTYPE html>
              min="1" max="100" value="{{ max_articles or 5 }}">
     </div>
 
-    <div style="margin-top:20px;display:flex;align-items:center;gap:10px;">
-      <input type="checkbox" id="demo" name="demo" value="1"
-             style="accent-color:#4af;cursor:pointer;">
-      <label for="demo" style="margin:0;cursor:pointer;">Cached demo data &mdash; no live API calls</label>
+    <div class="demo-row">
+      <input type="checkbox" id="demo" name="demo" value="1">
+      <label for="demo">Cached demo data &mdash; no live API calls</label>
     </div>
 
-    <button type="button" id="submitBtn" onclick="submitWithLoader()">&#9654; Run Analysis</button>
+    <button type="button" id="submitBtn" onclick="submitWithLoader()">Run Analysis</button>
 
     <div class="known">Pre-mapped regions: {{ regions }}</div>
   </form>
@@ -261,7 +264,7 @@ _INDEX_HTML = """<!DOCTYPE html>
       document.getElementById('btnSingle').classList.toggle('active', !isCmp);
       document.getElementById('btnCompare').classList.toggle('active',  isCmp);
       document.getElementById('submitBtn').textContent =
-        isCmp ? '▷ Run Comparison' : '▶ Run Analysis';
+        isCmp ? 'Run Comparison' : 'Run Analysis';
       document.getElementById('location2').required = isCmp;
     }
 
@@ -273,17 +276,14 @@ _INDEX_HTML = """<!DOCTYPE html>
       if (!loc) { document.getElementById('location').focus(); return; }
       if (mode === 'compare' && !loc2) { document.getElementById('location2').focus(); return; }
 
-      var title = mode === 'compare'
-        ? loc.toUpperCase() + ' vs ' + loc2.toUpperCase()
-        : loc.toUpperCase();
+      var title = mode === 'compare' ? loc + ' vs ' + loc2 : loc;
       var sub = mode === 'compare'
-        ? 'fetching both regions · running llm analysis · building comparison dashboard'
-        : 'fetching up to ' + arts + ' articles · running llm analysis · building dashboard';
+        ? 'fetching both regions \u00b7 running llm analysis \u00b7 building comparison dashboard'
+        : 'fetching up to ' + arts + ' articles \u00b7 running llm analysis \u00b7 building dashboard';
 
       document.getElementById('loader-title').textContent = title;
       document.getElementById('loader-sub').textContent   = sub;
       document.getElementById('loader').style.display     = 'flex';
-
       document.getElementById('watchForm').action = mode === 'compare' ? '/compare' : '/analyze';
       setTimeout(function() { document.getElementById('watchForm').submit(); }, 60);
     }
@@ -320,34 +320,37 @@ _WAITING_HTML = """<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>GeoWatch — Analyzing {{ title }}...</title>
+  <title>GeoWatch &mdash; Analyzing {{ title }}...</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: #0a0c10;
-      color: #c8d6e5;
-      font-family: 'Courier New', Courier, monospace;
+      background: #faf9f7;
+      color: #1c2024;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 28px;
+      gap: 26px;
     }
     .spinner {
       width: 56px; height: 56px;
-      border: 3px solid #1e2535;
-      border-top-color: #4af;
+      border: 3px solid #e7e5e0;
+      border-top-color: #2563eb;
       border-radius: 50%;
       animation: spin 0.85s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .title { color: #4af; font-size: 1rem; letter-spacing: 4px; text-transform: uppercase; }
-    .sub   { color: #3a4a5a; font-size: 0.72rem; letter-spacing: 1px; }
-    .elapsed { color: #556; font-size: 0.68rem; margin-top: 6px; letter-spacing: 1px; }
+    .title {
+      font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+      color: #16365c; font-size: 1.4rem; font-weight: 700; text-align: center;
+    }
+    .sub   { color: #98a1ab; font-size: 0.78rem; text-align: center; }
+    .elapsed { color: #98a1ab; font-size: 0.72rem; margin-top: 6px; text-align: center; }
     .error-box {
-      background: #1c0a0a; border: 1px solid #7a2020; border-radius: 6px;
-      color: #e05050; font-size: 0.85rem; padding: 14px 18px;
+      background: #fef2f2; border: 1px solid #fecaca; border-left: 4px solid #dc2626;
+      border-radius: 8px; color: #b91c1c; font-size: 0.85rem; padding: 14px 18px;
       max-width: 480px; text-align: center;
     }
   </style>

@@ -22,32 +22,32 @@ REGION_COORDS: dict[str, tuple[float, float]] = {
 }
 
 _SEVERITY_COLOR = {
-    "low": "green",
-    "medium": "yellow",
-    "high": "orange",
-    "critical": "red",
+    "low": "#1a7f37",
+    "medium": "#d4a72c",
+    "high": "#ea7317",
+    "critical": "#dc2626",
 }
 
 _LEGEND_HTML = """
 <div style="
     position: fixed;
-    bottom: 30px;
-    left: 30px;
+    bottom: 24px;
+    left: 24px;
     z-index: 1000;
-    background: rgba(15, 15, 20, 0.88);
-    border: 1px solid #444;
-    border-radius: 6px;
-    padding: 12px 16px;
-    font-family: monospace;
-    font-size: 13px;
-    color: #e0e0e0;
-    min-width: 160px;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid #e7e5e0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 12px;
+    color: #55606c;
+    box-shadow: 0 2px 8px rgba(28,32,36,0.1);
 ">
-  <b style="color:#fff;letter-spacing:1px;">SEVERITY</b><br><br>
-  <span style="color:red;">&#9679;</span>&nbsp; Critical<br>
-  <span style="color:orange;">&#9679;</span>&nbsp; High<br>
-  <span style="color:gold;">&#9679;</span>&nbsp; Medium<br>
-  <span style="color:green;">&#9679;</span>&nbsp; Low
+  <b style="color:#16365c;font-size:10.5px;letter-spacing:1.5px;">SEVERITY</b><br>
+  <span style="color:#dc2626;">&#9679;</span>&nbsp; Critical<br>
+  <span style="color:#ea7317;">&#9679;</span>&nbsp; High<br>
+  <span style="color:#d4a72c;">&#9679;</span>&nbsp; Medium<br>
+  <span style="color:#1a7f37;">&#9679;</span>&nbsp; Low
 </div>
 """
 
@@ -64,7 +64,7 @@ def build_map(events: list[dict], location: str, output: str = "map.html") -> in
     m = folium.Map(
         location=center,
         zoom_start=zoom,
-        tiles="CartoDB dark_matter",
+        tiles="CartoDB positron",
     )
 
     plotted = 0

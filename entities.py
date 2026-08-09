@@ -5,12 +5,12 @@ from typing import Any
 
 
 _SEV_COLOR = {
-    "low":      "#2ea44f",
-    "medium":   "#e3b341",
-    "high":     "#f97316",
-    "critical": "#ef4444",
+    "low":      "#1a7f37",
+    "medium":   "#d4a72c",
+    "high":     "#ea7317",
+    "critical": "#dc2626",
 }
-_DEFAULT_NODE_COLOR = "#4af"
+_DEFAULT_NODE_COLOR = "#2563eb"
 _MAX_NODES    = 30
 _MIN_NODE_FREQ = 2
 _MIN_EDGE_WEIGHT = 2
@@ -148,22 +148,23 @@ def render_entity_graph_html(
     tooltip_id = f"{gid}-tooltip"
 
     header = (
-        f'<div style="color:#4a6080;font-size:0.7rem;letter-spacing:2px;'
-        f'text-transform:uppercase;padding:8px 16px 4px;">{title}</div>'
+        f'<div style="color:#98a1ab;font-size:11px;letter-spacing:1.5px;font-weight:700;'
+        f'text-transform:uppercase;padding:10px 18px 2px;">{title}</div>'
         if title else ""
     )
 
     return f"""{header}
-<div style="background:#0d1117;width:100%;position:relative;">
+<div style="background:#fff;width:100%;position:relative;">
 <svg id="{svg_id}" width="100%" height="360"
-     style="display:block;background:#0d1117;font-family:'Courier New',monospace;">
+     style="display:block;background:#fff;font-family:'Segoe UI',system-ui,sans-serif;">
   <g id="{edges_id}"></g>
   <g id="{nodes_id}"></g>
   <g id="{labels_id}"></g>
 </svg>
-<div id="{tooltip_id}" style="display:none;position:absolute;background:rgba(13,17,23,0.95);
-  border:1px solid #263040;border-radius:4px;padding:5px 9px;font-size:11px;
-  color:#c8d6e5;font-family:'Courier New',monospace;pointer-events:none;z-index:10;white-space:nowrap;">
+<div id="{tooltip_id}" style="display:none;position:absolute;background:rgba(255,255,255,0.97);
+  border:1px solid #e7e5e0;border-radius:6px;padding:5px 9px;font-size:11px;
+  color:#1c2024;font-family:'Segoe UI',system-ui,sans-serif;pointer-events:none;z-index:10;
+  white-space:nowrap;box-shadow:0 2px 8px rgba(28,32,36,0.12);">
 </div>
 </div>
 <script>
@@ -198,7 +199,7 @@ def render_entity_graph_html(
   var edgeEls = edges.map(function(e) {{
     var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     var op = 0.12 + 0.55 * (e.weight / MAX_WEIGHT);
-    line.setAttribute('stroke', '#4a6080');
+    line.setAttribute('stroke', '#98a1ab');
     line.setAttribute('stroke-opacity', op);
     line.setAttribute('stroke-width', 1 + 2 * (e.weight / MAX_WEIGHT));
     gEdges.appendChild(line);
@@ -210,8 +211,8 @@ def render_entity_graph_html(
     var circ = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     circ.setAttribute('r', r);
     circ.setAttribute('fill', n.color);
-    circ.setAttribute('fill-opacity', '0.85');
-    circ.setAttribute('stroke', 'rgba(255,255,255,0.22)');
+    circ.setAttribute('fill-opacity', '0.88');
+    circ.setAttribute('stroke', '#ffffff');
     circ.setAttribute('stroke-width', '1.5');
     circ.style.cursor = 'pointer';
     circ.addEventListener('mouseenter', function(ev) {{
@@ -229,8 +230,8 @@ def render_entity_graph_html(
   // Fix 3: truncate at 15 chars; full name shown on hover via circle tooltip
   var labelEls = nodes.map(function(n) {{
     var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    t.setAttribute('font-size', '9');
-    t.setAttribute('fill', '#8aa0ba');
+    t.setAttribute('font-size', '9.5');
+    t.setAttribute('fill', '#55606c');
     t.setAttribute('text-anchor', 'middle');
     t.setAttribute('pointer-events', 'none');
     var display = n.name.length > 15 ? n.name.slice(0, 14) + '…' : n.name;

@@ -62,12 +62,13 @@ class TestBuildEntityCooccurrence:
         assert len(result["nodes"]) <= 30
 
     def test_node_color_reflects_dominant_severity(self):
-        # critical events → node color should be red (#ef4444)
+        # critical events → node color should be the critical severity color
+        from entities import _SEV_COLOR
         events = [_make_event(["Leader"], severity="critical") for _ in range(3)]
         result = build_entity_cooccurrence(events)
         node = next((n for n in result["nodes"] if n["name"] == "Leader"), None)
         assert node is not None
-        assert node["color"] == "#ef4444"
+        assert node["color"] == _SEV_COLOR["critical"]
 
     def test_node_has_required_keys(self):
         events = [_make_event(["Ukraine", "NATO"]) for _ in range(3)]
