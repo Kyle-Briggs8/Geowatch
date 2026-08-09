@@ -14,6 +14,7 @@ from folium.plugins import MarkerCluster
 
 from mapper import REGION_COORDS, _LEGEND_HTML
 from entities import build_entity_cooccurrence, render_entity_graph_html
+from grading import assess_confidence, describe_grade, grade_event
 
 _SEV_ORDER = ["low", "medium", "high", "critical"]
 _SEV_WEIGHT = {"low": 1, "medium": 2, "high": 3, "critical": 4}
@@ -481,6 +482,8 @@ def _map_iframe(events: list[dict], location: str) -> str:
                 "image":  article.get("image_url") or "",
                 "sev":    sev,
                 "etype":  analysis.get("event_type", ""),
+                "grade":  grade_event(ev),
+                "gradedesc": describe_grade(grade_event(ev)),
             }.items()
         )
         icon_html = (
@@ -588,7 +591,9 @@ def _map_iframe(events: list[dict], location: str) -> str:
     badge.textContent=(d.etype||'').replace(/_/g,' ');
     badge.style.color=SEV[d.sev]||'#888';
     document.getElementById('gw-title').textContent=d.title||'';
-    document.getElementById('gw-meta').textContent=(d.source||'')+(d.date?' · '+d.date:'');
+    var meta=document.getElementById('gw-meta');
+    meta.textContent=(d.source||'')+(d.date?' · '+d.date:'')+(d.grade?' · '+d.grade:'');
+    meta.title=d.gradedesc||'';
     var col=SEV[d.sev]||'#888';
 
     card.style.display='block';card.style.visibility='hidden';
@@ -700,6 +705,8 @@ _DASH_TMPL = """\
     <h1>GeoWatch &mdash; __LOCATION__ &mdash; last __DAYS__ days</h1>
   </header>
 
+  __ASSESSMENT__
+
   <div>
     <div class="section-label">Interactive Map &mdash; click cluster to expand individual events</div>
     __MAP__
@@ -770,6 +777,39 @@ def _entity_grid_html(
     )
 
 
+_TREND_OUTLOOK = {
+    "Situation escalating":  ("Continued elevated activity over the near term is likely (55–80%).", "#ef4444"),
+    "Situation stabilizing": ("Renewed near-term escalation is unlikely (20–45%).", "#2ea44f"),
+    "Situation stable":      ("A significant near-term shift in tempo is unlikely (20–45%).", "#e3b341"),
+    "No data":               ("Insufficient reporting to assess trend.", "#4a6080"),
+}
+
+
+def _assessment_html(events: list[dict], days: int) -> str:
+    """Return the ICD 203 analytic assessment strip for the dashboard header."""
+    trend = _compute_trend(events, days)
+    outlook, color = _TREND_OUTLOOK.get(trend, _TREND_OUTLOOK["No data"])
+    confidence, basis = assess_confidence(events)
+
+    if trend == "No data":
+        assessment = outlook
+    else:
+        assessment = (
+            f"We assess with {confidence.upper()} confidence: {trend.lower()}. {outlook}"
+        )
+
+    return (
+        '<div style="background:#11151c;border-bottom:1px solid #1e2535;'
+        'padding:14px 28px;display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;">'
+        '<span style="color:#4a6080;font-size:0.7rem;letter-spacing:3px;'
+        'text-transform:uppercase;">Analytic Assessment</span>'
+        f'<span style="color:{color};font-size:0.85rem;">{assessment}</span>'
+        f'<span style="color:#3a4a5a;font-size:0.68rem;">Basis: {basis}. '
+        'Estimative language per ICD 203; source grades per NATO Admiralty System.</span>'
+        '</div>'
+    )
+
+
 def build_dashboard(events: list[dict], location: str, days: int,
                     alert: dict | None = None) -> str:
     """Return a fully self-contained dashboard HTML string (no external dependencies)."""
@@ -795,9 +835,10 @@ def build_dashboard(events: list[dict], location: str, days: int,
 
     return (
         _DASH_TMPL
-        .replace("__ALERT__",    alert_html)
-        .replace("__LOCATION__", location)
-        .replace("__DAYS__",     str(days))
+        .replace("__ALERT__",      alert_html)
+        .replace("__ASSESSMENT__", _assessment_html(events, days))
+        .replace("__LOCATION__",   location)
+        .replace("__DAYS__",       str(days))
         .replace("__MAP__",      _map_iframe(events, location))
         .replace("__TIMELINE__", severity_timeline_b64(events, days))
         .replace("__SWIMLANE__",        event_swimlane_html(events, days))
@@ -1009,6 +1050,8 @@ def _combined_map_iframe(
                     "image":  article.get("image_url") or "",
                     "sev":    sev,
                     "etype":  analysis.get("event_type", ""),
+                    "grade":  grade_event(ev),
+                    "gradedesc": describe_grade(grade_event(ev)),
                 }.items()
             )
             if style == "solid":
@@ -1143,7 +1186,9 @@ def _combined_map_iframe(
     badge.textContent=(d.etype||'').replace(/_/g,' ');
     badge.style.color=SEV[d.sev]||'#888';
     document.getElementById('gw-title').textContent=d.title||'';
-    document.getElementById('gw-meta').textContent=(d.source||'')+(d.date?' · '+d.date:'');
+    var meta=document.getElementById('gw-meta');
+    meta.textContent=(d.source||'')+(d.date?' · '+d.date:'')+(d.grade?' · '+d.grade:'');
+    meta.title=d.gradedesc||'';
     var col=SEV[d.sev]||'#888';
     card.style.display='block';card.style.visibility='hidden';
     var popH=card.offsetHeight;

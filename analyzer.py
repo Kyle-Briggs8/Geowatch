@@ -15,7 +15,8 @@ No preamble, no markdown, just raw JSON.
   "entities": ["list of key people or organizations mentioned"],
   "severity": "one of: low, medium, high, critical",
   "location_mentioned": "most specific location mentioned in the article or null",
-  "one_line_summary": "one sentence summary of the event"
+  "one_line_summary": "one sentence summary of the event",
+  "credibility": "NATO Admiralty information-credibility digit, integer 1-6: 1=confirmed by independent sources, 2=probably true (consistent with other reporting), 3=possibly true, 4=doubtful, 5=improbable, 6=truth cannot be judged. Judge the claim itself (attribution, corroboration, specificity), not the outlet. Reserve 1 for claims the article explicitly corroborates with multiple independent sources; single-outlet reporting with named attribution is 2, vaguer sourcing is 3."
 }"""
 
 

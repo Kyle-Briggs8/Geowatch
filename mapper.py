@@ -1,6 +1,8 @@
 import folium
 from folium import Element
 
+from grading import describe_grade, grade_event
+
 REGION_COORDS: dict[str, tuple[float, float]] = {
     "Syria": (34.8021, 38.9968),
     "Ukraine": (48.3794, 31.1656),
@@ -85,6 +87,7 @@ def build_map(events: list[dict], location: str, output: str = "map.html") -> in
           <b>Severity:</b> <span style="color:{color};font-weight:bold;">{severity.upper()}</span><br>
           <b>Entities:</b> {entity_str}<br>
           <b>Source:</b> {article.get('source', '—')}<br>
+          <b>Grade:</b> {grade_event(event)} <span style="color:#888;">({describe_grade(grade_event(event))})</span><br>
           <b>Date:</b> {article.get('date', '—')}<br><br>
           <a href="{article.get('url', '#')}" target="_blank"
              style="color:#4af;text-decoration:none;">&#x1F517; Read article</a>

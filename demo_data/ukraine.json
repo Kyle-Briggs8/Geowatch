@@ -1,0 +1,444 @@
+{
+ "location": "Ukraine",
+ "days": 30,
+ "captured_at": "2026-08-09 08:37 UTC",
+ "events": [
+  {
+   "article": {
+    "title": "Ukraine building Patriots is in Lockheed’s interest, McCaul says",
+    "date": "2026-07-11",
+    "source": "Biztoc.com",
+    "url": "https://biztoc.com/x/937cba6d2f06617c",
+    "description": "US defense contractors including Lockheed Martin Corp. have every interest to let Ukraine manufacture Patriot missile interceptors after President Donald Trump pledged the US would grant a license for the weapons system, a senior Republican lawmaker said.\n“I …",
+    "image_url": "https://biztoc.com/cdn/937cba6d2f06617c_s.webp"
+   },
+   "analysis": {
+    "event_type": "political",
+    "entities": [
+     "Ukraine",
+     "Lockheed Martin Corp.",
+     "Donald Trump",
+     "US"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "A senior Republican lawmaker says US defense contractors have an interest in letting Ukraine manufacture Patriot missile interceptors",
+    "credibility": "2"
+   }
+  },
+  {
+   "article": {
+    "title": "Prominent Putin Critic Fans the Flames on Lindsey Graham Conspiracy Theories: ‘Russians Are Expert at Administration of Poisons’",
+    "date": "2026-07-12",
+    "source": "Mediaite",
+    "url": "https://www.mediaite.com/politics/prominent-putin-critic-fans-the-flames-on-lindsey-graham-conspiracy-theories-russians-are-expert-at-administration-of-poisons/",
+    "description": "Putin critic Bill Browder said he believed Russian agents could have poisoned Sen. Lindsey Graham during the senator's trip to Ukraine right before he died\nThe post Prominent Putin Critic Fans the Flames on Lindsey Graham Conspiracy Theories: ‘Russians Are Ex…",
+    "image_url": "https://www.mediaite.com/wp-content/uploads/2026/07/Untitled-design-2026-07-12T155614-853.jpg"
+   },
+   "analysis": {
+    "event_type": "political",
+    "entities": [
+     "Bill Browder",
+     "Lindsey Graham",
+     "Putin",
+     "Russian agents"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "Bill Browder suggests Russian agents may have poisoned Sen. Lindsey Graham during his trip to Ukraine",
+    "credibility": "5"
+   }
+  },
+  {
+   "article": {
+    "title": "Wednesday, July 15. Russia’s War On Ukraine: News And Information From Ukraine",
+    "date": "2026-07-15",
+    "source": "Forbes",
+    "url": "https://www.forbes.com/sites/katyasoldak/2026/07/15/wednesday-july-15-russias-war-on-ukraine-news-and-information-from-ukraine/",
+    "description": "Dispatches from Ukraine. Day 1603.",
+    "image_url": "https://imageio.forbes.com/specials-images/imageserve/6a581954492c5b3f5be56934/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds"
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "entities": [
+     "Russia",
+     "Ukraine"
+    ],
+    "severity": "high",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "Russia continues its ongoing war against Ukraine on day 1603 of the conflict",
+    "credibility": "1"
+   }
+  },
+  {
+   "article": {
+    "title": "Thirteen killed in Russia and Ukraine strikes - officials",
+    "date": "2026-07-16",
+    "source": "RTE",
+    "url": "https://www.rte.ie/news/2026/0716/1583763-russia-ukraine-strikes/",
+    "description": "Russian and Ukrainian attacks on civilian areas in towns and cities, many on the ⁠front line of the more than four-year-old war, killed at least 13 people yesterday, local officials said.",
+    "image_url": "https://www.rte.ie/images/002422f9-1600.jpg"
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "entities": [
+     "Russia",
+     "Ukraine"
+    ],
+    "severity": "high",
+    "location_mentioned": "Russia and Ukraine",
+    "one_line_summary": "At least 13 people were killed in Russian and Ukrainian strikes on civilian areas",
+    "credibility": "1"
+   }
+  },
+  {
+   "article": {
+    "title": "Would Europeans fight, if it came to that?",
+    "date": "2026-07-18",
+    "source": "Www.nrc.nl",
+    "url": "https://www.nrc.nl/nieuws/2026/07/18/would-europeans-fight-if-it-came-to-that-a4932663",
+    "description": "Putting boots on the ground would not help Ukraine, but it might help Europe find the stomach for war, writes Nathalie Tocci.",
+    "image_url": "https://images.nrc.nl/rFjJoK3pkBQWECY8RshkDYtbh2U=/1200x627/smart/filters:no_upscale()/s3/static.nrc.nl/wp-content/uploads/2026/07/17093737/180726OPI_2035288505_WEB_ILLU_Economist_Europeans-Fight_Dan-Williams.jpg"
+   },
+   "analysis": {
+    "event_type": "political",
+    "entities": [
+     "Nathalie Tocci",
+     "Europe",
+     "Ukraine"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "Nathalie Tocci suggests that European involvement in the conflict in Ukraine could help Europe prepare for war",
+    "credibility": "2"
+   }
+  },
+  {
+   "article": {
+    "title": "At least one killed as Russia launches overnight missile and drone attack on Kyiv",
+    "date": "2026-07-19",
+    "source": "euronews.com",
+    "url": "https://www.euronews.com/my-europe/2026/07/19/at-least-one-killed-as-russia-launches-overnight-missile-and-drone-attack-on-kyiv",
+    "description": "",
+    "image_url": null
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "entities": [
+     "Russia"
+    ],
+    "severity": "high",
+    "location_mentioned": "Kyiv",
+    "one_line_summary": "Russia launched a missile and drone attack on Kyiv, resulting in at least one death",
+    "credibility": "1"
+   }
+  },
+  {
+   "article": {
+    "title": "Zelenskyy replaces military leader and brings back defence minister he sacked - The Guardian",
+    "date": "2026-07-21",
+    "source": "Slashdot.org",
+    "url": "https://slashdot.org/firehose.pl?op=view&amp;id=184570006",
+    "description": "Zelenskyy replaces military leader and brings back defence minister he sackedThe Guardian Zelensky sacks Ukraine’s military chief following widespread protestsCNN Zelenskyy replaces Ukraine military chief after protestsAl Jazeera Ukraine’s Zelenskyy fires his…",
+    "image_url": null
+   },
+   "analysis": {
+    "event_type": "political",
+    "entities": [
+     "Zelenskyy",
+     "Ukraine"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "Ukrainian President Zelenskyy replaces the country's military leader and reinstates a previously sacked defence minister amid widespread protests",
+    "credibility": "2"
+   }
+  },
+  {
+   "article": {
+    "title": "Russia's businesses under strain from Ukraine's attacks on Wildberries",
+    "date": "2026-07-22",
+    "source": "BBC News",
+    "url": "https://www.bbc.co.uk/news/articles/cvg9n2y61w6o",
+    "description": "Ukrainian drones have hit several retail warehouses belonging to Russia's biggest online retailer Wildberries in a matter of days.",
+    "image_url": "https://ichef.bbci.co.uk/ace/branded_news/1200/cpsprodpb/3c64/live/d7b13ca0-85f3-11f1-8ade-a7a676c613b9.jpg"
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "entities": [
+     "Russia",
+     "Ukraine",
+     "Wildberries"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Russia",
+    "one_line_summary": "Ukrainian drones have attacked several Russian retail warehouses belonging to Wildberries",
+    "credibility": "2"
+   }
+  },
+  {
+   "article": {
+    "title": "How volunteers with 3D printers make weapons for Ukraine",
+    "date": "2026-07-24",
+    "source": "Biztoc.com",
+    "url": "https://biztoc.com/x/717b6070b188aa79",
+    "description": "Last week, Ukrainian President Zelenskyy dismissed his tech-savvy defense minister. That sparked protests among supporters who credit him with helping transform Ukraine's defense capabilities. Special correspondent Simon Ostrovsky and producer Katia Patin rep…",
+    "image_url": "https://biztoc.com/cdn/717b6070b188aa79_s.webp"
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "entities": [
+     "Ukrainian President Zelenskyy",
+     "Simon Ostrovsky",
+     "Katia Patin"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "Ukrainian President Zelenskyy dismissed his defense minister, sparking protests among supporters who credit him with transforming Ukraine's defense capabilities",
+    "credibility": "2"
+   }
+  },
+  {
+   "article": {
+    "title": "Russia Wants 30,000 More North Korean Troops for Ukraine War, Zelensky Says",
+    "date": "2026-07-25",
+    "source": "Biztoc.com",
+    "url": "https://biztoc.com/x/19b091a8580d2ee4",
+    "description": "Ukrainian President Volodymyr Zelensky said Saturday that Russia is preparing to bring an additional 30,000 North Korean troops into its war against Ukraine, a move that would dramatically expand Pyongyang's direct involvement in the conflict if confirmed.\n\"W…",
+    "image_url": "https://biztoc.com/cdn/19b091a8580d2ee4_s.webp"
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "entities": [
+     "Russia",
+     "North Korea",
+     "Ukraine",
+     "Volodymyr Zelensky"
+    ],
+    "severity": "high",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "Russia is preparing to bring 30,000 North Korean troops into its war against Ukraine, according to Ukrainian President Volodymyr Zelensky",
+    "credibility": "2"
+   }
+  },
+  {
+   "article": {
+    "title": "Need out-of-box thinking to plug paper leaks, says Supreme Court",
+    "date": "2026-07-27",
+    "source": "The Times of India",
+    "url": "https://timesofindia.indiatimes.com/india/need-out-of-box-thinking-to-plug-paper-leaks-says-supreme-court/articleshow/132672742.cms",
+    "description": "A high-powered committee for education reform has been formed. The Supreme Court seeks \"out-of-box thinking\" to address sector problems. The court will hear the NEET paper leak petition on August 3. Government needs to examine additional safeguards for online…",
+    "image_url": "https://static.toiimg.com/thumb/msid-132672747,width-1280,height-720,resizemode-6,overlay-toi_sw,pt-32,y_pad-600/photo.jpg"
+   },
+   "analysis": {
+    "event_type": "political",
+    "entities": [
+     "Supreme Court",
+     "Government"
+    ],
+    "severity": "medium",
+    "location_mentioned": null,
+    "one_line_summary": "The Supreme Court has called for out-of-box thinking to address issues in the education sector, including the NEET paper leak.",
+    "credibility": "1"
+   }
+  },
+  {
+   "article": {
+    "title": "Zelensky says he asked Trump for emergency package of Patriot missiles",
+    "date": "2026-07-29",
+    "source": "Freerepublic.com",
+    "url": "https://freerepublic.com/focus/f-news/4389866/posts",
+    "description": "Ukrainian President Volodymyr Zelensky on Tuesday said he'd asked President Trump for a \"winter package\" consisting of 300 Patriot interceptors to fend off the Kremlin amid Kyiv's war with Russia.The request follows Trump's approval for Ukraine to manufacture…",
+    "image_url": null
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "entities": [
+     "Volodymyr Zelensky",
+     "Donald Trump",
+     "Ukraine",
+     "Russia",
+     "Kremlin",
+     "Kyiv"
+    ],
+    "severity": "high",
+    "location_mentioned": "Kyiv",
+    "one_line_summary": "Ukrainian President Volodymyr Zelensky asked President Trump for a package of 300 Patriot missiles to aid in the war against Russia",
+    "credibility": "2"
+   }
+  },
+  {
+   "article": {
+    "title": "Russia hockey ban extended through 2027 IIHF Men's World Championship",
+    "date": "2026-07-30",
+    "source": "NBCSports.com",
+    "url": "https://www.nbcsports.com/olympics/news/russia-hockey-ban-iihf-world-championship",
+    "description": "Russia has been banned from international hockey since shortly after the nation invaded Ukraine in February 2022.",
+    "image_url": "https://s.yimg.com/lo/mysterio/api/eff882eba6434289033f0ad5705d5053aed4e4dbcc6e08b2c141b2ebe8f78bb8/lightyear_networkapi/resizefill_w1200;quality_80;format_webp/https:%2F%2Fmedia.zenfs.com%2Fen%2Fnbcsports.com%2Fd12829f57a9be705b924862abfd28831"
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "entities": [
+     "Russia",
+     "Ukraine",
+     "IIHF"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "Russia's ban from international hockey has been extended through the 2027 IIHF Men's World Championship due to its invasion of Ukraine",
+    "credibility": "1"
+   }
+  },
+  {
+   "article": {
+    "title": "Homemade bomb goes off outside upscale Moscow restaurant state officials say",
+    "date": "2026-08-01",
+    "source": "DW (English)",
+    "url": "https://www.dw.com/en/homemade-bomb-goes-off-outside-upscale-moscow-restaurant-state-officials-say/a-78205022",
+    "description": "Russian authorities said the blast occurred outside a restaurant on Kudrinskaya Square when a woman allegedly carrying explosives was stopped by a security guard.",
+    "image_url": "https://static.dw.com/image/78205163_6.jpg"
+   },
+   "analysis": {
+    "event_type": "terrorism",
+    "entities": [
+     "Russian authorities"
+    ],
+    "severity": "high",
+    "location_mentioned": "Kudrinskaya Square, Moscow",
+    "one_line_summary": "A homemade bomb exploded outside an upscale restaurant in Moscow after a woman carrying explosives was stopped by a security guard.",
+    "credibility": "2"
+   }
+  },
+  {
+   "article": {
+    "title": "Ukraine says major Russian oil refinery and airfield hit , as Moscow reports eight deaths",
+    "date": "2026-08-02",
+    "source": "bbc.co.uk",
+    "url": "https://www.bbc.co.uk/news/articles/c998gg5pe09o",
+    "description": "",
+    "image_url": null
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "entities": [
+     "Ukraine",
+     "Russia",
+     "Moscow"
+    ],
+    "severity": "high",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "Ukraine has struck a major Russian oil refinery and airfield, resulting in eight reported deaths according to Moscow",
+    "credibility": "2"
+   }
+  },
+  {
+   "article": {
+    "title": "Ukrainian studies in  crisi despite rising demand in Europe",
+    "date": "2026-08-03",
+    "source": "timeshighereducation.com",
+    "url": "https://www.timeshighereducation.com/news/ukrainian-studies-crisis-despite-rising-demand-europe",
+    "description": "",
+    "image_url": null
+   },
+   "analysis": {
+    "event_type": "other",
+    "entities": [
+     "Ukraine",
+     "Europe"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Europe",
+    "one_line_summary": "Ukrainian studies are in crisis despite a rising demand for them in Europe",
+    "credibility": "2"
+   }
+  },
+  {
+   "article": {
+    "title": "Strathcona Resources Ltd. Reports Second Quarter 2026 Financial and Operating Results and Announces Quarterly Dividend",
+    "date": "2026-08-05",
+    "source": "PRNewswire",
+    "url": "https://www.prnewswire.com/news-releases/strathcona-resources-ltd-reports-second-quarter-2026-financial-and-operating-results-and-announces-quarterly-dividend-302844348.html",
+    "description": "CALGARY, AB, Aug. 5, 2026 /PRNewswire/ -- Strathcona Resources Ltd. (\"Strathcona\" or the \"Company\") (TSX: SCR) today reported its second quarter 2026 financial and operating results. The Board of Directors also declared a quarterly dividend of $0.30 per commo…",
+    "image_url": "https://mmx.prnewswire.com/media/MS1048081/Strathcona-Resources-Ltd-Strathcona-Resources-Ltd-Reports-Seco.jpg?id=OA2798907&p=facebook"
+   },
+   "analysis": {
+    "event_type": "economic",
+    "entities": [
+     "Strathcona Resources Ltd.",
+     "TSX"
+    ],
+    "severity": "low",
+    "location_mentioned": "Calgary, AB",
+    "one_line_summary": "Strathcona Resources Ltd. reported its second quarter 2026 financial and operating results and announced a quarterly dividend of $0.30 per common share.",
+    "credibility": "1"
+   }
+  },
+  {
+   "article": {
+    "title": "Petrus Resources Announces Second Quarter 2026 Financial and Operating Results",
+    "date": "2026-08-06",
+    "source": "Financial Post",
+    "url": "https://financialpost.com/globe-newswire/petrus-resources-announces-second-quarter-2026-financial-and-operating-results",
+    "description": "CALGARY, Alberta, Aug. 06, 2026 (GLOBE NEWSWIRE) — Petrus Resources Ltd. (“Petrus” or the “Company”) (TSX: PRQ) is pleased to report financial and operating results as at and for the three and six months ended June 30, 2026. Q2 2026 HIGHLIGHTS: Operating netb…",
+    "image_url": null
+   },
+   "analysis": {
+    "event_type": "economic",
+    "entities": [
+     "Petrus Resources Ltd.",
+     "TSX"
+    ],
+    "severity": "low",
+    "location_mentioned": "Calgary, Alberta",
+    "one_line_summary": "Petrus Resources Ltd. announced its second quarter 2026 financial and operating results",
+    "credibility": "1"
+   }
+  },
+  {
+   "article": {
+    "title": "Friday’s Mini-Report, 8.7.26",
+    "date": "2026-08-07",
+    "source": "Biztoc.com",
+    "url": "https://biztoc.com/x/00d9a34f3b39dcad",
+    "description": "Today’s edition of quick hits.\n* This bill now moves on to the House, where its fate is uncertain: “The Senate passed a sweeping new package of sanctions targeting Russia and Iran on Friday, approving a measure aimed at supporting Ukraine in its fight against…",
+    "image_url": "https://biztoc.com/cdn/00d9a34f3b39dcad_s.webp"
+   },
+   "analysis": {
+    "event_type": "political",
+    "entities": [
+     "Russia",
+     "Iran",
+     "Ukraine",
+     "The Senate",
+     "The House"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "The Senate passed a package of sanctions targeting Russia and Iran to support Ukraine",
+    "credibility": "1"
+   }
+  },
+  {
+   "article": {
+    "title": "US intel sharing rebounds with Ukraine",
+    "date": "2026-08-08",
+    "source": "Freerepublic.com",
+    "url": "https://freerepublic.com/focus/f-news/4391119/posts",
+    "description": "The intelligence-sharing relationship between the U.S. and Ukraine has bounced back to previous highs, according to long-time Ukraine watchers — a welcome boost during a critical window of opportunity for the Ukrainian war effort. Sen. Mark Warner (D-Va.), th…",
+    "image_url": null
+   },
+   "analysis": {
+    "event_type": "political",
+    "entities": [
+     "U.S.",
+     "Ukraine",
+     "Sen. Mark Warner"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "The US and Ukraine's intelligence-sharing relationship has rebounded to previous highs, boosting the Ukrainian war effort",
+    "credibility": "2"
+   }
+  }
+ ]
+}

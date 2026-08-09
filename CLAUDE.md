@@ -8,7 +8,9 @@ Open-source geospatial intelligence dashboard. Fetches news from NewsAPI and GDE
 main.py          CLI entry point (argparse)
 app.py           Flask web UI, background-thread job runner, status polling
 fetcher.py       Dual-source news ingestion (NewsAPI + GDELT), synonym filtering, date-windowed parallel fetch
-analyzer.py      Groq LLM article classification (event type, severity, entities, summary)
+analyzer.py      Groq LLM article classification (event type, severity, entities, summary, Admiralty credibility)
+grading.py       IC tradecraft: NATO Admiralty source grading (A–F/1–6), ICD 203 confidence assessment
+demo.py          Demo-mode cache: save/load analyzed event sets as JSON in demo_data/
 mapper.py        Folium map generation, marker clustering, popup cards with images
 visualizer.py    Matplotlib severity escalation chart + interactive HTML swimlane timeline
 briefer.py       Markdown intelligence briefing generator
@@ -23,6 +25,8 @@ render.yaml      Render service definition
 - **Synonym filtering:** LLM generates ~20 location synonyms on first run to filter irrelevant articles without losing niche city-specific coverage.
 - **Background thread pipeline:** Flask routes return immediately, pipeline runs in a background thread, frontend polls /status/<job_id> every 2s. Prevents gunicorn timeout kills on Render.
 - **Single-file dashboard:** All charts embedded as base64 images in a single HTML file. Swimlane is interactive HTML/JS. No external dependencies at render time.
+- **Tradecraft grading:** Source reliability (A–F) comes from a curated outlet table in grading.py; information credibility (1–6) is judged per-article by the LLM. Analytic confidence (ICD 203) is derived deterministically from sourcing breadth/quality, never from model self-assessment.
+- **Demo mode:** `--save-demo` caches a live run's analyzed events to demo_data/ (committed); `--demo` (CLI) or the web checkbox replays it with zero API calls. Use for live demos so NewsAPI/GDELT/Groq flakiness can't break a presentation.
 
 ## Conventions
 

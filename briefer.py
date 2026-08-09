@@ -2,6 +2,8 @@ import sys
 from collections import Counter
 from datetime import datetime, timedelta
 
+from grading import assess_confidence, grade_event, source_reliability, RELIABILITY_DESC
+
 
 _SEV_ORDER  = ["low", "medium", "high", "critical"]
 _SEV_WEIGHT = {"low": 1, "medium": 2, "high": 3, "critical": 4}
@@ -73,18 +75,37 @@ def generate_brief(events: list[dict], location: str, days: int) -> str:
     first  = sum(_SEV_WEIGHT[s] * sum(counts[s][:mid]) for s in _SEV_ORDER)
     second = sum(_SEV_WEIGHT[s] * sum(counts[s][mid:]) for s in _SEV_ORDER)
 
+    confidence, confidence_basis = assess_confidence(analyzed)
+    conf_upper = confidence.upper()
+
+    # Estimative language per ICD 203: probability bands accompany each outlook.
     if first == 0 and second == 0:
-        trend_sentence = "Insufficient data to assess trend over the reporting period."
+        trend_sentence = "Insufficient reporting to assess trend over the period; confidence in any trend judgment is low."
     elif first == 0:
-        trend_sentence = "Activity emerged in the second half of the reporting period with no baseline for comparison."
+        trend_sentence = (
+            f"We assess with {conf_upper} confidence that activity emerged in the second half of the "
+            "reporting period; with no baseline for comparison, near-term trajectory cannot be judged."
+        )
     elif (second - first) / first > 0.20:
         pct = int(((second - first) / first) * 100)
-        trend_sentence = f"Situation escalating — weighted severity index increased {pct}% in the second half of the reporting period."
+        trend_sentence = (
+            f"We assess with {conf_upper} confidence that the situation is escalating — the weighted "
+            f"severity index increased {pct}% in the second half of the reporting period. "
+            "Continued elevated activity over the near term is likely (55–80%)."
+        )
     elif (first - second) / first > 0.20:
         pct = int(((first - second) / first) * 100)
-        trend_sentence = f"Situation stabilizing — weighted severity index decreased {pct}% in the second half of the reporting period."
+        trend_sentence = (
+            f"We assess with {conf_upper} confidence that the situation is stabilizing — the weighted "
+            f"severity index decreased {pct}% in the second half of the reporting period. "
+            "Renewed near-term escalation is unlikely (20–45%)."
+        )
     else:
-        trend_sentence = "Situation stable — no significant change in weighted severity across the reporting period."
+        trend_sentence = (
+            f"We assess with {conf_upper} confidence that the situation is stable — no significant "
+            "change in weighted severity across the reporting period. A significant near-term shift "
+            "in tempo is unlikely (20–45%)."
+        )
 
     # ── Top 3 events by severity ─────────────────────────────────────────────
     sev_rank = {"critical": 0, "high": 1, "medium": 2, "low": 3}
@@ -98,14 +119,15 @@ def generate_brief(events: list[dict], location: str, days: int) -> str:
     for i, ev in enumerate(top3, 1):
         a    = ev["analysis"]
         art  = ev["article"]
-        sev  = a.get("severity", "?").upper()
-        summ = a.get("one_line_summary", art.get("title", ""))
-        date = _fmt_date(art.get("date", ""))
-        src  = art.get("source", "Unknown")
-        ents = ", ".join(a.get("entities") or []) or "—"
+        sev   = a.get("severity", "?").upper()
+        summ  = a.get("one_line_summary", art.get("title", ""))
+        date  = _fmt_date(art.get("date", ""))
+        src   = art.get("source", "Unknown")
+        grade = grade_event(ev)
+        ents  = ", ".join(a.get("entities") or []) or "—"
         top_md += (
             f"\n**{i}. [{sev}]** {summ}\n"
-            f"*{date} | {src}*\n"
+            f"*{date} | {src} [{grade}]*\n"
             f"Key entities: {ents}\n"
         )
 
@@ -121,6 +143,19 @@ def generate_brief(events: list[dict], location: str, days: int) -> str:
         entity_rows += f"| {ent} | {cnt} |\n"
     if not entity_rows:
         entity_rows = "| — | — |\n"
+
+    # ── Sourcing & reliability ───────────────────────────────────────────────
+    src_counter: Counter = Counter()
+    for ev in analyzed:
+        src = (ev["article"].get("source") or "Unknown").strip()
+        src_counter[src] += 1
+
+    source_rows = ""
+    for src, cnt in src_counter.most_common(10):
+        rel = source_reliability(src)
+        source_rows += f"| {src} | {rel} — {RELIABILITY_DESC[rel]} | {cnt} |\n"
+    if not source_rows:
+        source_rows = "| — | — | — |\n"
 
     # ── Coverage gaps ────────────────────────────────────────────────────────
     gaps = _coverage_gaps(events, days)
@@ -147,6 +182,8 @@ def generate_brief(events: list[dict], location: str, days: int) -> str:
 ## Situation Assessment
 {trend_sentence}
 
+*Confidence basis: {confidence_basis}.*
+
 ## Top Events
 {top_md.strip()}
 
@@ -157,6 +194,16 @@ def generate_brief(events: list[dict], location: str, days: int) -> str:
 | Entity | Appearances |
 |--------|-------------|
 {entity_rows.strip()}
+
+---
+
+## Sourcing & Reliability
+
+| Source | Admiralty reliability | Reports |
+|--------|-----------------------|---------|
+{source_rows.strip()}
+
+*Source grades follow the NATO Admiralty System — letter: source reliability (A–F); digit shown on individual events: information credibility (1–6). Estimative language and confidence levels conform to ICD 203.*
 
 ---
 

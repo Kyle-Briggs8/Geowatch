@@ -14,6 +14,8 @@ Open-source geospatial intelligence from live news. GeoWatch fetches recent news
 - **Comparison mode** — run two locations in parallel on a single combined map with side-by-side charts and swimlanes
 - **Daily brief** (`--brief`) — generates a one-page markdown intelligence report
 - **Alert threshold** (`--alert-threshold`) — prints a terminal alert and injects a dashboard banner if >30% of recent events hit the threshold
+- **IC tradecraft grading** — every event carries a NATO Admiralty System code (source reliability A–F from a curated outlet table, information credibility 1–6 assessed per-article by the LLM); briefings and the dashboard assessment strip use ICD 203 estimative language, with analytic confidence derived from breadth and quality of sourcing
+- **Demo mode** (`--demo` / web checkbox) — renders instantly from a cached dataset in `demo_data/`, no API calls; capture a dataset from any live run with `--save-demo`
 
 ---
 
@@ -65,6 +67,10 @@ python main.py --location "Syria" --days 7 --brief
 
 # Alert if >30% of last-7-day events are HIGH or above
 python main.py --location "Yemen" --days 14 --alert-threshold high
+
+# Capture a live run as a reusable demo dataset, then replay it offline
+python main.py --location "Ukraine" --days 30 --save-demo
+python main.py --location "Ukraine" --demo --brief
 ```
 
 ### CLI flags
@@ -78,6 +84,8 @@ python main.py --location "Yemen" --days 14 --alert-threshold high
 | `--output` | auto | Output HTML filename |
 | `--brief` | off | Write a markdown intelligence briefing |
 | `--alert-threshold` | off | `low` / `medium` / `high` / `critical` |
+| `--demo` | off | Render from the cached dataset in `demo_data/` — no API calls |
+| `--save-demo` | off | Save this run's analyzed events to `demo_data/` for later `--demo` use |
 
 ---
 

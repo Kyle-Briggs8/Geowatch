@@ -10,6 +10,7 @@ if hasattr(sys.stdout, "reconfigure"):
 
 from analyzer import analyze_article
 from briefer import generate_brief
+from demo import load_demo_events, save_demo_events
 from entities import build_entity_cooccurrence
 from fetcher import get_news
 from visualizer import build_dashboard, build_comparison_dashboard, _compute_trend
@@ -126,6 +127,32 @@ def _run_single(args: argparse.Namespace) -> None:
     alert_threshold = args.alert_threshold
     output = args.output or f"{args.location.lower().replace(' ', '_')}_dashboard.html"
 
+    # ── Demo mode: render entirely from the cached dataset, no API calls ─────
+    if args.demo:
+        try:
+            payload = load_demo_events(args.location)
+        except FileNotFoundError as exc:
+            print(f"[ERROR] {exc}", file=sys.stderr)
+            sys.exit(1)
+        events = payload["events"]
+        days   = payload.get("days", args.days)
+        print(f'\n[DEMO] Using cached dataset for "{args.location}" '
+              f'(captured {payload.get("captured_at", "unknown")}, '
+              f'{len(events)} events)')
+        alert = _check_alert(events, alert_threshold) if alert_threshold else None
+        if alert:
+            _print_alert_box(alert, args.location)
+        dashboard_html = build_dashboard(events, args.location, days, alert=alert)
+        with open(output, "w", encoding="utf-8") as f:
+            f.write(dashboard_html)
+        _print_summary(args.location, days, events, output)
+        if args.brief:
+            brief_path = output.replace(".html", "_brief.md")
+            with open(brief_path, "w", encoding="utf-8") as f:
+                f.write(generate_brief(events, args.location, days))
+            print(f"\n  Brief saved to → {brief_path}")
+        return
+
     print(f'\nFetching news for "{args.location}" (last {args.days} days)...')
     try:
         raw_articles = get_news(args.location, args.days)
@@ -163,6 +190,10 @@ def _run_single(args: argparse.Namespace) -> None:
             print(f"    └─ [{sev}] {etype} — {summary}")
         else:
             print("    └─ [WARN] Could not parse analysis for this article")
+
+    if args.save_demo:
+        demo_path = save_demo_events(args.location, args.days, events)
+        print(f"\n  Demo dataset saved to → {demo_path}")
 
     # ── Alert threshold check ─────────────────────────────────────────────────
     alert = None
@@ -302,12 +333,23 @@ def main() -> None:
         help="Generate a one-page markdown intelligence briefing alongside the dashboard",
     )
     parser.add_argument(
+        "--demo", action="store_true",
+        help="Render from the cached demo dataset for this location — no API calls",
+    )
+    parser.add_argument(
+        "--save-demo", action="store_true",
+        help="After a live run, save the analyzed events to demo_data/ for later --demo use",
+    )
+    parser.add_argument(
         "--alert-threshold",
         choices=["low", "medium", "high", "critical"],
         metavar="LEVEL",
         help="Alert if >30%% of last-7-day events meet or exceed this severity (low/medium/high/critical)",
     )
     args = parser.parse_args()
+
+    if args.compare and (args.demo or args.save_demo):
+        parser.error("--demo/--save-demo are only supported with --location (single mode)")
 
     if args.compare:
         _run_compare(args)

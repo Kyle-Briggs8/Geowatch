@@ -8,6 +8,7 @@ from concurrent.futures import ThreadPoolExecutor
 from flask import Flask, Response, jsonify, render_template_string, request
 
 from analyzer import analyze_article
+from demo import load_demo_events
 from fetcher import get_news
 from mapper import REGION_COORDS
 from visualizer import build_dashboard, build_comparison_dashboard
@@ -241,6 +242,12 @@ _INDEX_HTML = """<!DOCTYPE html>
              min="1" max="100" value="{{ max_articles or 5 }}">
     </div>
 
+    <div style="margin-top:20px;display:flex;align-items:center;gap:10px;">
+      <input type="checkbox" id="demo" name="demo" value="1"
+             style="accent-color:#4af;cursor:pointer;">
+      <label for="demo" style="margin:0;cursor:pointer;">Cached demo data &mdash; no live API calls</label>
+    </div>
+
     <button type="button" id="submitBtn" onclick="submitWithLoader()">&#9654; Run Analysis</button>
 
     <div class="known">Pre-mapped regions: {{ regions }}</div>
@@ -398,8 +405,14 @@ def _subsample(raw: list, max_n: int) -> list:
     return [raw[int(i * step)] for i in range(max_n)]
 
 
-def _do_analyze(location: str, days: int, max_articles: int) -> str:
-    """Fetch, analyze, and render a single-location dashboard. Returns HTML string."""
+def _do_analyze(location: str, days: int, max_articles: int, demo: bool = False) -> str:
+    """Fetch, analyze, and render a single-location dashboard. Returns HTML string.
+
+    With demo=True, renders from the cached dataset in demo_data/ — no API calls.
+    """
+    if demo:
+        payload = load_demo_events(location)
+        return build_dashboard(payload["events"], location, payload.get("days", days))
     raw      = get_news(location, days)
     articles = _subsample(raw, max_articles)
     events   = [{"article": art, "analysis": analyze_article(art)} for art in articles]
@@ -437,6 +450,7 @@ def analyze() -> str:
     location     = (request.form.get("location") or "").strip()
     days         = int(request.form.get("days") or 30)
     max_articles = max(1, min(int(request.form.get("max_articles") or 5), 100))
+    demo         = request.form.get("demo") == "1"
     regions      = ", ".join(sorted(REGION_COORDS.keys()))
 
     if not location:
@@ -444,7 +458,7 @@ def analyze() -> str:
             _INDEX_HTML, error="Please enter a location.", regions=regions
         )
 
-    job_id = _start_job(_do_analyze, location, days, max_articles)
+    job_id = _start_job(_do_analyze, location, days, max_articles, demo)
     return render_template_string(_WAITING_HTML, job_id=job_id, title=location)
 
 

@@ -1,5 +1,16 @@
 .env
 __pycache__/
 *.pyc
+
+# Generated artifacts
 map.html
 *_map.html
+*_dashboard.html
+comparison_dashboard.html
+*_brief.md
+flask_*.txt
+flask_response*.html
+
+# Local session notes / harness state
+geowatch_session.md
+.claude/
