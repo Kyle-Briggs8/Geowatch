@@ -19,6 +19,39 @@ import time
 import requests
 
 _NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
+
+# Country → capital, for anchoring country-level mentions somewhere meaningful
+# (a static table beats an external API here: no churn, no network, no quota)
+_CAPITALS = {
+    "ukraine": "Kyiv", "russia": "Moscow", "belarus": "Minsk",
+    "germany": "Berlin", "france": "Paris", "poland": "Warsaw",
+    "uk": "London", "united kingdom": "London", "britain": "London",
+    "great britain": "London", "england": "London",
+    "usa": "Washington, D.C.", "united states": "Washington, D.C.",
+    "us": "Washington, D.C.", "america": "Washington, D.C.",
+    "china": "Beijing", "taiwan": "Taipei", "japan": "Tokyo",
+    "north korea": "Pyongyang", "south korea": "Seoul",
+    "iran": "Tehran", "israel": "Jerusalem", "syria": "Damascus",
+    "lebanon": "Beirut", "iraq": "Baghdad", "turkey": "Ankara",
+    "saudi arabia": "Riyadh", "yemen": "Sanaa", "oman": "Muscat",
+    "qatar": "Doha", "kuwait": "Kuwait City", "jordan": "Amman",
+    "united arab emirates": "Abu Dhabi", "uae": "Abu Dhabi",
+    "egypt": "Cairo", "libya": "Tripoli", "sudan": "Khartoum",
+    "ethiopia": "Addis Ababa", "somalia": "Mogadishu", "kenya": "Nairobi",
+    "nigeria": "Abuja", "india": "New Delhi", "pakistan": "Islamabad",
+    "afghanistan": "Kabul", "myanmar": "Naypyidaw",
+    "moldova": "Chisinau", "romania": "Bucharest", "hungary": "Budapest",
+    "slovakia": "Bratislava", "bulgaria": "Sofia", "serbia": "Belgrade",
+    "azerbaijan": "Baku", "armenia": "Yerevan", "georgia": "Tbilisi",
+    "kazakhstan": "Astana", "italy": "Rome", "spain": "Madrid",
+    "netherlands": "Amsterdam", "belgium": "Brussels", "sweden": "Stockholm",
+    "norway": "Oslo", "finland": "Helsinki", "denmark": "Copenhagen",
+    "czech republic": "Prague", "czechia": "Prague", "austria": "Vienna",
+    "switzerland": "Bern", "greece": "Athens", "lithuania": "Vilnius",
+    "latvia": "Riga", "estonia": "Tallinn", "canada": "Ottawa",
+    "mexico": "Mexico City", "brazil": "Brasilia", "australia": "Canberra",
+    "venezuela": "Caracas", "colombia": "Bogota",
+}
 _USER_AGENT = "GeoWatch/1.0 (open-source geospatial dashboard; github.com/Kyle-Briggs8/Geowatch)"
 _CACHE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "geo_cache.json")
 _RATE_LIMIT_S = 1.1
@@ -98,6 +131,22 @@ def _query(q: str) -> tuple[bool, dict | None]:
             return False, None
 
 
+def _anchor_country_at_capital(country: str, hit: dict) -> dict:
+    """For a country-level geocode, move the anchor point to the capital city.
+
+    A geometric centroid can be visually absurd (Russia's is in central
+    Siberia); the capital is where country-level news usually concerns.
+    Precision stays 'country' — the anchor is presentational, not a claim.
+    """
+    capital = _CAPITALS.get(country.strip().lower())
+    if not capital:
+        return hit
+    ok, cap_hit = _query(f"{capital}, {country}")
+    if ok and cap_hit:
+        return {"coords": cap_hit["coords"], "precision": "country"}
+    return hit
+
+
 def geocode_place(place: str, region: str | None = None) -> dict | None:
     """Geocode a place name, optionally with a region fallback.
 
@@ -136,6 +185,9 @@ def geocode_place(place: str, region: str | None = None) -> dict | None:
             break
         if hit:
             break
+
+    if hit and hit["precision"] == "country":
+        hit = _anchor_country_at_capital(place, hit)
 
     if definitive or hit:
         cache[key] = hit

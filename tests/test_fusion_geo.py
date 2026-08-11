@@ -166,15 +166,33 @@ class TestGeocoder:
         assert g.call_count == 2
         assert g.call_args_list[1].kwargs["params"]["q"] == "Mykolaivka, Ukraine"
 
-    def test_country_and_region_precision(self):
-        with patch("geocoder.requests.get",
-                   return_value=self._resp([{"lat": "49.48", "lon": "31.27",
-                                            "addresstype": "country"}])):
-            assert geocoder.geocode_place("Ukraine")["precision"] == "country"
+    def test_region_precision(self):
         with patch("geocoder.requests.get",
                    return_value=self._resp([{"lat": "47.5", "lon": "34.6",
                                             "addresstype": "state"}])):
             assert geocoder.geocode_place("Zaporizhzhia oblast")["precision"] == "region"
+
+    def test_country_anchors_at_capital_keeps_country_precision(self):
+        country_resp = self._resp([{"lat": "64.68", "lon": "97.74", "addresstype": "country"}])
+        capital_resp = self._resp([{"lat": "55.75", "lon": "37.61", "addresstype": "city"}])
+        with patch("geocoder.requests.get",
+                   side_effect=[country_resp, capital_resp]) as g:
+            hit = geocoder.geocode_place("Russia")
+        assert hit == {"coords": [55.75, 37.61], "precision": "country"}
+        assert g.call_args_list[1].kwargs["params"]["q"] == "Moscow, Russia"
+
+    def test_unknown_country_keeps_centroid(self):
+        country_resp = self._resp([{"lat": "1.0", "lon": "2.0", "addresstype": "country"}])
+        with patch("geocoder.requests.get", return_value=country_resp):
+            hit = geocoder.geocode_place("Wakanda")
+        assert hit == {"coords": [1.0, 2.0], "precision": "country"}
+
+    def test_capital_geocode_failure_keeps_centroid(self):
+        country_resp = self._resp([{"lat": "64.68", "lon": "97.74", "addresstype": "country"}])
+        with patch("geocoder.requests.get",
+                   side_effect=[country_resp, ConnectionError("boom")]):
+            hit = geocoder.geocode_place("Russia")
+        assert hit == {"coords": [64.68, 97.74], "precision": "country"}
 
     def test_legacy_list_cache_entry_upgraded(self):
         geocoder._load_cache()["kyiv|ukraine"] = [50.45, 30.52]

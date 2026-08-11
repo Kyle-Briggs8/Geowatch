@@ -1,7 +1,7 @@
 {
  "location": "Ukraine",
  "days": 30,
- "captured_at": "2026-08-11 05:58 UTC",
+ "captured_at": "2026-08-11 06:35 UTC",
  "events": [
   {
    "article": {
@@ -25,8 +25,8 @@
     "credibility": 2
    },
    "coords": [
-    49.4871968,
-    31.2718321
+    50.4500336,
+    30.5241361
    ],
    "loc_precision": "country"
   },
@@ -52,8 +52,8 @@
     "credibility": "2"
    },
    "coords": [
-    54.7023545,
-    -3.2765753
+    51.5074456,
+    -0.1277653
    ],
    "loc_precision": "country"
   },
@@ -78,8 +78,8 @@
     "credibility": 2
    },
    "coords": [
-    49.4871968,
-    31.2718321
+    50.4500336,
+    30.5241361
    ],
    "loc_precision": "country"
   },
@@ -104,8 +104,8 @@
     "credibility": "2"
    },
    "coords": [
-    64.6863136,
-    97.7453061
+    55.625578,
+    37.6063916
    ],
    "loc_precision": "country"
   },
@@ -133,8 +133,8 @@
     "credibility": "2"
    },
    "coords": [
-    51.1638175,
-    10.4478313
+    52.5173885,
+    13.3951309
    ],
    "loc_precision": "country"
   },
@@ -161,8 +161,8 @@
     "credibility": 2
    },
    "coords": [
-    49.4871968,
-    31.2718321
+    50.4500336,
+    30.5241361
    ],
    "loc_precision": "country"
   },
@@ -189,8 +189,8 @@
     "credibility": 2
    },
    "coords": [
-    64.6863136,
-    97.7453061
+    55.625578,
+    37.6063916
    ],
    "loc_precision": "country"
   },
@@ -217,8 +217,8 @@
     "credibility": 2
    },
    "coords": [
-    49.4871968,
-    31.2718321
+    50.4500336,
+    30.5241361
    ],
    "loc_precision": "country"
   },
@@ -275,8 +275,8 @@
     "credibility": 2
    },
    "coords": [
-    49.4871968,
-    31.2718321
+    50.4500336,
+    30.5241361
    ],
    "loc_precision": "country"
   },
@@ -303,8 +303,8 @@
     "credibility": "2"
    },
    "coords": [
-    49.4871968,
-    31.2718321
+    50.4500336,
+    30.5241361
    ],
    "loc_precision": "country"
   },
@@ -330,8 +330,8 @@
     "credibility": "3"
    },
    "coords": [
-    49.4871968,
-    31.2718321
+    50.4500336,
+    30.5241361
    ],
    "loc_precision": "country"
   },
