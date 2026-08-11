@@ -1,209 +1,54 @@
 {
  "location": "Ukraine",
  "days": 30,
- "captured_at": "2026-08-11 03:29 UTC",
+ "captured_at": "2026-08-11 05:45 UTC",
  "events": [
   {
    "article": {
-    "title": "Polish politician throws ‘Hitler’ Zelensky portrait in trash (VIDEO)",
+    "title": "Ukraine and allies launch coalition to tackle Russia’s ballistic missiles",
     "date": "2026-07-13",
-    "source": "RT",
-    "url": "https://www.rt.com/news/642956-poland-ukraine-zelensky-hitler/",
-    "description": "Krakow mayoral candidate Marianna Schreiber has thrown Vladimir Zelensky’s portrait into the trash in a social media video, accusing the Ukrainian leader of glorifying Nazi collaborators",
-    "image_url": "https://mf.b37mrtl.ru/files/2026.07/article/6a55053985f5406ce76e752a.png"
-   },
-   "analysis": {
-    "event_type": "political",
-    "entities": [
-     "Marianna Schreiber",
-     "Vladimir Zelensky"
-    ],
-    "severity": "medium",
-    "location_mentioned": "Krakow",
-    "one_line_summary": "Polish politician Marianna Schreiber threw a portrait of Ukrainian leader Vladimir Zelensky into the trash, accusing him of glorifying Nazi collaborators",
-    "credibility": "2"
-   },
-   "coords": [
-    50.0469432,
-    19.9971534
-   ]
-  },
-  {
-   "article": {
-    "title": "Ukraine and its allies hope Graham isn’t their last ally with Trump’s ear - Politico",
-    "date": "2026-07-15",
-    "source": "Slashdot.org",
-    "url": "https://slashdot.org/firehose.pl?op=view&amp;id=184473242",
-    "description": "Ukraine and its allies hope Graham isn’t their last ally with Trump’s earPolitico Opinion | Honor Lindsey Graham By Helping UkraineWSJ For Lindsey Graham, foreign policy may be where his influence was felt mostNPR China can help end Ukraine war by pressuring …",
-    "image_url": null
-   },
-   "analysis": {
-    "event_type": "political",
-    "entities": [
-     "Ukraine",
-     "Lindsey Graham",
-     "Donald Trump",
-     "China"
-    ],
-    "severity": "medium",
-    "location_mentioned": "Ukraine",
-    "one_line_summary": "Ukraine and its allies are concerned about losing influential allies with President Trump's ear, particularly after Lindsey Graham's efforts to support them",
-    "credibility": "2"
-   },
-   "coords": [
-    49.4871968,
-    31.2718321
-   ]
-  },
-  {
-   "article": {
-    "title": "British families 'unwittingly funding Russian kidnap of Ukrainian children after Labour watered down oil sanctions', researchers warn",
-    "date": "2026-07-17",
-    "source": "Dailymail.com",
-    "url": "https://www.dailymail.com/news/article-15968017/British-families-Russian-kidnap-Ukrainian-children-oil-sanctions.html",
-    "description": "British families are unwittingly funding Vladimir Putin's industrial scale kidnap of Ukrainian children after Labour watered down oil sanctions, researchers have warned.",
-    "image_url": "https://i.dailymail.com/1s/2026/07/17/23/110095425-0-image-m-10_1784327098140.jpg"
-   },
-   "analysis": {
-    "event_type": "conflict",
-    "entities": [
-     "Vladimir Putin",
-     "Labour",
-     "British families",
-     "Ukrainian children"
-    ],
-    "severity": "high",
-    "location_mentioned": "Ukraine",
-    "one_line_summary": "British families are unwittingly funding Vladimir Putin's kidnap of Ukrainian children due to watered down oil sanctions by Labour",
-    "credibility": "3"
-   },
-   "coords": [
-    49.4871968,
-    31.2718321
-   ]
-  },
-  {
-   "article": {
-    "title": "Kiev hit by several waves of missile strikes – reports (VIDEOS)",
-    "date": "2026-07-18",
-    "source": "RT",
-    "url": "https://www.rt.com/russia/643219-kiev-missiles-strikes-fires/",
-    "description": "The Ukrainian capital was hit by a combined drone and missile strike early Sunday morning, according to local officials and media reports Read Full Article at RT.com",
-    "image_url": "https://mf.b37mrtl.ru/files/2026.07/article/6a5c10bf85f5401b9c59caf9.jpg"
-   },
-   "analysis": {
-    "event_type": "conflict",
-    "entities": [
-     "Ukraine",
-     "Kiev"
-    ],
-    "severity": "high",
-    "location_mentioned": "Kiev",
-    "one_line_summary": "Kiev was hit by a combined drone and missile strike early Sunday morning",
-    "credibility": "3"
-   },
-   "coords": [
-    50.4500336,
-    30.5241361
-   ]
-  },
-  {
-   "article": {
-    "title": "Andy Burnham’s in-tray: The challenges facing the new UK PM",
-    "date": "2026-07-19",
     "source": "Al Jazeera English",
-    "url": "https://www.aljazeera.com/economy/2026/7/19/andy-burnhams-in-tray-the-challenges-facing-the-new-uk-pm",
-    "description": "Andy Burnham will become Britain's next prime minister on Monday, with huge challenges and opportunities.",
-    "image_url": "https://www.aljazeera.com/wp-content/uploads/2026/07/ap_6a5d16db77651-1784485595.jpg?resize=1920%2C1440"
+    "url": "https://www.aljazeera.com/news/2026/7/13/ukraine-and-allies-launch-coalition-to-tackle-russias-ballistic-missiles",
+    "description": "Russia has escalated attacks in recent weeks, taking advantage of Ukraine’s critical shortage of air defences.",
+    "image_url": "https://www.aljazeera.com/wp-content/uploads/2026/07/afp_6a552cd995f2-1783966937.jpg?resize=1920%2C1440"
    },
    "analysis": {
-    "event_type": "political",
-    "entities": [
-     "Andy Burnham"
-    ],
-    "severity": "medium",
-    "location_mentioned": "Britain",
-    "one_line_summary": "Andy Burnham is set to become Britain's next prime minister, facing significant challenges and opportunities",
-    "credibility": "2"
-   },
-   "coords": [
-    54.3151594,
-    -1.9181532
-   ]
-  },
-  {
-   "article": {
-    "title": "Azerbaijan confirms secret German-Russian talks in Baku on Ukraine conflict",
-    "date": "2026-07-21",
-    "source": "Crypto Briefing",
-    "url": "https://cryptobriefing.com/azerbaijan-confirms-secret-german-russian-talks-in-baku-on-ukraine-conflict/",
-    "description": "Azerbaijan confirms secret talks between Germany and Russia on Ukraine. Ceasefire agreement by December 31, 2026 at 35.5% YES.\nThe post Azerbaijan confirms secret German-Russian talks in Baku on Ukraine conflict appeared first on Crypto Briefing.",
-    "image_url": "https://static.cryptobriefing.com/wp-content/uploads/2026/07/21193041/the-three-flame-towers-in-baku-azerbaijan-look-blueish-purpl-1-1-800x420.jpeg"
-   },
-   "analysis": {
+    "relevant": true,
     "event_type": "conflict",
     "entities": [
-     "Azerbaijan",
-     "Germany",
+     "Ukraine",
      "Russia"
     ],
-    "severity": "medium",
-    "location_mentioned": "Baku",
-    "one_line_summary": "Azerbaijan has confirmed secret talks between Germany and Russia regarding the Ukraine conflict, with a potential ceasefire agreement by December 31, 2026",
-    "credibility": "3"
+    "severity": "high",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "Ukraine and its allies are forming a coalition to counter Russia's ballistic missile attacks amidst a critical shortage of air defenses in Ukraine",
+    "credibility": 2
    },
    "coords": [
-    40.3755885,
-    49.8328009
+    49.4871968,
+    31.2718321
    ]
   },
   {
    "article": {
-    "title": "Ukraine appears to change tactics in Russia attacks",
-    "date": "2026-07-22",
-    "source": "Biztoc.com",
-    "url": "https://biztoc.com/x/7dd98e1d2e3c1fd8",
-    "description": "Ukraine appears to be shifting its strategy in its attacks on Russia. Kyiv is letting up on its strikes on Russian oil refineries — easing Moscow’s fuel crunch and pushing gas prices back down — and is instead hitting ships: More than 120 Russia-linked vessel…",
-    "image_url": "https://biztoc.com/cdn/7dd98e1d2e3c1fd8_s.webp"
+    "title": "Burnham to promise new path for UK when he becomes new Labour leader",
+    "date": "2026-07-16",
+    "source": "BBC News",
+    "url": "https://www.bbc.co.uk/news/articles/c2lq12z1xdlo",
+    "description": "In a speech on Friday, he will begin to set out his vision for government, before becoming prime minister next week.",
+    "image_url": "https://ichef.bbci.co.uk/ace/branded_news/1200/cpsprodpb/8cbd/live/1aebe3f0-815b-11f1-af12-1d73a1ab1e06.jpg"
    },
    "analysis": {
-    "event_type": "conflict",
-    "entities": [
-     "Ukraine",
-     "Russia",
-     "Kyiv",
-     "Moscow"
-    ],
-    "severity": "medium",
-    "location_mentioned": "Russia",
-    "one_line_summary": "Ukraine appears to be shifting its strategy in its attacks on Russia, targeting ships instead of oil refineries",
-    "credibility": "2"
-   },
-   "coords": [
-    64.6863136,
-    97.7453061
-   ]
-  },
-  {
-   "article": {
-    "title": "'Not Trump's kind of guy': White House insider leaks President's private thoughts about 'dorky' new UK Prime Minister, by MARK HALPERIN",
-    "date": "2026-07-23",
-    "source": "Dailymail.com",
-    "url": "https://www.dailymail.com/debate/article-16000225/Trump-British-Prime-Minister-Burnham-dorky-mark-halperin.html",
-    "description": "'He has a clean slate,' the person said of Trump world's view of Burnham, 'but he's going to run into the same problems. People are unhappy.'",
-    "image_url": "https://i.dailymail.com/1s/2026/07/23/18/110209685-0-image-a-8_1784826723616.jpg"
-   },
-   "analysis": {
+    "relevant": "false",
     "event_type": "political",
     "entities": [
-     "Donald Trump",
-     "UK Prime Minister",
-     "Mark Halperin"
+     "Burnham",
+     "Labour"
     ],
     "severity": "low",
     "location_mentioned": "UK",
-    "one_line_summary": "A White House insider has leaked President Trump's private thoughts about the new UK Prime Minister, describing him as 'dorky'",
-    "credibility": "3"
+    "one_line_summary": "Burnham is set to become the new Labour leader and will outline his vision for government in a speech on Friday",
+    "credibility": "2"
    },
    "coords": [
     54.7023545,
@@ -212,24 +57,346 @@
   },
   {
    "article": {
-    "title": "Ukrainian Armed Forces attacked an Iranian vessel in the Caspian Sea. Iran's Foreign Ministry: Kyiv attacked an Iranian merchant vessel in the Caspian Sea",
-    "date": "2026-07-25",
-    "source": "Freerepublic.com",
-    "url": "https://freerepublic.com/focus/f-news/4389355/posts",
-    "description": "TEHRAN, Juy 25--RIA Novosti. The Ukrainian Armed Forces attacked an Iranian merchant vessel in the Caspian Sea, the Islamic Republic's Foreign Ministry reported. \"The Iranian Foreign Ministry strongly condemns Ukraine's attack on an Iranian merchant vessel in…",
-    "image_url": null
+    "title": "Ukrainian soldiers criticise removal of popular defence minister",
+    "date": "2026-07-17",
+    "source": "BBC News",
+    "url": "https://www.bbc.com/news/articles/cvg8w4dpjkwo",
+    "description": "Protests erupted in Ukraine on Thursday after Mykhailo Fedorov's removal - and now soldiers are also criticising the move.",
+    "image_url": "https://ichef.bbci.co.uk/news/1024/branded_news/0d83/live/2d7f0f80-8212-11f1-bee8-53ce494e1abc.jpg"
    },
    "analysis": {
+    "relevant": true,
+    "event_type": "political",
+    "entities": [
+     "Mykhailo Fedorov"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "Ukrainian soldiers are criticising the removal of defence minister Mykhailo Fedorov, which has sparked protests in the country",
+    "credibility": 2
+   },
+   "coords": [
+    49.4871968,
+    31.2718321
+   ]
+  },
+  {
+   "article": {
+    "title": "Russians turn to cash, putting more strain on slowing wartime economy",
+    "date": "2026-07-18",
+    "source": "BBC News",
+    "url": "https://www.bbc.co.uk/news/articles/cglj255jk8ko",
+    "description": "Russians have been hit by mobile internet shutdowns and more businesses are seeking to dodge tax after more than four years of war with Ukraine.",
+    "image_url": "https://ichef.bbci.co.uk/ace/branded_news/1200/cpsprodpb/c416/live/685838d0-81b2-11f1-bc34-d11e2a8fe857.jpg"
+   },
+   "analysis": {
+    "relevant": "true",
+    "event_type": "economic",
+    "entities": [
+     "Russians"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Russia",
+    "one_line_summary": "Russians are turning to cash and seeking to dodge tax due to wartime economic strain and mobile internet shutdowns after over four years of war with Ukraine.",
+    "credibility": "2"
+   },
+   "coords": [
+    64.6863136,
+    97.7453061
+   ]
+  },
+  {
+   "article": {
+    "title": "Russian army deserters in Germany: 'No choice but to run'",
+    "date": "2026-07-19",
+    "source": "DW (English)",
+    "url": "https://www.dw.com/en/russian-army-deserters-in-germany-no-choice-but-to-run/a-78020377",
+    "description": "Almost all asylum applications by Russian deserters are being denied by German authorities. DW and Russian-language media outlet Astra spoke to one of the young men who fears he'll be sent back to die on the front lines.",
+    "image_url": "https://static.dw.com/image/70868877_6.jpg"
+   },
+   "analysis": {
+    "relevant": "false",
+    "event_type": "other",
+    "entities": [
+     "Russian army",
+     "German authorities",
+     "DW",
+     "Astra"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Germany",
+    "one_line_summary": "Russian army deserters in Germany are having their asylum applications denied, fearing they will be sent back to fight on the front lines",
+    "credibility": "2"
+   },
+   "coords": [
+    51.1638175,
+    10.4478313
+   ]
+  },
+  {
+   "article": {
+    "title": "Ukraine's Zelenskyy fires his military chief after protests and names a new one",
+    "date": "2026-07-21",
+    "source": "NPR",
+    "url": "https://www.npr.org/2026/07/21/g-s1-134849/ukraine-military-chief-fired-protests",
+    "description": "President Volodymyr Zelenskyy fired Gen. Oleksandr Syrskyi as commander-in-chief of Ukraine's armed forces following days of protests demanding his removal. Zelenskyy appointed Mykhailo Drapatyi as the new army chief.",
+    "image_url": "https://npr.brightspotcdn.com/dims3/default/strip/false/crop/2000x1125+0+104/resize/1400/quality/85/format/jpeg/?url=http%3A%2F%2Fnpr-brightspot.s3.amazonaws.com%2F36%2F57%2F0bcd69b04045b6553fd33188e37a%2Fap26199705557337.jpg"
+   },
+   "analysis": {
+    "relevant": true,
+    "event_type": "political",
+    "entities": [
+     "Volodymyr Zelenskyy",
+     "Oleksandr Syrskyi",
+     "Mykhailo Drapatyi"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "Ukrainian President Volodymyr Zelenskyy fired his military chief Gen. Oleksandr Syrskyi and appointed Mykhailo Drapatyi as the new army chief after protests",
+    "credibility": 2
+   },
+   "coords": [
+    49.4871968,
+    31.2718321
+   ]
+  },
+  {
+   "article": {
+    "title": "Russia's businesses under strain from Ukraine's attacks on Wildberries",
+    "date": "2026-07-22",
+    "source": "BBC News",
+    "url": "https://www.bbc.co.uk/news/articles/cvg9n2y61w6o",
+    "description": "Ukrainian drones have hit several retail warehouses belonging to Russia's biggest online retailer Wildberries in a matter of days.",
+    "image_url": "https://ichef.bbci.co.uk/ace/branded_news/1200/cpsprodpb/3c64/live/d7b13ca0-85f3-11f1-8ade-a7a676c613b9.jpg"
+   },
+   "analysis": {
+    "relevant": true,
     "event_type": "conflict",
     "entities": [
-     "Ukrainian Armed Forces",
-     "Iran's Foreign Ministry",
-     "Iran"
+     "Russia",
+     "Ukraine",
+     "Wildberries"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Russia",
+    "one_line_summary": "Ukrainian drones have attacked several Russian retail warehouses belonging to Wildberries",
+    "credibility": 2
+   },
+   "coords": [
+    64.6863136,
+    97.7453061
+   ]
+  },
+  {
+   "article": {
+    "title": "Loomer meets with Zelensky in Ukraine after major U-turn...",
+    "date": "2026-07-23",
+    "source": "Associated Press",
+    "url": "https://apnews.com/article/laura-loomer-ukraine-russia-zelenskyy-trump-8ae91d7f5bfb3940388de800301b34ce",
+    "description": "Laura Loomer, President Donald Trump's ally with a reputation for incendiary social media comments, has sat down with Ukrainian President Volodymyr Zelenskyy after a dramatic about-face regarding the war. Loomer had spent years minimizing Russia’s invasion of…",
+    "image_url": "https://dims.apnews.com/dims4/default/b495b04/2147483647/strip/true/crop/3896x2596+0+0/resize/980x653!/quality/90/?url=https%3A%2F%2Fassets.apnews.com%2F61%2F49%2F4cbcd15201f60d9772c35d1570f7%2Fd2212acb84994f2d8173a5fe7d6b0151"
+   },
+   "analysis": {
+    "relevant": true,
+    "event_type": "political",
+    "entities": [
+     "Laura Loomer",
+     "Volodymyr Zelenskyy",
+     "Donald Trump"
+    ],
+    "severity": "low",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "Laura Loomer met with Ukrainian President Volodymyr Zelenskyy after changing her stance on the war in Ukraine",
+    "credibility": 2
+   },
+   "coords": [
+    49.4871968,
+    31.2718321
+   ]
+  },
+  {
+   "article": {
+    "title": "Russia hits drone demonstration near Kyiv, killing 10",
+    "date": "2026-07-24",
+    "source": "DW (English)",
+    "url": "https://www.dw.com/en/russia-hits-drone-demonstration-near-kyiv-killing-10/a-78105704",
+    "description": "Ukraine says 10 were killed and around 100 injured in the strike, a day after Zelenskyy met with officials from US arms giant Raytheon. Meanwhile, in St. Petersburg, another Wildberries warehouse came under drone fire.",
+    "image_url": "https://static.dw.com/image/78100422_6.jpg"
+   },
+   "analysis": {
+    "relevant": true,
+    "event_type": "conflict",
+    "entities": [
+     "Russia",
+     "Ukraine",
+     "Zelenskyy",
+     "Raytheon",
+     "Wildberries"
+    ],
+    "severity": "high",
+    "location_mentioned": "Kyiv",
+    "one_line_summary": "Russia struck a drone demonstration near Kyiv, killing 10 people and injuring around 100, amidst ongoing conflict and drone attacks in the region.",
+    "credibility": 2
+   },
+   "coords": [
+    50.4500336,
+    30.5241361
+   ]
+  },
+  {
+   "article": {
+    "title": "Ukraine drone strikes on Wildberries warehouses hit Russian sellers, consumers",
+    "date": "2026-07-25",
+    "source": "NPR",
+    "url": "https://www.npr.org/2026/07/25/nx-s1-5905377/ukraine-drone-strikes-on-wildberries-warehouses-hit-russian-sellers-consumers",
+    "description": "Ukraine's attacks on warehouses of the Russian online retailer Wildberries have hurt small businesses and some consumers.",
+    "image_url": "https://media.npr.org/include/images/facebook-default-wide-s1400-c85.jpg"
+   },
+   "analysis": {
+    "relevant": true,
+    "event_type": "conflict",
+    "entities": [
+     "Ukraine",
+     "Wildberries",
+     "Russia"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "Ukraine's drone strikes on Wildberries warehouses have negatively impacted Russian sellers and consumers",
+    "credibility": 2
+   },
+   "coords": [
+    49.4871968,
+    31.2718321
+   ]
+  },
+  {
+   "article": {
+    "title": "PM pledges continued support for Ukraine ahead of Zelensky visit",
+    "date": "2026-07-26",
+    "source": "BBC News",
+    "url": "https://www.bbc.co.uk/news/articles/cy8me5vyjg2o",
+    "description": "The Ukrainian president will be Andy Burnham's first international visitor since taking office.",
+    "image_url": "https://ichef.bbci.co.uk/ace/branded_news/1200/cpsprodpb/22a2/live/0e818a60-8922-11f1-a7ab-8b30adf0800a.jpg"
+   },
+   "analysis": {
+    "relevant": "false",
+    "event_type": "political",
+    "entities": [
+     "Ukraine",
+     "Zelensky",
+     "Andy Burnham"
+    ],
+    "severity": "low",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "The Ukrainian president will visit, with the PM pledging continued support for Ukraine",
+    "credibility": "2"
+   },
+   "coords": [
+    49.4871968,
+    31.2718321
+   ]
+  },
+  {
+   "article": {
+    "title": "Why does the world support Ukraine but not Israel?",
+    "date": "2026-07-27",
+    "source": "Haaretz",
+    "url": "https://www.haaretz.com/opinion/2026-07-28/ty-article-opinion/.premium/why-does-the-world-support-ukraine-but-not-israel/0000019f-a535-d641-a1df-e77f2fc30000",
+    "description": "Answer might be found by looking at two different stories – one easily understood, one complex – through four lenses",
+    "image_url": "https://img.haarets.co.il/bs/0000019f-a535-d641-a1df-e77f2fc30000/d8/95/621b78ea818a19ea988acce9c85a/2097363535.jpg?precrop=2152,1253,x44,y163&width=1200&height=630&cmsprod"
+   },
+   "analysis": {
+    "relevant": "false",
+    "event_type": "other",
+    "entities": [
+     "Ukraine",
+     "Israel"
+    ],
+    "severity": "low",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "The article explores the differing levels of global support for Ukraine and Israel through various analytical lenses",
+    "credibility": "3"
+   },
+   "coords": [
+    49.4871968,
+    31.2718321
+   ]
+  },
+  {
+   "article": {
+    "title": "Ukraine negotiator: 'We have the upper hand'",
+    "date": "2026-07-28",
+    "source": "NPR",
+    "url": "https://www.npr.org/2026/07/28/g-s1-135640/ukraine-war-peace-negotiator-russia",
+    "description": "In an interview with NPR, one of Ukraine's top negotiators Sergiy Kyslytsya explains why Kyiv believes it now has the leverage to force Russia into serious negotiations.",
+    "image_url": "https://npr.brightspotcdn.com/dims3/default/strip/false/crop/5906x3322+0+340/resize/1400/quality/85/format/jpeg/?url=http%3A%2F%2Fnpr-brightspot.s3.amazonaws.com%2F57%2F88%2F3184b84e4df6b4e1fea733c9bcb4%2Fsergiy-kyslytsya001.jpg"
+   },
+   "analysis": {
+    "relevant": true,
+    "event_type": "political",
+    "entities": [
+     "Sergiy Kyslytsya",
+     "Ukraine",
+     "Russia"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Kyiv",
+    "one_line_summary": "Ukraine's top negotiator Sergiy Kyslytsya believes Ukraine has the upper hand in negotiations with Russia",
+    "credibility": 2
+   },
+   "coords": [
+    50.4500336,
+    30.5241361
+   ]
+  },
+  {
+   "article": {
+    "title": "Deaths in Ukraine after Zelenskyy warns of Russian strikes",
+    "date": "2026-07-29",
+    "source": "DW (English)",
+    "url": "https://www.dw.com/en/deaths-in-ukraine-after-zelenskyy-warns-of-russian-strikes/a-78167375",
+    "description": "At least eight people have been killed in air strikes across Ukraine. President Volodymyr Zelenskyy had warned of a \"massive Russian attack\" citing air force reports, as Kyiv in turn again bombed a logistics center.",
+    "image_url": "https://static.dw.com/image/78168688_6.jpg"
+   },
+   "analysis": {
+    "relevant": true,
+    "event_type": "conflict",
+    "entities": [
+     "Volodymyr Zelenskyy",
+     "Russia"
+    ],
+    "severity": "high",
+    "location_mentioned": "Kyiv",
+    "one_line_summary": "At least eight people have been killed in air strikes across Ukraine after President Zelenskyy warned of a massive Russian attack",
+    "credibility": 2
+   },
+   "coords": [
+    50.4500336,
+    30.5241361
+   ]
+  },
+  {
+   "article": {
+    "title": "Iran war: Is Ukraine opening a new front in Caspian Sea?",
+    "date": "2026-07-30",
+    "source": "DW (English)",
+    "url": "https://www.dw.com/en/are-iran-and-ukraine-wars-getting-tangled-in-caspian-sea/a-78178784",
+    "description": "Tehran has threatened a response after a Ukrainian strike on a Iranian cargo ship in the Caspian Sea Kyiv says was carrying weapons to Russia. A recent Ukrainian strike on an Iranian vessel in the Caspian Sea has drawn concerns that Russia's war in Ukraine an…",
+    "image_url": "https://static.dw.com/image/71157443_6.jpg"
+   },
+   "analysis": {
+    "relevant": true,
+    "event_type": "conflict",
+    "entities": [
+     "Ukraine",
+     "Iran",
+     "Russia"
     ],
     "severity": "medium",
     "location_mentioned": "Caspian Sea",
-    "one_line_summary": "The Ukrainian Armed Forces attacked an Iranian merchant vessel in the Caspian Sea, according to Iran's Foreign Ministry",
-    "credibility": "3"
+    "one_line_summary": "Ukraine has struck an Iranian cargo ship in the Caspian Sea, allegedly carrying weapons to Russia, prompting threats of a response from Tehran",
+    "credibility": 2
    },
    "coords": [
     41.7789772,
@@ -238,230 +405,53 @@
   },
   {
    "article": {
-    "title": "Vessel sinks a week after being struck by Russian fire, Ukrainian officials say - Reuters",
-    "date": "2026-07-26",
-    "source": "Slashdot.org",
-    "url": "https://slashdot.org/firehose.pl?op=view&amp;id=184710510",
-    "description": "Vessel sinks a week after being struck by Russian fire, Ukrainian officials sayReuters 2 Indians Missing After Another Attack On Ship At Odesa Port In UkraineNDTV Ukraine war briefing: Russia behind deadly strike on cargo ship, says Ukraine, as Putin thanks N…",
-    "image_url": null
+    "title": "Trump now 'not sure' about letting Ukraine build Patriot missiles",
+    "date": "2026-07-31",
+    "source": "BBC News",
+    "url": "https://www.bbc.co.uk/news/articles/c86n0336082o",
+    "description": "The US president's latest comments come weeks after he offered Kyiv the right to make the missiles.",
+    "image_url": "https://ichef.bbci.co.uk/ace/branded_news/1200/cpsprodpb/1120/live/e32703c0-8d24-11f1-a7ab-8b30adf0800a.jpg"
    },
    "analysis": {
-    "event_type": "conflict",
-    "entities": [
-     "Russia",
-     "Ukraine",
-     "Putin"
-    ],
-    "severity": "high",
-    "location_mentioned": "Odesa Port",
-    "one_line_summary": "A vessel sank a week after being struck by Russian fire, with two Indians reported missing, according to Ukrainian officials",
-    "credibility": "2"
-   },
-   "coords": [
-    46.4857247,
-    30.7484149
-   ]
-  },
-  {
-   "article": {
-    "title": "Even in death, Lindsey Graham is driving diplomacy forward",
-    "date": "2026-07-28",
-    "source": "New York Post",
-    "url": "https://nypost.com/2026/07/28/us-news/even-in-death-lindsey-graham-is-driving-diplomacy-forward/",
-    "description": "WASHINGTON – Lindsey Graham’s bipartisan relationships and stature on the global stage drove world events one last time Tuesday, as a gathering for his funeral produced a possibility for peace. Ukrainian President Volodymyr Zelensky, in town for Graham’s memo…",
-    "image_url": "https://nypost.com/wp-content/uploads/sites/2/2026/07/crop-40115019_9c2f0f.jpg?quality=75&strip=all&w=1200"
-   },
-   "analysis": {
+    "relevant": true,
     "event_type": "political",
     "entities": [
-     "Lindsey Graham",
-     "Volodymyr Zelensky"
+     "Trump",
+     "Ukraine",
+     "US",
+     "Kyiv"
     ],
     "severity": "medium",
-    "location_mentioned": "Washington",
-    "one_line_summary": "The funeral of Lindsey Graham brought together world leaders, including Ukrainian President Volodymyr Zelensky, and sparked a possibility for peace",
-    "credibility": "2"
+    "location_mentioned": "Kyiv",
+    "one_line_summary": "US President Trump expressed uncertainty about allowing Ukraine to build Patriot missiles, reversing his previous stance",
+    "credibility": 2
    },
    "coords": [
-    38.8950982,
-    -77.0363849
+    50.4500336,
+    30.5241361
    ]
   },
   {
    "article": {
-    "title": "GOP Lawmaker Calls Trump's Framing of Ukraine War 'Embarrassing'",
-    "date": "2026-07-30",
-    "source": "Biztoc.com",
-    "url": "https://biztoc.com/x/d36655ec868aa7f6",
-    "description": "Representative Don Bacon, one of Congress' most outspoken Republican supporters of Ukraine, publicly rebuked President Donald Trump after the president responded to a question about his meeting with Ukrainian President Volodymyr Zelensky by saying he wants th…",
-    "image_url": "https://biztoc.com/cdn/d36655ec868aa7f6_s.webp"
-   },
-   "analysis": {
-    "event_type": "political",
-    "entities": [
-     "Don Bacon",
-     "Donald Trump",
-     "Volodymyr Zelensky"
-    ],
-    "severity": "low",
-    "location_mentioned": "Ukraine",
-    "one_line_summary": "Representative Don Bacon publicly rebuked President Donald Trump over his comments on the Ukraine war",
-    "credibility": "2"
-   },
-   "coords": [
-    49.4871968,
-    31.2718321
-   ]
-  },
-  {
-   "article": {
-    "title": "Russia destroys 1.5M Ukrainian books in drone strike targeting culture",
+    "title": "Homemade bomb goes off outside upscale Moscow restaurant state officials say",
     "date": "2026-08-01",
-    "source": "Crypto Briefing",
-    "url": "https://cryptobriefing.com/russia-destroys-15m-ukrainian-books-in-drone-strike-targeting-culture/",
-    "description": "The destruction of Ukrainian cultural assets may signal a strategic shift, complicating Ukraine's efforts and impacting military dynamics.\nThe post Russia destroys 1.5M Ukrainian books in drone strike targeting culture appeared first on Crypto Briefing.",
-    "image_url": "https://static.cryptobriefing.com/wp-content/uploads/2026/08/01165505/the-theater-courage-and-survival-in-the-defining-atrocity-of-1-800x420.jpeg"
+    "source": "DW (English)",
+    "url": "https://www.dw.com/en/homemade-bomb-goes-off-outside-upscale-moscow-restaurant-state-officials-say/a-78205022",
+    "description": "Russian authorities said the blast occurred outside a restaurant on Kudrinskaya Square when a woman allegedly carrying explosives was stopped by a security guard.",
+    "image_url": "https://static.dw.com/image/78205163_6.jpg"
    },
    "analysis": {
-    "event_type": "conflict",
+    "relevant": "false",
+    "event_type": "terrorism",
     "entities": [
-     "Russia",
-     "Ukraine"
-    ],
-    "severity": "high",
-    "location_mentioned": "Ukraine",
-    "one_line_summary": "Russia has destroyed 1.5 million Ukrainian books in a drone strike targeting Ukrainian culture",
-    "credibility": "3"
-   },
-   "coords": [
-    49.4871968,
-    31.2718321
-   ]
-  },
-  {
-   "article": {
-    "title": "Oil Spill From Sanctioned Tanker Is Growing Fast",
-    "date": "2026-08-04",
-    "source": "Newser",
-    "url": "https://www.newser.com/story/394083/oil-spill-from-sanctioned-tanker-is-growing-fast.html",
-    "description": "An oil spill caused by leakage from a UK-sanctioned tanker grounded for weeks off Oman appears to be expanding dramatically, reaching shorelines and far out to sea, according to experts and satellite images reviewed by the AP . Greenpeace Germany said in a st…",
-    "image_url": "https://cdn.newser.com/image/1703213-12-20260804172808.jpeg"
-   },
-   "analysis": {
-    "event_type": "natural_disaster",
-    "entities": [
-     "Greenpeace Germany",
-     "UK"
-    ],
-    "severity": "high",
-    "location_mentioned": "Oman",
-    "one_line_summary": "An oil spill from a UK-sanctioned tanker grounded off Oman is expanding dramatically, reaching shorelines and far out to sea",
-    "credibility": "2"
-   },
-   "coords": [
-    21.0000287,
-    57.0036901
-   ]
-  },
-  {
-   "article": {
-    "title": "Retired Army colonel explains why Patriot missiles are so valuable and in short supply",
-    "date": "2026-08-05",
-    "source": "PBS",
-    "url": "https://www.pbs.org/newshour/show/retired-army-colonel-explains-why-patriot-missiles-are-so-valuable-and-in-short-supply",
-    "description": "To discuss the air defense shortage in Ukraine and the impact on its ability to defend itself from Russia, Amna Nawaz spoke with retired Army Col. Robert Hamilton. He's now president of the Delphi Global Research Center, a military consulting firm. PBS News i…",
-    "image_url": "https://d3i6fh83elv35t.cloudfront.net/static/2026/08/ukrainediss-1024x683.jpg"
-   },
-   "analysis": {
-    "event_type": "conflict",
-    "entities": [
-     "Robert Hamilton",
-     "Ukraine",
-     "Russia",
-     "Delphi Global Research Center"
+     "Russian authorities"
     ],
     "severity": "medium",
-    "location_mentioned": "Ukraine",
-    "one_line_summary": "A retired Army colonel discusses the air defense shortage in Ukraine and the importance of Patriot missiles in its defense against Russia",
-    "credibility": "2"
-   },
-   "coords": [
-    49.4871968,
-    31.2718321
-   ]
-  },
-  {
-   "article": {
-    "title": "Mercer International Inc. Reports Second Quarter 2026 Results",
-    "date": "2026-08-06",
-    "source": "GlobeNewswire",
-    "url": "https://www.globenewswire.com/news-release/2026/08/06/3340823/10647/en/Mercer-International-Inc-Reports-Second-Quarter-2026-Results.html",
-    "description": "Selected Highlights  Second quarter Operating EBITDA* of negative $21.0 million (net loss of $76.0 million), including a non-cash inventory impairment of...",
-    "image_url": "https://ml.globenewswire.com/Resource/Download/3ff20124-4ccd-43ca-a482-d421d047632d"
-   },
-   "analysis": {
-    "event_type": "economic",
-    "entities": [
-     "Mercer International Inc."
-    ],
-    "severity": "medium",
-    "location_mentioned": null,
-    "one_line_summary": "Mercer International Inc. reports a net loss of $76.0 million for the second quarter of 2026.",
+    "location_mentioned": "Kudrinskaya Square",
+    "one_line_summary": "A homemade bomb exploded outside a Moscow restaurant after a woman carrying explosives was stopped by a security guard.",
     "credibility": "2"
    },
    "coords": null
-  },
-  {
-   "article": {
-    "title": "Ukrainian Drone With Huge Explosive Payload Hits Bulgaria Near Vital Gas Pipeline",
-    "date": "2026-08-08",
-    "source": "Biztoc.com",
-    "url": "https://biztoc.com/x/116f6cfdac01f6df",
-    "description": "Ukrainian Drone With Huge Explosive Payload Hits Bulgaria Near Vital Gas Pipeline\n \nA major border and aerial incident has occurred between Ukraine and Bulgaria, and Bulgarian officials are outraged and demanding answers - ironically on the heels of a politic…",
-    "image_url": "https://biztoc.com/cdn/116f6cfdac01f6df_s.webp"
-   },
-   "analysis": {
-    "event_type": "conflict",
-    "entities": [
-     "Ukraine",
-     "Bulgaria"
-    ],
-    "severity": "high",
-    "location_mentioned": "Bulgaria",
-    "one_line_summary": "A Ukrainian drone with a large explosive payload has hit Bulgaria near a vital gas pipeline, sparking outrage and demands for answers from Bulgarian officials",
-    "credibility": "3"
-   },
-   "coords": [
-    42.6073975,
-    25.4856617
-   ]
-  },
-  {
-   "article": {
-    "title": "FBI Chief Kash Patel plans Russia trip in October; Kremlin-friendly newspaper hints at a give and take",
-    "date": "2026-08-09",
-    "source": "The Times of India",
-    "url": "https://economictimes.indiatimes.com/news/international/world-news/fbi-chief-kash-patel-plans-russia-trip-in-october-kremlin-friendly-newspaper-hints-at-a-give-and-take/articleshow/133073033.cms",
-    "description": "FBI Director Kash Patel plans an unusual trip to Russia in mid-October.  This visit occurs amid ongoing geopolitical tensions and heightened congressional scrutiny.  Patel's history involves controversial Russia-related developments from Donald Trump's first …",
-    "image_url": "https://img.etimg.com/thumb/msid-133073082,width-1200,height-630,imgsize-84532,overlay-economictimes/articleshow.jpg"
-   },
-   "analysis": {
-    "event_type": "political",
-    "entities": [
-     "Kash Patel",
-     "FBI",
-     "Kremlin",
-     "Donald Trump"
-    ],
-    "severity": "medium",
-    "location_mentioned": "Russia",
-    "one_line_summary": "FBI Director Kash Patel plans to visit Russia in October amid ongoing geopolitical tensions and congressional scrutiny",
-    "credibility": "2"
-   },
-   "coords": [
-    64.6863136,
-    97.7453061
-   ]
   }
  ],
  "x_events": [

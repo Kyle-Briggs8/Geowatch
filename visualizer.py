@@ -390,10 +390,10 @@ def _glance_html(events: list[dict]) -> str:
 
     return f"""
     <div class="stats">
-      <div class="stat"><div class="stat-num">{len(analyzed)}</div><div class="stat-label">Events analyzed</div></div>
-      <div class="stat"><div class="stat-num" style="color:#c2410c">{high_crit}</div><div class="stat-label">High or critical</div></div>
-      <div class="stat"><div class="stat-num">{len(sources)}</div><div class="stat-label">Distinct outlets</div></div>
-      <div class="stat"><div class="stat-num" style="color:#1a7f37">{best}</div><div class="stat-label">Best sourcing grade</div></div>
+      <div class="stat" title="Articles that were fetched, judged relevant, and classified by the LLM this run"><div class="stat-num">{len(analyzed)}</div><div class="stat-label">Events analyzed</div></div>
+      <div class="stat" title="Events the LLM rated high or critical severity"><div class="stat-num" style="color:#c2410c">{high_crit}</div><div class="stat-label">High or critical</div></div>
+      <div class="stat" title="Different news outlets contributing to this run — more outlets means stronger corroboration"><div class="stat-num">{len(sources)}</div><div class="stat-label">Distinct outlets</div></div>
+      <div class="stat" title="Best NATO Admiralty reliability letter among contributing outlets: A completely reliable, B usually reliable, C fairly reliable, D not usually reliable, E unreliable, F cannot be judged"><div class="stat-num" style="color:#1a7f37">{best}</div><div class="stat-label">Top source grade</div></div>
     </div>
     <div class="types">{type_rows or '<div style="color:#98a1ab;font-size:12px;">No data</div>'}</div>"""
 

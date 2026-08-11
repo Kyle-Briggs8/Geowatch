@@ -12,7 +12,7 @@ from analyzer import analyze_article, analyze_posts
 from briefer import generate_brief
 from demo import load_demo_events, save_demo_events
 from entities import build_entity_cooccurrence
-from fetcher import get_news
+from fetcher import get_news, select_articles
 from geocoder import geocode_events
 from visualizer import build_dashboard, build_comparison_dashboard, _compute_trend
 from xfetcher import get_x_posts, has_x_token
@@ -24,14 +24,6 @@ def _bar(count: int, total: int, width: int = 10) -> str:
     """Return a block-character progress bar string for count out of total."""
     filled = round((count / total) * width) if total else 0
     return "█" * filled + "░" * (width - filled)
-
-
-def _subsample(articles: list[dict], max_n: int) -> list[dict]:
-    """Return up to max_n evenly-spaced articles from the list."""
-    if len(articles) <= max_n:
-        return articles
-    step = len(articles) / max_n
-    return [articles[int(i * step)] for i in range(max_n)]
 
 
 def _check_alert(events: list[dict], threshold: str) -> dict | None:
@@ -183,10 +175,10 @@ def _run_single(args: argparse.Namespace) -> None:
         print(f"[ERROR] {exc}", file=sys.stderr)
         sys.exit(1)
 
-    articles = _subsample(raw_articles, max_articles)
+    articles = select_articles(raw_articles, max_articles)
     print(
         f"Found {len(raw_articles)} articles — "
-        f"analyzing {len(articles)} spread across full date range\n"
+        f"analyzing {len(articles)}, best-graded sources across the full date range\n"
     )
 
     for i, art in enumerate(articles, 1):
@@ -286,7 +278,7 @@ def _run_compare(args: argparse.Namespace) -> None:
     def _pipeline(location: str):
         try:
             raw = get_news(location, args.days)
-            articles = _subsample(raw, max_articles)
+            articles = select_articles(raw, max_articles)
             print(f"[{location}] Analyzing {len(articles)} articles...")
             evts = [
                 {"article": art, "analysis": a}

@@ -9,7 +9,7 @@ from flask import Flask, Response, jsonify, render_template_string, request
 
 from analyzer import analyze_article, analyze_posts
 from demo import load_demo_events
-from fetcher import get_news
+from fetcher import get_news, select_articles
 from geocoder import geocode_events
 from mapper import REGION_COORDS
 from visualizer import build_dashboard, build_comparison_dashboard
@@ -407,14 +407,6 @@ _WAITING_HTML = """<!DOCTYPE html>
 
 # ── Pipeline helpers ──────────────────────────────────────────────────────────
 
-def _subsample(raw: list, max_n: int) -> list:
-    """Return up to max_n evenly-spaced items from raw."""
-    if len(raw) <= max_n:
-        return raw
-    step = len(raw) / max_n
-    return [raw[int(i * step)] for i in range(max_n)]
-
-
 def _do_analyze(location: str, days: int, max_articles: int, demo: bool = False,
                 include_x: bool = False) -> str:
     """Fetch, analyze, and render a single-location dashboard. Returns HTML string.
@@ -440,7 +432,7 @@ def _do_analyze(location: str, days: int, max_articles: int, demo: bool = False,
             x_fut = x_executor.submit(get_x_posts, location, days)
 
     raw      = get_news(location, days)
-    articles = _subsample(raw, max_articles)
+    articles = select_articles(raw, max_articles)
     events   = [
         {"article": art, "analysis": a}
         for art in articles
@@ -470,7 +462,7 @@ def _do_compare(loc_a: str, loc_b: str, days: int, max_articles: int) -> str:
         raw = get_news(loc, days)
         evts = [
             {"article": art, "analysis": a}
-            for art in _subsample(raw, max_articles)
+            for art in select_articles(raw, max_articles)
             if not ((a := analyze_article(art, loc)) and a.get("relevant") is False)
         ]
         geocode_events(evts, loc)

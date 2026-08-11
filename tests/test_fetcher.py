@@ -47,6 +47,7 @@ class TestGetNewsapiNews:
         mock_resp = _make_newsapi_response([raw_article])
 
         with patch("fetcher._newsapi_window") as mock_window, \
+             patch("fetcher._newsapi_priority_window", return_value=[]), \
              patch.dict(os.environ, {"NEWSAPI_KEY": "test-key-123"}):
             # Patch _newsapi_window to return our normalized dict directly
             mock_window.return_value = [
@@ -67,6 +68,45 @@ class TestGetNewsapiNews:
         expected_keys = {"title", "date", "source", "url", "description", "image_url"}
         for art in articles:
             assert expected_keys == set(art.keys()), f"Missing keys in: {art}"
+
+    def test_priority_articles_win_url_collision(self):
+        """An article from the priority pass beats the same URL from the daily pass."""
+        shared_url = "https://reuters.com/article/x"
+        prio  = [{"title": "Reuters original", "date": "2026-08-01", "source": "Reuters",
+                  "url": shared_url, "description": "d", "image_url": None}]
+        daily = [{"title": "Aggregated copy", "date": "2026-08-01", "source": "Biztoc.com",
+                  "url": shared_url, "description": "", "image_url": None}]
+        with patch("fetcher._newsapi_window", return_value=daily), \
+             patch("fetcher._newsapi_priority_window", return_value=prio), \
+             patch.dict(os.environ, {"NEWSAPI_KEY": "test-key-123"}):
+            import fetcher
+            articles, _ = fetcher.get_newsapi_news("TestLocation", 1)
+        matches = [a for a in articles if a["url"] == shared_url]
+        assert len(matches) == 1
+        assert matches[0]["source"] == "Reuters"
+
+    def test_daily_window_excludes_junk_domains(self):
+        """_newsapi_window sends the excludeDomains blocklist."""
+        import fetcher
+        mock_resp = MagicMock()
+        mock_resp.raise_for_status.return_value = None
+        mock_resp.json.return_value = {"status": "ok", "articles": []}
+        with patch("fetcher.requests.get", return_value=mock_resp) as mock_get:
+            fetcher._newsapi_window("Loc", datetime(2026, 8, 1), datetime(2026, 8, 2), "k")
+        params = mock_get.call_args.kwargs["params"]
+        assert "biztoc.com" in params["excludeDomains"]
+
+    def test_priority_window_restricts_to_highgrade_domains(self):
+        """_newsapi_priority_window requests only the high-reliability allowlist."""
+        import fetcher
+        mock_resp = MagicMock()
+        mock_resp.raise_for_status.return_value = None
+        mock_resp.json.return_value = {"status": "ok", "articles": []}
+        with patch("fetcher.requests.get", return_value=mock_resp) as mock_get:
+            fetcher._newsapi_priority_window("Loc", datetime(2026, 8, 1), datetime(2026, 8, 8), "k")
+        params = mock_get.call_args.kwargs["params"]
+        assert "reuters.com" in params["domains"]
+        assert params["pageSize"] == 100
 
     def test_returns_empty_list_on_http_500(self):
         """Returns an empty list when the API returns HTTP 500."""
@@ -296,3 +336,58 @@ class TestMakeDailyWindows:
         for start, end in windows:
             delta = end - start
             assert delta == timedelta(days=1), f"Window not 1 day wide: {delta}"
+
+
+# ---------------------------------------------------------------------------
+# select_articles
+# ---------------------------------------------------------------------------
+
+def _art(url, date, source, desc="d", img="i"):
+    return {"title": url, "date": date, "source": source,
+            "url": url, "description": desc, "image_url": img}
+
+
+class TestSelectArticles:
+
+    def test_prefers_higher_grade_source_within_a_day(self):
+        import fetcher
+        arts = [
+            _art("a1", "2026-08-01", "Biztoc.com"),
+            _art("a2", "2026-08-01", "Reuters"),
+            _art("a3", "2026-08-01", "Freerepublic.com"),
+            _art("a4", "2026-08-02", "Random Blog"),
+            _art("a5", "2026-08-02", "BBC News"),
+        ]
+        picked = fetcher.select_articles(arts, 2)
+        assert {a["source"] for a in picked} == {"Reuters", "BBC News"}
+
+    def test_preserves_date_spread(self):
+        import fetcher
+        arts = [_art(f"a{i}{d}", f"2026-08-0{d}", "Reuters") for d in (1, 2, 3) for i in range(5)]
+        picked = fetcher.select_articles(arts, 3)
+        assert {a["date"] for a in picked} == {"2026-08-01", "2026-08-02", "2026-08-03"}
+
+    def test_respects_max_n(self):
+        import fetcher
+        arts = [_art(f"a{i}", "2026-08-01", "Reuters") for i in range(10)]
+        assert len(fetcher.select_articles(arts, 4)) == 4
+
+    def test_returns_all_when_under_limit(self):
+        import fetcher
+        arts = [_art("a1", "2026-08-01", "Reuters")]
+        assert fetcher.select_articles(arts, 5) == arts
+
+    def test_richer_article_wins_tie(self):
+        import fetcher
+        arts = [
+            _art("bare", "2026-08-01", "Unknown Outlet", desc="", img=None),
+            _art("rich", "2026-08-01", "Another Unknown", desc="full text", img="pic"),
+        ]
+        picked = fetcher.select_articles(arts, 1)
+        assert picked[0]["url"] == "rich"
+
+    def test_output_sorted_by_date(self):
+        import fetcher
+        arts = [_art(f"a{d}", f"2026-08-0{d}", "Reuters") for d in (3, 1, 2)] * 2
+        picked = fetcher.select_articles(arts, 3)
+        assert [a["date"] for a in picked] == sorted(a["date"] for a in picked)

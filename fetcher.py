@@ -9,12 +9,30 @@ import requests
 from dotenv import load_dotenv
 from groq import Groq
 
+from grading import source_reliability
+
 load_dotenv()
 
 _NEWSAPI_MAX_DAYS   = 30
 _GDELT_MAX_DAYS     = 90
 _NEWSAPI_PER_DAY    = 20  # articles fetched per day from NewsAPI
 _GDELT_PER_DAY      = 5   # articles fetched per day from GDELT
+
+# Aggregators and press-release wires that flood publishedAt-sorted results
+# with low-grade rebroadcasts — excluded so real outlets get the result slots
+_EXCLUDE_DOMAINS = ",".join([
+    "biztoc.com", "freerepublic.com", "slashdot.org", "newser.com",
+    "prnewswire.com", "globenewswire.com", "menafn.com", "financialpost.com",
+])
+
+# High-reliability outlets (A/B on the Admiralty table in grading.py) queried
+# in a dedicated priority pass so top-grade coverage is always in the pool
+_PRIORITY_DOMAINS = ",".join([
+    "reuters.com", "apnews.com", "bbc.co.uk", "bbc.com", "theguardian.com",
+    "aljazeera.com", "bloomberg.com", "nytimes.com", "washingtonpost.com",
+    "npr.org", "dw.com", "france24.com", "euronews.com", "kyivindependent.com",
+    "politico.com", "ft.com", "economist.com", "time.com",
+])
 
 
 def _make_daily_windows(days: int) -> list[tuple[datetime, datetime]]:
@@ -58,6 +76,7 @@ def _newsapi_window(
                 "language": "en",
                 "sortBy":   "publishedAt",
                 "pageSize": _NEWSAPI_PER_DAY,
+                "excludeDomains": _EXCLUDE_DOMAINS,
             },
             headers={"X-Api-Key": api_key},
             timeout=10,
@@ -83,8 +102,64 @@ def _newsapi_window(
     ]
 
 
+def _newsapi_priority_window(
+    location: str, from_dt: datetime, to_dt: datetime, api_key: str
+) -> list[dict]:
+    """One NewsAPI request restricted to high-reliability outlets for a window."""
+    try:
+        r = requests.get(
+            "https://newsapi.org/v2/everything",
+            params={
+                "q":        location,
+                "from":     from_dt.strftime("%Y-%m-%d"),
+                "to":       to_dt.strftime("%Y-%m-%d"),
+                "language": "en",
+                "sortBy":   "publishedAt",
+                "pageSize": 100,
+                "domains":  _PRIORITY_DOMAINS,
+            },
+            headers={"X-Api-Key": api_key},
+            timeout=10,
+        )
+        r.raise_for_status()
+        data = r.json()
+    except (requests.RequestException, ValueError):
+        return []
+
+    if data.get("status") != "ok":
+        return []
+
+    return [
+        {
+            "title":       item.get("title")       or "",
+            "date":        (item.get("publishedAt") or "")[:10],
+            "source":      (item.get("source") or {}).get("name") or "",
+            "url":         item.get("url")         or "",
+            "description": item.get("description") or "",
+            "image_url":   item.get("urlToImage")  or None,
+        }
+        for item in data.get("articles", [])
+    ]
+
+
+def _make_weekly_windows(days: int) -> list[tuple[datetime, datetime]]:
+    """Return (start, end) tuples in 7-day steps covering [now-days, now]."""
+    end = datetime.utcnow()
+    windows: list[tuple[datetime, datetime]] = []
+    cur = end - timedelta(days=days)
+    while cur < end:
+        nxt = min(cur + timedelta(days=7), end)
+        windows.append((cur, nxt))
+        cur = nxt
+    return windows
+
+
 def get_newsapi_news(location: str, days: int) -> tuple[list[dict], int]:
-    """One request per calendar day, all in parallel. Returns (articles, actual_days)."""
+    """Daily windows plus a weekly high-grade priority pass, all in parallel.
+
+    Priority-pass articles are merged first so top-reliability outlets win
+    URL-collision dedupe. Returns (articles, actual_days).
+    """
     api_key = os.getenv("NEWSAPI_KEY")
     if not api_key or api_key == "your_newsapi_key_here":
         raise EnvironmentError(
@@ -101,20 +176,65 @@ def get_newsapi_news(location: str, days: int) -> tuple[list[dict], int]:
             file=sys.stderr,
         )
 
-    windows = _make_daily_windows(actual_days)
+    daily_windows  = _make_daily_windows(actual_days)
+    weekly_windows = _make_weekly_windows(actual_days)
+
+    with ThreadPoolExecutor(max_workers=min(len(daily_windows) + len(weekly_windows), 10)) as ex:
+        prio_futs  = [ex.submit(_newsapi_priority_window, location, ws, we, api_key)
+                      for ws, we in weekly_windows]
+        daily_futs = [ex.submit(_newsapi_window, location, ws, we, api_key)
+                      for ws, we in daily_windows]
+        priority = [art for f in prio_futs for art in f.result()]
+        daily    = [art for f in daily_futs for art in f.result()]
+
     seen: set[str] = set()
     articles: list[dict] = []
-
-    with ThreadPoolExecutor(max_workers=min(len(windows), 10)) as ex:
-        futs = [ex.submit(_newsapi_window, location, ws, we, api_key) for ws, we in windows]
-        for f in as_completed(futs):
-            for art in f.result():
-                url = art["url"]
-                if url and url not in seen:
-                    seen.add(url)
-                    articles.append(art)
+    for art in priority + daily:
+        url = art["url"]
+        if url and url not in seen:
+            seen.add(url)
+            articles.append(art)
 
     return articles, actual_days
+
+
+def select_articles(articles: list[dict], max_n: int) -> list[dict]:
+    """Pick up to max_n articles, preferring reliable outlets while keeping date spread.
+
+    Articles are bucketed by date; within each bucket they're ranked by Admiralty
+    source reliability (A best), then richness (has description, has image).
+    Buckets are drained round-robin — best article from each date first — so the
+    result spans the full window instead of clustering, and a Reuters piece
+    always beats an ungraded aggregator on the same day.
+    """
+    if len(articles) <= max_n:
+        return articles
+
+    buckets: dict[str, list[dict]] = {}
+    for art in articles:
+        buckets.setdefault(art.get("date") or "", []).append(art)
+
+    for arts in buckets.values():
+        arts.sort(key=lambda a: (
+            source_reliability(a.get("source")),
+            not a.get("description"),
+            not a.get("image_url"),
+        ))
+
+    selected: list[dict] = []
+    dates = sorted(buckets)
+    deepest = max(len(b) for b in buckets.values())
+    rank = 0
+    while len(selected) < max_n and rank < deepest:
+        for d in dates:
+            if rank < len(buckets[d]):
+                selected.append(buckets[d][rank])
+                if len(selected) == max_n:
+                    break
+        rank += 1
+
+    selected.sort(key=lambda a: a.get("date") or "")
+    return selected
 
 
 # ── GDELT ─────────────────────────────────────────────────────────────────────
