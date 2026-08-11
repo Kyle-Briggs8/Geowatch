@@ -14,8 +14,6 @@ from folium.plugins import MarkerCluster
 
 from mapper import REGION_COORDS, _LEGEND_HTML
 from entities import build_entity_cooccurrence, render_entity_graph_html
-import hashlib
-
 from grading import assess_confidence, describe_grade, grade_event, grade_post
 
 _SEV_ORDER = ["low", "medium", "high", "critical"]
@@ -637,28 +635,18 @@ def _x_tab_html(x_events: list[dict] | None, days: int, x_status: str | None,
     </div>"""
 
 
-def _jitter(ev: dict) -> tuple[float, float]:
-    """Deterministic per-event offset (±0.4°) so co-located markers don't stack."""
-    seed = (ev.get("article", {}).get("url") or "") + (ev.get("article", {}).get("title") or "")
-    h = hashlib.md5(seed.encode("utf-8")).digest()
-    return ((h[0] / 255 - 0.5) * 0.8, (h[1] / 255 - 0.5) * 0.8)
-
-
 def _marker_location(ev: dict, center: tuple[float, float]) -> tuple[float, float]:
     """Marker position honoring geocode precision.
 
-    Point/region precision → exact geocoded coords. Country precision → the
-    country's coords with jitter (several country-level events shouldn't stack
-    on one centroid dot). No coords at all → AOI centroid with jitter.
+    Geocoded events sit exactly on their coordinates; events with no coords sit
+    exactly on the AOI centroid. No synthetic jitter — co-located markers are
+    handled by the marker cluster (numbered bubble that fans out on click),
+    which doesn't invent positions the data doesn't support.
     """
     coords = ev.get("coords")
     if coords and len(coords) == 2:
-        if ev.get("loc_precision") == "country":
-            jl, jn = _jitter(ev)
-            return (coords[0] + jl, coords[1] + jn)
         return (coords[0], coords[1])
-    jl, jn = _jitter(ev)
-    return (center[0] + jl, center[1] + jn)
+    return center
 
 
 def _is_approx(ev: dict) -> bool:

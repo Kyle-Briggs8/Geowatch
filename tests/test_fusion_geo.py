@@ -111,24 +111,15 @@ class TestMarkerLocation:
         ev = {"article": {"url": "u"}, "coords": [49.99, 36.23]}
         assert _marker_location(ev, (48.0, 31.0)) == (49.99, 36.23)
 
-    def test_fallback_jitter_is_deterministic_and_bounded(self):
+    def test_no_coords_falls_back_to_exact_aoi_centroid(self):
         ev = {"article": {"url": "https://a.com/1", "title": "t"}}
-        a = _marker_location(ev, (48.0, 31.0))
-        b = _marker_location(ev, (48.0, 31.0))
-        assert a == b
-        assert abs(a[0] - 48.0) <= 0.4 and abs(a[1] - 31.0) <= 0.4
+        assert _marker_location(ev, (48.0, 31.0)) == (48.0, 31.0)
 
-    def test_different_events_jitter_differently(self):
-        a = _marker_location({"article": {"url": "https://a.com/1", "title": "x"}}, (48, 31))
-        b = _marker_location({"article": {"url": "https://a.com/2", "title": "y"}}, (48, 31))
-        assert a != b
-
-    def test_country_precision_jitters_around_country_coords(self):
+    def test_country_precision_sits_on_its_own_coords(self):
+        # no synthetic jitter — co-located markers are the cluster's job
         ev = {"article": {"url": "u", "title": "t"},
               "coords": [49.48, 31.27], "loc_precision": "country"}
-        loc = _marker_location(ev, (48.0, 31.0))
-        assert loc != (49.48, 31.27)                       # not the bare centroid
-        assert abs(loc[0] - 49.48) <= 0.45 and abs(loc[1] - 31.27) <= 0.45
+        assert _marker_location(ev, (48.0, 31.0)) == (49.48, 31.27)
 
     def test_approx_marker_rendered_dashed(self, sample_events):
         from visualizer import _map_iframe

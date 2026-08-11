@@ -198,18 +198,17 @@ def get_newsapi_news(location: str, days: int) -> tuple[list[dict], int]:
     return articles, actual_days
 
 
-def select_articles(articles: list[dict], max_n: int) -> list[dict]:
-    """Pick up to max_n articles, preferring reliable outlets while keeping date spread.
+def rank_articles(articles: list[dict]) -> list[dict]:
+    """Return ALL articles in quality-first, date-spread order.
 
     Articles are bucketed by date; within each bucket they're ranked by Admiralty
     source reliability (A best), then richness (has description, has image).
-    Buckets are drained round-robin — best article from each date first — so the
-    result spans the full window instead of clustering, and a Reuters piece
-    always beats an ungraded aggregator on the same day.
+    Buckets are drained round-robin — best article from each date first — so a
+    prefix of any length spans the full window, and a Reuters piece always beats
+    an ungraded aggregator on the same day. Pipelines walk this ranking and keep
+    analyzing until they have enough *relevant* events, so LLM-dropped articles
+    are backfilled by the next-best candidates.
     """
-    if len(articles) <= max_n:
-        return articles
-
     buckets: dict[str, list[dict]] = {}
     for art in articles:
         buckets.setdefault(art.get("date") or "", []).append(art)
@@ -221,18 +220,21 @@ def select_articles(articles: list[dict], max_n: int) -> list[dict]:
             not a.get("image_url"),
         ))
 
-    selected: list[dict] = []
+    ranked: list[dict] = []
     dates = sorted(buckets)
-    deepest = max(len(b) for b in buckets.values())
-    rank = 0
-    while len(selected) < max_n and rank < deepest:
+    deepest = max((len(b) for b in buckets.values()), default=0)
+    for rank in range(deepest):
         for d in dates:
             if rank < len(buckets[d]):
-                selected.append(buckets[d][rank])
-                if len(selected) == max_n:
-                    break
-        rank += 1
+                ranked.append(buckets[d][rank])
+    return ranked
 
+
+def select_articles(articles: list[dict], max_n: int) -> list[dict]:
+    """Pick up to max_n articles, preferring reliable outlets while keeping date spread."""
+    if len(articles) <= max_n:
+        return articles
+    selected = rank_articles(articles)[:max_n]
     selected.sort(key=lambda a: a.get("date") or "")
     return selected
 

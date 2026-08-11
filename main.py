@@ -12,7 +12,7 @@ from analyzer import analyze_article, analyze_posts
 from briefer import generate_brief
 from demo import load_demo_events, save_demo_events
 from entities import build_entity_cooccurrence
-from fetcher import get_news, select_articles
+from fetcher import get_news, rank_articles
 from geocoder import geocode_events
 from visualizer import build_dashboard, build_comparison_dashboard, _compute_trend
 from xfetcher import get_x_posts, has_x_token
@@ -175,30 +175,29 @@ def _run_single(args: argparse.Namespace) -> None:
         print(f"[ERROR] {exc}", file=sys.stderr)
         sys.exit(1)
 
-    articles = select_articles(raw_articles, max_articles)
+    ranked = rank_articles(raw_articles)
     print(
         f"Found {len(raw_articles)} articles — "
-        f"analyzing {len(articles)}, best-graded sources across the full date range\n"
+        f"analyzing best-graded candidates until {max_articles} relevant events\n"
     )
-
-    for i, art in enumerate(articles, 1):
-        print(f"  [{i:>2}] {art['date']}  {art['source']}")
-        print(f"       {art['title']}")
-        if art["description"]:
-            desc = art["description"][:120] + ("…" if len(art["description"]) > 120 else "")
-            print(f"       {desc}")
-        print()
 
     print("─" * 43)
     print("Running Groq LLM analysis...")
     print("─" * 43)
 
+    # Walk the quality ranking until enough RELEVANT events are collected —
+    # articles the LLM screens out get backfilled by the next-best candidates.
+    # Analysis budget capped at 2x the target so a noisy pool can't run away.
+    budget = min(len(ranked), max_articles * 2)
     events: list[dict] = []
-    for i, art in enumerate(articles, 1):
-        print(f"  Analyzing article {i}/{len(articles)}: {art['title'][:60]}...")
+    for i, art in enumerate(ranked[:budget], 1):
+        if len(events) >= max_articles:
+            break
+        print(f"  [{len(events) + 1:>3}/{max_articles}] {art['date']}  "
+              f"{art['source']}: {art['title'][:60]}...")
         analysis = analyze_article(art, args.location)
         if analysis and analysis.get("relevant") is False:
-            print(f"    └─ [SKIP] Not primarily about {args.location} — dropped")
+            print(f"    └─ [SKIP] Not primarily about {args.location} — trying next candidate")
             continue
         events.append({"article": art, "analysis": analysis})
         if analysis:
@@ -208,6 +207,11 @@ def _run_single(args: argparse.Namespace) -> None:
             print(f"    └─ [{sev}] {etype} — {summary}")
         else:
             print("    └─ [WARN] Could not parse analysis for this article")
+
+    events.sort(key=lambda e: e["article"].get("date") or "")
+    if len(events) < max_articles:
+        print(f"\n  [NOTE] {len(events)} relevant events found "
+              f"(requested {max_articles}) — pool exhausted after screening")
 
     # ── Geocode events from their extracted locations ────────────────────────
     print("\nGeocoding event locations (Nominatim, cached)...")
@@ -278,14 +282,17 @@ def _run_compare(args: argparse.Namespace) -> None:
     def _pipeline(location: str):
         try:
             raw = get_news(location, args.days)
-            articles = select_articles(raw, max_articles)
-            print(f"[{location}] Analyzing {len(articles)} articles...")
-            evts = [
-                {"article": art, "analysis": a}
-                for art in articles
-                if not ((a := analyze_article(art, location))
-                        and a.get("relevant") is False)
-            ]
+            ranked = rank_articles(raw)
+            print(f"[{location}] Analyzing candidates for {max_articles} relevant events...")
+            evts = []
+            for art in ranked[:max_articles * 2]:
+                if len(evts) >= max_articles:
+                    break
+                a = analyze_article(art, location)
+                if a and a.get("relevant") is False:
+                    continue
+                evts.append({"article": art, "analysis": a})
+            evts.sort(key=lambda e: e["article"].get("date") or "")
             geocode_events(evts, location)
             return location, evts
         except Exception as exc:  # broad: one location failing must not cancel the other

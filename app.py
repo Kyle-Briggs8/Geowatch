@@ -9,7 +9,7 @@ from flask import Flask, Response, jsonify, render_template_string, request
 
 from analyzer import analyze_article, analyze_posts
 from demo import load_demo_events
-from fetcher import get_news, select_articles
+from fetcher import get_news, rank_articles
 from geocoder import geocode_events
 from mapper import REGION_COORDS
 from visualizer import build_dashboard, build_comparison_dashboard
@@ -431,13 +431,17 @@ def _do_analyze(location: str, days: int, max_articles: int, demo: bool = False,
             x_executor = ThreadPoolExecutor(max_workers=1)
             x_fut = x_executor.submit(get_x_posts, location, days)
 
-    raw      = get_news(location, days)
-    articles = select_articles(raw, max_articles)
-    events   = [
-        {"article": art, "analysis": a}
-        for art in articles
-        if not ((a := analyze_article(art, location)) and a.get("relevant") is False)
-    ]
+    raw    = get_news(location, days)
+    ranked = rank_articles(raw)
+    events: list = []
+    for art in ranked[:max_articles * 2]:
+        if len(events) >= max_articles:
+            break
+        a = analyze_article(art, location)
+        if a and a.get("relevant") is False:
+            continue
+        events.append({"article": art, "analysis": a})
+    events.sort(key=lambda e: e["article"].get("date") or "")
     geocode_events(events, location)
 
     x_events = None
@@ -460,11 +464,16 @@ def _do_compare(loc_a: str, loc_b: str, days: int, max_articles: int) -> str:
     """Fetch, analyze, and render a two-location comparison dashboard. Returns HTML string."""
     def _pipeline(loc: str) -> list:
         raw = get_news(loc, days)
-        evts = [
-            {"article": art, "analysis": a}
-            for art in select_articles(raw, max_articles)
-            if not ((a := analyze_article(art, loc)) and a.get("relevant") is False)
-        ]
+        ranked = rank_articles(raw)
+        evts: list = []
+        for art in ranked[:max_articles * 2]:
+            if len(evts) >= max_articles:
+                break
+            a = analyze_article(art, loc)
+            if a and a.get("relevant") is False:
+                continue
+            evts.append({"article": art, "analysis": a})
+        evts.sort(key=lambda e: e["article"].get("date") or "")
         geocode_events(evts, loc)
         return evts
 
