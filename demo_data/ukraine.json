@@ -1,7 +1,7 @@
 {
  "location": "Ukraine",
  "days": 30,
- "captured_at": "2026-08-11 06:35 UTC",
+ "captured_at": "2026-08-11 16:01 UTC",
  "events": [
   {
    "article": {
@@ -21,7 +21,7 @@
     ],
     "severity": "high",
     "location_mentioned": "Ukraine",
-    "one_line_summary": "Ukraine and its allies are forming a coalition to counter Russia's ballistic missile attacks amidst a critical shortage of air defenses in Ukraine",
+    "one_line_summary": "Ukraine and its allies are forming a coalition to counter Russia's increased ballistic missile attacks",
     "credibility": 2
    },
    "coords": [
@@ -48,7 +48,7 @@
     ],
     "severity": "low",
     "location_mentioned": "UK",
-    "one_line_summary": "Burnham is set to become the new Labour leader and will outline his vision for government in a speech on Friday",
+    "one_line_summary": "Burnham is set to become the new Labour leader and will outline his vision for government in a speech",
     "credibility": "2"
    },
    "coords": [
@@ -74,7 +74,7 @@
     ],
     "severity": "medium",
     "location_mentioned": "Ukraine",
-    "one_line_summary": "Ukrainian soldiers are criticising the removal of defence minister Mykhailo Fedorov, which has sparked protests in the country",
+    "one_line_summary": "Ukrainian soldiers are criticising the removal of defence minister Mykhailo Fedorov, which sparked protests in the country",
     "credibility": 2
    },
    "coords": [
@@ -93,14 +93,14 @@
     "image_url": "https://ichef.bbci.co.uk/ace/branded_news/1200/cpsprodpb/c416/live/685838d0-81b2-11f1-bc34-d11e2a8fe857.jpg"
    },
    "analysis": {
-    "relevant": "true",
+    "relevant": "false",
     "event_type": "economic",
     "entities": [
      "Russians"
     ],
     "severity": "medium",
     "location_mentioned": "Russia",
-    "one_line_summary": "Russians are turning to cash and seeking to dodge tax due to wartime economic strain and mobile internet shutdowns after over four years of war with Ukraine.",
+    "one_line_summary": "Russians face economic strain and mobile internet shutdowns amid ongoing war with Ukraine",
     "credibility": "2"
    },
    "coords": [
@@ -157,7 +157,7 @@
     ],
     "severity": "medium",
     "location_mentioned": "Ukraine",
-    "one_line_summary": "Ukrainian President Volodymyr Zelenskyy fired his military chief Gen. Oleksandr Syrskyi and appointed Mykhailo Drapatyi as the new army chief after protests",
+    "one_line_summary": "Ukrainian President Volodymyr Zelenskyy fired his military chief Gen. Oleksandr Syrskyi and appointed Mykhailo Drapatyi as the new army chief after days of protests",
     "credibility": 2
    },
    "coords": [
@@ -185,7 +185,7 @@
     ],
     "severity": "medium",
     "location_mentioned": "Russia",
-    "one_line_summary": "Ukrainian drones have attacked several Russian retail warehouses belonging to Wildberries",
+    "one_line_summary": "Ukrainian drones have attacked several Wildberries retail warehouses in Russia",
     "credibility": 2
    },
    "coords": [
@@ -238,12 +238,13 @@
      "Russia",
      "Ukraine",
      "Zelenskyy",
+     "US",
      "Raytheon",
      "Wildberries"
     ],
     "severity": "high",
     "location_mentioned": "Kyiv",
-    "one_line_summary": "Russia struck a drone demonstration near Kyiv, killing 10 people and injuring around 100, amidst ongoing conflict and drone attacks in the region.",
+    "one_line_summary": "Russia struck a drone demonstration near Kyiv, killing 10 and injuring around 100 people",
     "credibility": 2
    },
    "coords": [
@@ -271,7 +272,7 @@
     ],
     "severity": "medium",
     "location_mentioned": "Ukraine",
-    "one_line_summary": "Ukraine's drone strikes on Wildberries warehouses have negatively impacted Russian sellers and consumers",
+    "one_line_summary": "Ukraine's drone strikes on Wildberries warehouses have affected Russian sellers and consumers",
     "credibility": 2
    },
    "coords": [
@@ -352,9 +353,9 @@
      "Ukraine",
      "Russia"
     ],
-    "severity": "medium",
+    "severity": "low",
     "location_mentioned": "Kyiv",
-    "one_line_summary": "Ukraine's top negotiator Sergiy Kyslytsya believes Ukraine has the upper hand in negotiations with Russia",
+    "one_line_summary": "Ukraine's top negotiator Sergiy Kyslytsya believes Ukraine has the upper hand to force Russia into serious negotiations",
     "credibility": 2
    },
    "coords": [
@@ -380,15 +381,15 @@
      "Russia"
     ],
     "severity": "high",
-    "location_mentioned": "Kyiv",
-    "one_line_summary": "At least eight people have been killed in air strikes across Ukraine after President Zelenskyy warned of a massive Russian attack",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "At least eight people have been killed in air strikes across Ukraine after President Volodymyr Zelenskyy warned of a massive Russian attack",
     "credibility": 2
    },
    "coords": [
     50.4500336,
     30.5241361
    ],
-   "loc_precision": "point"
+   "loc_precision": "country"
   },
   {
    "article": {
@@ -400,7 +401,7 @@
     "image_url": "https://static.dw.com/image/71157443_6.jpg"
    },
    "analysis": {
-    "relevant": true,
+    "relevant": "true",
     "event_type": "conflict",
     "entities": [
      "Ukraine",
@@ -409,8 +410,8 @@
     ],
     "severity": "medium",
     "location_mentioned": "Caspian Sea",
-    "one_line_summary": "Ukraine has struck an Iranian cargo ship in the Caspian Sea, allegedly carrying weapons to Russia, prompting threats of a response from Tehran",
-    "credibility": 2
+    "one_line_summary": "Ukraine has struck an Iranian cargo ship in the Caspian Sea, allegedly carrying weapons to Russia, prompting a threat of response from Tehran",
+    "credibility": "2"
    },
    "coords": [
     41.7789772,
@@ -433,19 +434,18 @@
     "entities": [
      "Trump",
      "Ukraine",
-     "US",
-     "Kyiv"
+     "US"
     ],
-    "severity": "medium",
-    "location_mentioned": "Kyiv",
-    "one_line_summary": "US President Trump expressed uncertainty about allowing Ukraine to build Patriot missiles, reversing his previous stance",
+    "severity": "low",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "US President Trump expressed uncertainty about allowing Ukraine to build Patriot missiles, weeks after initially offering the opportunity",
     "credibility": 2
    },
    "coords": [
     50.4500336,
     30.5241361
    ],
-   "loc_precision": "point"
+   "loc_precision": "country"
   },
   {
    "article": {
@@ -463,15 +463,288 @@
      "Russian authorities"
     ],
     "severity": "medium",
-    "location_mentioned": "Moscow",
+    "location_mentioned": "Kudrinskaya Square, Moscow",
     "one_line_summary": "A homemade bomb exploded outside a Moscow restaurant after a woman carrying explosives was stopped by a security guard.",
     "credibility": "2"
+   },
+   "coords": null,
+   "loc_precision": null
+  },
+  {
+   "article": {
+    "title": "Ukraine hits targets deep inside Russia, killing eight",
+    "date": "2026-08-02",
+    "source": "DW (English)",
+    "url": "https://www.dw.com/en/ukraine-hits-targets-deep-inside-russia-killing-eight/a-78208850",
+    "description": "Ukrainian drone strikes inside Russia killed eight people overnight in attacks that targeted military and civilian infrastructure. Russia said Moscow's forces downed 635 drones in the assault.",
+    "image_url": "https://static.dw.com/image/78209069_6.jpg"
+   },
+   "analysis": {
+    "relevant": true,
+    "event_type": "conflict",
+    "entities": [
+     "Ukraine",
+     "Russia",
+     "Moscow"
+    ],
+    "severity": "high",
+    "location_mentioned": "Russia",
+    "one_line_summary": "Ukrainian drone strikes inside Russia killed eight people, targeting military and civilian infrastructure",
+    "credibility": 2
    },
    "coords": [
     55.625578,
     37.6063916
    ],
-   "loc_precision": "region"
+   "loc_precision": "country"
+  },
+  {
+   "article": {
+    "title": "Iran called off Ukraine strikes after Kiev’s ‘apology’ – Khamenei adviser",
+    "date": "2026-08-03",
+    "source": "RT",
+    "url": "https://www.rt.com/news/643819-iran-called-off-ukraine-strike/",
+    "description": "Iran called off strikes on Ukraine after Kiev apologized for an attack on an Iranian cargo ship, an adviser to Mojtaba Khamenei has said Read Full Article at RT.com",
+    "image_url": "https://mf.b37mrtl.ru/files/2026.08/article/6a711c712030277e9b106cfe.jpg"
+   },
+   "analysis": {
+    "relevant": true,
+    "event_type": "conflict",
+    "entities": [
+     "Iran",
+     "Ukraine",
+     "Mojtaba Khamenei"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "Iran cancelled planned strikes on Ukraine after Kiev apologized for an attack on an Iranian cargo ship",
+    "credibility": 3
+   },
+   "coords": [
+    50.4500336,
+    30.5241361
+   ],
+   "loc_precision": "country"
+  },
+  {
+   "article": {
+    "title": "Ukraine's air defenses are proving to be a weak point",
+    "date": "2026-08-04",
+    "source": "NPR",
+    "url": "https://www.npr.org/2026/08/04/nx-s1-5909140/ukraines-air-defenses-are-proving-to-be-a-weak-point",
+    "description": "Ukraine's defenses have held the line on most fronts, but there's one glaring weakness -- Russian ballistic missiles. Ukraine is desperately short of U.S.-made Patriot air defense missiles needed to defend against the Russians.",
+    "image_url": "https://media.npr.org/include/images/facebook-default-wide-s1400-c85.jpg"
+   },
+   "analysis": {
+    "relevant": true,
+    "event_type": "conflict",
+    "entities": [
+     "Ukraine",
+     "Russia",
+     "U.S."
+    ],
+    "severity": "medium",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "Ukraine's air defenses are struggling to counter Russian ballistic missiles due to a shortage of U.S.-made Patriot air defense missiles",
+    "credibility": 2
+   },
+   "coords": [
+    50.4500336,
+    30.5241361
+   ],
+   "loc_precision": "country"
+  },
+  {
+   "article": {
+    "title": "Kyiv residents face attacks with fewer defenses overhead",
+    "date": "2026-08-05",
+    "source": "NPR",
+    "url": "https://www.npr.org/2026/08/05/nx-s1-5921395/kyiv-residents-face-attacks-with-fewer-defenses-overhead",
+    "description": "Another overnight attack killed at least 17 people in and around Kyiv. The strikes come as Ukraine faces a growing shortage of the interceptor missiles used to defend the capital.",
+    "image_url": "https://media.npr.org/include/images/facebook-default-wide-s1400-c85.jpg"
+   },
+   "analysis": {
+    "relevant": true,
+    "event_type": "conflict",
+    "entities": [
+     "Ukraine"
+    ],
+    "severity": "high",
+    "location_mentioned": "Kyiv",
+    "one_line_summary": "At least 17 people were killed in overnight attacks in and around Kyiv as the city faces a shortage of interceptor missiles for defense",
+    "credibility": 2
+   },
+   "coords": [
+    50.4500336,
+    30.5241361
+   ],
+   "loc_precision": "point"
+  },
+  {
+   "article": {
+    "title": "How Ukraine is taking the war 'deeper' into Russia",
+    "date": "2026-08-06",
+    "source": "BBC News",
+    "url": "https://www.bbc.co.uk/news/videos/ce8l6x3r9gjo",
+    "description": "Ukrainian strikes have targeted key economic and military supply chains in recent weeks.",
+    "image_url": "https://ichef.bbci.co.uk/news/1024/branded_news/7c50/live/50689bd0-91bf-11f1-a7ab-8b30adf0800a.jpg"
+   },
+   "analysis": {
+    "relevant": true,
+    "event_type": "conflict",
+    "entities": [
+     "Ukraine",
+     "Russia"
+    ],
+    "severity": "high",
+    "location_mentioned": "Russia",
+    "one_line_summary": "Ukraine has launched strikes targeting key economic and military supply chains in Russia",
+    "credibility": 2
+   },
+   "coords": [
+    55.625578,
+    37.6063916
+   ],
+   "loc_precision": "country"
+  },
+  {
+   "article": {
+    "title": "Migrant tunnels in Lithuania direct suspicion towards Minsk",
+    "date": "2026-08-07",
+    "source": "DW (English)",
+    "url": "https://www.dw.com/en/migrant-tunnels-in-lithuania-direct-suspicion-towards-minsk/a-78280640",
+    "description": "Lithuania's border guards have discovered tunnels through which migrants are trying to enter the country from Belarus. Analysts see them as a means to destabilize the country.",
+    "image_url": "https://static.dw.com/image/78276910_6.jpg"
+   },
+   "analysis": {
+    "relevant": "false",
+    "event_type": "other",
+    "entities": [
+     "Lithuania",
+     "Belarus",
+     "Minsk"
+    ],
+    "severity": "low",
+    "location_mentioned": "Lithuania",
+    "one_line_summary": "Lithuania's border guards discovered tunnels used by migrants to enter from Belarus, sparking concerns of destabilization efforts",
+    "credibility": "2"
+   },
+   "coords": [
+    54.6870458,
+    25.2829111
+   ],
+   "loc_precision": "country"
+  },
+  {
+   "article": {
+    "title": "Ukraine mourns \"collector of souls\" Oleksiy Yukov, killed recovering war dead",
+    "date": "2026-08-08",
+    "source": "NPR",
+    "url": "https://www.npr.org/2026/08/08/nx-s1-5925887/ukraine-mourns-oleksiy-yukov",
+    "description": "Oleksiy Yukov spent two decades recovering the bodies of soldiers – including many Russians. He was killed during a recovery mission after stepping on a landmine.",
+    "image_url": "https://npr.brightspotcdn.com/dims3/default/strip/false/crop/5600x3150+0+292/resize/1400/quality/85/format/jpeg/?url=http%3A%2F%2Fnpr-brightspot.s3.amazonaws.com%2F27%2F1d%2F3f4898934fcc99f53c6f867c88d6%2Fgettyimages-2288793372.jpg"
+   },
+   "analysis": {
+    "relevant": true,
+    "event_type": "conflict",
+    "entities": [
+     "Oleksiy Yukov"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "Oleksiy Yukov, a Ukrainian who spent two decades recovering the bodies of soldiers, was killed by a landmine during a recovery mission",
+    "credibility": 2
+   },
+   "coords": [
+    50.4500336,
+    30.5241361
+   ],
+   "loc_precision": "country"
+  },
+  {
+   "article": {
+    "title": "Ukraine and Russia exchange attacks as Kyiv buys new ATACMS",
+    "date": "2026-08-09",
+    "source": "DW (English)",
+    "url": "https://www.dw.com/en/ukraine-and-russia-exchange-attacks-as-kyiv-buys-new-atacms/a-78294589",
+    "description": "Overnight drone and missile attacks killed several and injured dozens more in both Ukraine and Russia. As Kyiv seeks to defend itself it has now reportedly finalized a deal to buy US missile systems from Turkey.",
+    "image_url": "https://static.dw.com/image/78292714_6.jpg"
+   },
+   "analysis": {
+    "relevant": true,
+    "event_type": "conflict",
+    "entities": [
+     "Ukraine",
+     "Russia",
+     "Kyiv",
+     "Turkey",
+     "US"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Kyiv",
+    "one_line_summary": "Ukraine and Russia exchanged overnight drone and missile attacks, resulting in casualties, as Ukraine finalizes a deal to buy US missile systems from Turkey",
+    "credibility": 2
+   },
+   "coords": [
+    50.4500336,
+    30.5241361
+   ],
+   "loc_precision": "point"
+  },
+  {
+   "article": {
+    "title": "At least 13 killed in Ukrainian strike on Russia's Tatarstan region, officials say",
+    "date": "2026-08-10",
+    "source": "BBC News",
+    "url": "https://www.bbc.com/news/articles/cvgjvgv926po?xtor=AL-72-%5Bpartner%5D-%5Byahoo.north.america%5D-%5Bheadline%5D-%5Bnews%5D-%5Bbizdev%5D-%5Bisapi%5D",
+    "description": "It is one of the deadliest Ukrainian drone attacks on Russia since the start of Moscow's war on Ukraine.",
+    "image_url": "https://s.yimg.com/lo/mysterio/api/23fc7806fc5a9b50ac1005027a1276545b17f14dbc5a10a5d3148f719c940222/lightyear_networkapi/resizefill_w1024_h576%3Bquality_80%3Bformat_jpg/https%3A%2F%2Fmedia.zenfs.com%2Fen%2Fbbc_us_articles_995%2Fbd2a43577fb413590a6033d3ebf3a899"
+   },
+   "analysis": {
+    "relevant": true,
+    "event_type": "conflict",
+    "entities": [
+     "Ukraine",
+     "Russia",
+     "Moscow"
+    ],
+    "severity": "high",
+    "location_mentioned": "Tatarstan region",
+    "one_line_summary": "A Ukrainian strike on Russia's Tatarstan region killed at least 13 people, according to officials",
+    "credibility": 2
+   },
+   "coords": [
+    55.8307304,
+    52.7252971
+   ],
+   "loc_precision": "point"
+  },
+  {
+   "article": {
+    "title": "Polish politician throws ‘Hitler’ Zelensky portrait in trash (VIDEO)",
+    "date": "2026-07-13",
+    "source": "RT",
+    "url": "https://www.rt.com/news/642956-poland-ukraine-zelensky-hitler/",
+    "description": "Krakow mayoral candidate Marianna Schreiber has thrown Vladimir Zelensky’s portrait into the trash in a social media video, accusing the Ukrainian leader of glorifying Nazi collaborators",
+    "image_url": "https://mf.b37mrtl.ru/files/2026.07/article/6a55053985f5406ce76e752a.png"
+   },
+   "analysis": {
+    "relevant": "true",
+    "event_type": "political",
+    "entities": [
+     "Marianna Schreiber",
+     "Vladimir Zelensky"
+    ],
+    "severity": "low",
+    "location_mentioned": "Krakow",
+    "one_line_summary": "A Polish politician, Marianna Schreiber, threw a portrait of Ukrainian leader Vladimir Zelensky into the trash, accusing him of glorifying Nazi collaborators",
+    "credibility": "2"
+   },
+   "coords": [
+    50.0469432,
+    19.9971534
+   ],
+   "loc_precision": "point"
   }
  ],
  "x_events": [
