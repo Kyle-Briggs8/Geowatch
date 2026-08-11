@@ -13,6 +13,7 @@ from briefer import generate_brief
 from demo import load_demo_events, save_demo_events
 from entities import build_entity_cooccurrence
 from fetcher import get_news
+from geocoder import geocode_events
 from visualizer import build_dashboard, build_comparison_dashboard, _compute_trend
 from xfetcher import get_x_posts, has_x_token
 
@@ -213,6 +214,12 @@ def _run_single(args: argparse.Namespace) -> None:
         else:
             print("    └─ [WARN] Could not parse analysis for this article")
 
+    # ── Geocode events from their extracted locations ────────────────────────
+    print("\nGeocoding event locations (Nominatim, cached)...")
+    placed = geocode_events(events, args.location)
+    print(f"  Placed {placed}/{len(events)} events at real coordinates "
+          "(rest fall back to region centroid)")
+
     # ── Collect + classify X posts (fetch has been running in the background) ─
     x_events: list[dict] | None = None
     if x_fut is not None:
@@ -282,6 +289,7 @@ def _run_compare(args: argparse.Namespace) -> None:
                 {"article": art, "analysis": analyze_article(art)}
                 for art in articles
             ]
+            geocode_events(evts, location)
             return location, evts
         except Exception as exc:  # broad: one location failing must not cancel the other
             return location, exc

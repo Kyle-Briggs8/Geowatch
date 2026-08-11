@@ -1,7 +1,7 @@
 {
  "location": "Ukraine",
  "days": 30,
- "captured_at": "2026-08-11 02:33 UTC",
+ "captured_at": "2026-08-11 03:29 UTC",
  "events": [
   {
    "article": {
@@ -22,7 +22,11 @@
     "location_mentioned": "Krakow",
     "one_line_summary": "Polish politician Marianna Schreiber threw a portrait of Ukrainian leader Vladimir Zelensky into the trash, accusing him of glorifying Nazi collaborators",
     "credibility": "2"
-   }
+   },
+   "coords": [
+    50.0469432,
+    19.9971534
+   ]
   },
   {
    "article": {
@@ -45,7 +49,11 @@
     "location_mentioned": "Ukraine",
     "one_line_summary": "Ukraine and its allies are concerned about losing influential allies with President Trump's ear, particularly after Lindsey Graham's efforts to support them",
     "credibility": "2"
-   }
+   },
+   "coords": [
+    49.4871968,
+    31.2718321
+   ]
   },
   {
    "article": {
@@ -68,7 +76,11 @@
     "location_mentioned": "Ukraine",
     "one_line_summary": "British families are unwittingly funding Vladimir Putin's kidnap of Ukrainian children due to watered down oil sanctions by Labour",
     "credibility": "3"
-   }
+   },
+   "coords": [
+    49.4871968,
+    31.2718321
+   ]
   },
   {
    "article": {
@@ -89,7 +101,11 @@
     "location_mentioned": "Kiev",
     "one_line_summary": "Kiev was hit by a combined drone and missile strike early Sunday morning",
     "credibility": "3"
-   }
+   },
+   "coords": [
+    50.4500336,
+    30.5241361
+   ]
   },
   {
    "article": {
@@ -109,7 +125,11 @@
     "location_mentioned": "Britain",
     "one_line_summary": "Andy Burnham is set to become Britain's next prime minister, facing significant challenges and opportunities",
     "credibility": "2"
-   }
+   },
+   "coords": [
+    54.3151594,
+    -1.9181532
+   ]
   },
   {
    "article": {
@@ -131,7 +151,11 @@
     "location_mentioned": "Baku",
     "one_line_summary": "Azerbaijan has confirmed secret talks between Germany and Russia regarding the Ukraine conflict, with a potential ceasefire agreement by December 31, 2026",
     "credibility": "3"
-   }
+   },
+   "coords": [
+    40.3755885,
+    49.8328009
+   ]
   },
   {
    "article": {
@@ -154,7 +178,11 @@
     "location_mentioned": "Russia",
     "one_line_summary": "Ukraine appears to be shifting its strategy in its attacks on Russia, targeting ships instead of oil refineries",
     "credibility": "2"
-   }
+   },
+   "coords": [
+    64.6863136,
+    97.7453061
+   ]
   },
   {
    "article": {
@@ -176,7 +204,11 @@
     "location_mentioned": "UK",
     "one_line_summary": "A White House insider has leaked President Trump's private thoughts about the new UK Prime Minister, describing him as 'dorky'",
     "credibility": "3"
-   }
+   },
+   "coords": [
+    54.7023545,
+    -3.2765753
+   ]
   },
   {
    "article": {
@@ -198,7 +230,11 @@
     "location_mentioned": "Caspian Sea",
     "one_line_summary": "The Ukrainian Armed Forces attacked an Iranian merchant vessel in the Caspian Sea, according to Iran's Foreign Ministry",
     "credibility": "3"
-   }
+   },
+   "coords": [
+    41.7789772,
+    50.5607579
+   ]
   },
   {
    "article": {
@@ -220,7 +256,11 @@
     "location_mentioned": "Odesa Port",
     "one_line_summary": "A vessel sank a week after being struck by Russian fire, with two Indians reported missing, according to Ukrainian officials",
     "credibility": "2"
-   }
+   },
+   "coords": [
+    46.4857247,
+    30.7484149
+   ]
   },
   {
    "article": {
@@ -241,7 +281,11 @@
     "location_mentioned": "Washington",
     "one_line_summary": "The funeral of Lindsey Graham brought together world leaders, including Ukrainian President Volodymyr Zelensky, and sparked a possibility for peace",
     "credibility": "2"
-   }
+   },
+   "coords": [
+    38.8950982,
+    -77.0363849
+   ]
   },
   {
    "article": {
@@ -263,7 +307,11 @@
     "location_mentioned": "Ukraine",
     "one_line_summary": "Representative Don Bacon publicly rebuked President Donald Trump over his comments on the Ukraine war",
     "credibility": "2"
-   }
+   },
+   "coords": [
+    49.4871968,
+    31.2718321
+   ]
   },
   {
    "article": {
@@ -285,7 +333,11 @@
     "location_mentioned": "Japan",
     "one_line_summary": "A powerful earthquake in Japan has claimed at least 34 lives",
     "credibility": "2"
-   }
+   },
+   "coords": [
+    36.5748441,
+    139.2394179
+   ]
   },
   {
    "article": {
@@ -306,7 +358,11 @@
     "location_mentioned": "Ukraine",
     "one_line_summary": "Russia has destroyed 1.5 million Ukrainian books in a drone strike targeting Ukrainian culture",
     "credibility": "3"
-   }
+   },
+   "coords": [
+    49.4871968,
+    31.2718321
+   ]
   },
   {
    "article": {
@@ -327,7 +383,11 @@
     "location_mentioned": "Michigan",
     "one_line_summary": "Michigan reports 2 deaths related to a cyclosporiasis outbreak",
     "credibility": "2"
-   }
+   },
+   "coords": [
+    43.6211955,
+    -84.6824346
+   ]
   },
   {
    "article": {
@@ -348,7 +408,11 @@
     "location_mentioned": "Oman",
     "one_line_summary": "An oil spill from a UK-sanctioned tanker grounded off Oman is expanding dramatically, reaching shorelines and far out to sea",
     "credibility": "2"
-   }
+   },
+   "coords": [
+    21.0000287,
+    57.0036901
+   ]
   },
   {
    "article": {
@@ -371,7 +435,11 @@
     "location_mentioned": "Ukraine",
     "one_line_summary": "A retired Army colonel discusses the air defense shortage in Ukraine and the importance of Patriot missiles in its defense against Russia",
     "credibility": "2"
-   }
+   },
+   "coords": [
+    49.4871968,
+    31.2718321
+   ]
   },
   {
    "article": {
@@ -391,7 +459,8 @@
     "location_mentioned": null,
     "one_line_summary": "Mercer International Inc. reports a net loss of $76.0 million for the second quarter of 2026.",
     "credibility": "2"
-   }
+   },
+   "coords": null
   },
   {
    "article": {
@@ -412,7 +481,11 @@
     "location_mentioned": "Bulgaria",
     "one_line_summary": "A Ukrainian drone with a large explosive payload has hit Bulgaria near a vital gas pipeline, sparking outrage and demands for answers from Bulgarian officials",
     "credibility": "3"
-   }
+   },
+   "coords": [
+    42.6073975,
+    25.4856617
+   ]
   },
   {
    "article": {
@@ -435,7 +508,11 @@
     "location_mentioned": "Russia",
     "one_line_summary": "FBI Director Kash Patel plans to visit Russia in October amid ongoing geopolitical tensions and congressional scrutiny",
     "credibility": "2"
-   }
+   },
+   "coords": [
+    64.6863136,
+    97.7453061
+   ]
   }
  ],
  "x_events": [

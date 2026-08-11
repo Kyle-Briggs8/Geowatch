@@ -14,6 +14,8 @@ from folium.plugins import MarkerCluster
 
 from mapper import REGION_COORDS, _LEGEND_HTML
 from entities import build_entity_cooccurrence, render_entity_graph_html
+import hashlib
+
 from grading import assess_confidence, describe_grade, grade_event, grade_post
 
 _SEV_ORDER = ["low", "medium", "high", "critical"]
@@ -110,8 +112,14 @@ def _week_day_lists(days: int) -> list[list]:
     return day_lists
 
 
-def _event_log_rows(events: list[dict], day_to_week: dict) -> str:
-    """Render the chronological event log rows (newest first), tagged by week id."""
+def _event_log_rows(events: list[dict], day_to_week: dict,
+                    corr: dict | None = None) -> str:
+    """Render the chronological event log rows (newest first), tagged by week id.
+
+    When cross-INT correlation data is provided, corroborated events get a
+    clickable badge that jumps to the matching posts in the X Pulse tab.
+    """
+    by_event = (corr or {}).get("by_event", {})
     analyzed = [(e, _parse_event_date(e)) for e in events if e.get("analysis")]
     analyzed.sort(key=lambda t: (t[1] is None, t[1]), reverse=True)
 
@@ -131,20 +139,33 @@ def _event_log_rows(events: list[dict], day_to_week: dict) -> str:
         gdesc  = _html.escape(describe_grade(grade))
         wk     = day_to_week.get(d, "none")
         date_s = _fmt_day(d) if d else "—"
+
+        corr_html = ""
+        match = by_event.get(art.get("url") or "")
+        if match:
+            n     = len(match["post_ids"])
+            ids   = ",".join(match["post_ids"])
+            early = " · led by social" if match.get("early") else ""
+            corr_html = (
+                f'<button class="corr-badge" data-ids="{ids}" '
+                f'title="Independent social posts naming the same entities within 48h — click to view in X Pulse">'
+                f'&#8644; {n} social{early}</button>'
+            )
+
         rows += f"""
       <a class="ev" data-wk="{wk}" href="{url}" target="_blank" rel="noopener">
         <span class="ev-date">{date_s}</span>
         <span class="ev-mark" style="background:{_SEV_CSS[sev]}"></span>
         <span class="ev-main">
           <span class="ev-title">{title}</span>
-          <span class="ev-tags"><span class="sev-pill" style="color:{pt};background:{pb}">{sev.upper()}</span><span class="type-tag">{etype}</span></span>
+          <span class="ev-tags"><span class="sev-pill" style="color:{pt};background:{pb}">{sev.upper()}</span><span class="type-tag">{etype}</span>{corr_html}</span>
         </span>
         <span class="ev-meta">{src} <span class="grade" title="{gdesc}">{grade}</span></span>
       </a>"""
     return rows
 
 
-def _timeline_html(events: list[dict], days: int) -> str:
+def _timeline_html(events: list[dict], days: int, corr: dict | None = None) -> str:
     """Weekly stacked-severity bars with click-to-expand daily breakdown and a
     chronological event log that filters to the selected week. Self-contained HTML/JS."""
     day_lists = _week_day_lists(days)
@@ -205,7 +226,7 @@ def _timeline_html(events: list[dict], days: int) -> str:
         <div class="day-axis">{day_axis}</div>
       </div>"""
 
-    log_rows = _event_log_rows(events, day_to_week)
+    log_rows = _event_log_rows(events, day_to_week, corr=corr)
     if not log_rows:
         log_rows = '<div style="padding:18px 22px;color:#98a1ab;font-size:12px;">No analyzed events in this window.</div>'
 
@@ -427,8 +448,14 @@ def _x_volume_html(x_events: list[dict], days: int) -> str:
     </div>"""
 
 
-def _x_feed_html(x_events: list[dict]) -> str:
-    """Post feed styled like the news event log (newest first)."""
+def _x_feed_html(x_events: list[dict], early_ids: set | None = None) -> str:
+    """Post feed styled like the news event log (newest first).
+
+    Posts flagged as early signals (social reporting that preceded matched news
+    coverage) get a marker pill.
+    """
+    early_ids = early_ids or set()
+
     def _key(e):
         return e["post"].get("date") or ""
     rows = ""
@@ -475,13 +502,18 @@ def _x_feed_html(x_events: list[dict]) -> str:
                 f'{play}{more}</span>'
             )
 
+        early_html = ""
+        if p.get("id") in early_ids:
+            early_html = ('<span class="early-pill" title="This post preceded matched '
+                          'news reporting by a day or more">&#9888; EARLY SIGNAL</span>')
+
         rows += f"""
-      <a class="ev xp-post" href="{url}" target="_blank" rel="noopener">
+      <a class="ev xp-post" data-xid="{_html.escape(p.get('id') or '')}" href="{url}" target="_blank" rel="noopener">
         <span class="ev-date">{date_s}</span>
         <span class="ev-mark" style="background:{_SEV_CSS[sev]}"></span>
         <span class="ev-main">
           <span class="ev-title xp-text">{text}</span>
-          <span class="ev-tags"><span class="sev-pill" style="color:{pt};background:{pb}">{sev.upper()}</span><span class="type-tag">{etype}</span></span>
+          <span class="ev-tags"><span class="sev-pill" style="color:{pt};background:{pb}">{sev.upper()}</span><span class="type-tag">{etype}</span>{early_html}</span>
           {media_html}
         </span>
         <span class="ev-meta">{meta} <span class="grade" title="{gdesc}">{grade}</span></span>
@@ -495,7 +527,8 @@ def _x_empty_html(message: str) -> str:
             f'color:#98a1ab;font-size:13.5px;">{message}</div></div>')
 
 
-def _x_tab_html(x_events: list[dict] | None, days: int, x_status: str | None) -> str:
+def _x_tab_html(x_events: list[dict] | None, days: int, x_status: str | None,
+                corr: dict | None = None) -> str:
     """Assemble the X Pulse pane content (cards inside a <main> grid)."""
     if x_status == "no_token":
         return _x_empty_html(
@@ -507,6 +540,14 @@ def _x_tab_html(x_events: list[dict] | None, days: int, x_status: str | None) ->
     if not x_events:
         return _x_empty_html("No relevant X posts found in this window.")
 
+    corr = corr or {}
+    corr_note = ""
+    if corr.get("n_corroborated"):
+        n_early = len(corr.get("early_ids") or set())
+        corr_note = (f" Cross-INT: {corr['n_corroborated']} of {corr['n_events']} news events "
+                     f"are corroborated by independent social posts naming the same entities"
+                     + (f"; {n_early} post(s) preceded the news reporting." if n_early else "."))
+
     return f"""
     <div class="card full">
       <div class="card-head"><span class="card-title">Social Tempo</span><span class="card-sub">Posts per day &middot; classified by LLM triage</span></div>
@@ -517,12 +558,25 @@ def _x_tab_html(x_events: list[dict] | None, days: int, x_status: str | None) ->
       {_x_stats_html(x_events)}
       <div class="table-note">Social posts are graded F on the Admiralty reliability scale —
       individual account reliability cannot be judged. The digit (1–6) is per-post information
-      credibility assessed by LLM triage. Treat as leads, not confirmation.</div>
+      credibility assessed by LLM triage. Treat as leads, not confirmation.{corr_note}</div>
     </div>
     <div class="card full">
       <div class="card-head"><span class="card-title">Post Feed</span><span class="card-sub">Newest first &middot; click a post to open on X</span></div>
-      {_x_feed_html(x_events)}
+      {_x_feed_html(x_events, early_ids=corr.get("early_ids"))}
     </div>"""
+
+
+def _marker_location(ev: dict, center: tuple[float, float]) -> tuple[float, float]:
+    """Real geocoded coords if present, else region centroid with deterministic
+    jitter so co-located fallback markers don't stack into one dot."""
+    coords = ev.get("coords")
+    if coords and len(coords) == 2:
+        return (coords[0], coords[1])
+    seed = (ev.get("article", {}).get("url") or "") + (ev.get("article", {}).get("title") or "")
+    h = hashlib.md5(seed.encode("utf-8")).digest()
+    jit_lat = (h[0] / 255 - 0.5) * 0.8
+    jit_lon = (h[1] / 255 - 0.5) * 0.8
+    return (center[0] + jit_lat, center[1] + jit_lon)
 
 
 def _map_iframe(events: list[dict], location: str) -> str:
@@ -564,7 +618,7 @@ def _map_iframe(events: list[dict], location: str) -> str:
             f'box-shadow:0 1px 4px rgba(28,32,36,0.35);"></div>'
         )
         folium.Marker(
-            location=center,
+            location=_marker_location(ev, center),
             icon=folium.DivIcon(html=icon_html, icon_size=(14, 14), icon_anchor=(7, 7)),
             tooltip=analysis.get("one_line_summary", article.get("title", "")),
         ).add_to(cluster)
@@ -864,6 +918,14 @@ _SHARED_CSS = """
       background: rgba(0,0,0,0.28); text-shadow: 0 1px 6px rgba(0,0,0,0.6); }
     .xp-more { position: absolute; right: 6px; bottom: 6px; background: rgba(0,0,0,0.65);
       color: #fff; font-size: 10.5px; font-weight: 600; border-radius: 999px; padding: 1px 8px; }
+    /* cross-INT corroboration */
+    .corr-badge { border: none; cursor: pointer; font-family: inherit; font-size: 9.5px;
+      letter-spacing: 0.5px; font-weight: 700; color: #16365c; background: #e8eef5;
+      padding: 1px 9px; border-radius: 999px; transition: background .15s; }
+    .corr-badge:hover { background: #d5e2f0; }
+    .early-pill { font-size: 9.5px; letter-spacing: 0.5px; font-weight: 700;
+      color: #7c2d12; background: #ffedd5; padding: 1px 8px; border-radius: 999px; }
+    .xp-post.hl { background: #eef3fa; box-shadow: inset 3px 0 0 #2563eb; }
 """
 
 _DASH_TMPL = """\
@@ -1025,8 +1087,11 @@ def build_dashboard(events: list[dict], location: str, days: int,
     """
     timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
 
+    corr = None
     tabs_html, xpane_html = "", ""
     if x_events is not None or x_status is not None:
+        from fusion import correlate
+        corr = correlate(events, x_events or [], location)
         n_posts = len(x_events or [])
         tabs_html = (
             '<nav class="tabs">'
@@ -1037,15 +1102,26 @@ def build_dashboard(events: list[dict], location: str, days: int,
         )
         xpane_html = (
             '<div id="pane-xpulse" class="tabpane">'
-            f'<main>{_x_tab_html(x_events, days, x_status)}</main>'
+            f'<main>{_x_tab_html(x_events, days, x_status, corr=corr)}</main>'
             '</div>'
             '<script>'
-            'document.querySelectorAll(".tab").forEach(function(t){'
-            't.addEventListener("click",function(){'
+            'function gwShowPane(id){'
             'document.querySelectorAll(".tab").forEach(function(o){o.classList.remove("active");});'
             'document.querySelectorAll(".tabpane").forEach(function(p){p.classList.remove("open");});'
-            't.classList.add("active");'
-            'document.getElementById(t.dataset.pane).classList.add("open");'
+            'document.querySelector(".tab[data-pane=\\"" + id + "\\"]").classList.add("active");'
+            'document.getElementById(id).classList.add("open");'
+            '}'
+            'document.querySelectorAll(".tab").forEach(function(t){'
+            't.addEventListener("click",function(){gwShowPane(t.dataset.pane);});});'
+            'document.querySelectorAll(".corr-badge").forEach(function(b){'
+            'b.addEventListener("click",function(ev){'
+            'ev.preventDefault();ev.stopPropagation();'
+            'gwShowPane("pane-xpulse");'
+            'var ids=b.dataset.ids.split(",");'
+            'document.querySelectorAll(".xp-post").forEach(function(p){'
+            'p.classList.toggle("hl",ids.indexOf(p.dataset.xid)>=0);});'
+            'var first=document.querySelector(".xp-post.hl");'
+            'if(first)first.scrollIntoView({behavior:"smooth",block:"center"});'
             '});});'
             '</script>'
         )
@@ -1080,7 +1156,7 @@ def build_dashboard(events: list[dict], location: str, days: int,
         .replace("__NOUTLETS__",   str(len(outlets)))
         .replace("__MAP__",             _map_iframe(events, location))
         .replace("__GLANCE__",          _glance_html(events))
-        .replace("__TIMELINE__",        _timeline_html(events, days))
+        .replace("__TIMELINE__",        _timeline_html(events, days, corr=corr))
         .replace("__SOURCING__",        _sourcing_table_html(events))
         .replace("__ENTITY_SECTION__",  _entity_section_html(events))
         .replace("__TIMESTAMP__",       timestamp)
@@ -1280,7 +1356,7 @@ def _combined_map_iframe(
                     f'box-shadow:0 1px 4px rgba(28,32,36,0.35);"></div>'
                 )
             folium.Marker(
-                location=center,
+                location=_marker_location(ev, center),
                 icon=folium.DivIcon(html=icon_html, icon_size=(15, 15), icon_anchor=(7, 7)),
                 tooltip=analysis.get("one_line_summary", article.get("title", "")),
             ).add_to(cluster)

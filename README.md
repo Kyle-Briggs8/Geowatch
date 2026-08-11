@@ -8,7 +8,8 @@ Open-source geospatial intelligence from live news. GeoWatch fetches recent news
 
 ## Features
 
-- **Interactive Folium map** — severity-colored markers with cluster expansion and article popups
+- **Interactive Folium map** — every event geocoded to real coordinates (Nominatim, from the LLM-extracted location per article) with severity-colored markers, cluster expansion, and article popups
+- **Cross-INT corroboration** — news events corroborated by independent X posts naming the same entities within 48h get a clickable badge that jumps to the matching posts; social posts that preceded the news reporting are flagged as early signals
 - **Interactive event timeline** — weekly severity-stacked bars; click a week to expand its daily breakdown and filter the chronological event log
 - **Situation at a glance** — headline stats (events, high/critical count, outlets, best source grade) and event-type breakdown
 - **Comparison mode** — run two locations in parallel on a single combined map with side-by-side charts and event logs

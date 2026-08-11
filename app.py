@@ -10,6 +10,7 @@ from flask import Flask, Response, jsonify, render_template_string, request
 from analyzer import analyze_article, analyze_posts
 from demo import load_demo_events
 from fetcher import get_news
+from geocoder import geocode_events
 from mapper import REGION_COORDS
 from visualizer import build_dashboard, build_comparison_dashboard
 from xfetcher import get_x_posts, has_x_token
@@ -441,6 +442,7 @@ def _do_analyze(location: str, days: int, max_articles: int, demo: bool = False,
     raw      = get_news(location, days)
     articles = _subsample(raw, max_articles)
     events   = [{"article": art, "analysis": analyze_article(art)} for art in articles]
+    geocode_events(events, location)
 
     x_events = None
     if x_fut is not None:
@@ -462,8 +464,10 @@ def _do_compare(loc_a: str, loc_b: str, days: int, max_articles: int) -> str:
     """Fetch, analyze, and render a two-location comparison dashboard. Returns HTML string."""
     def _pipeline(loc: str) -> list:
         raw = get_news(loc, days)
-        return [{"article": art, "analysis": analyze_article(art)}
+        evts = [{"article": art, "analysis": analyze_article(art)}
                 for art in _subsample(raw, max_articles)]
+        geocode_events(evts, loc)
+        return evts
 
     with ThreadPoolExecutor(max_workers=2) as ex:
         fut_a = ex.submit(_pipeline, loc_a)

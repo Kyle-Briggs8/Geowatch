@@ -14,3 +14,4 @@ flask_response*.html
 # Local session notes / harness state
 geowatch_session.md
 .claude/
+geo_cache.json
