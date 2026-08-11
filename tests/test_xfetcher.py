@@ -34,6 +34,7 @@ class TestNormalizeItem:
     def test_normalizes_all_fields(self):
         post = xfetcher._normalize_item(_apify_item())
         assert post == {
+            "media": [],
             "id": "1846000000000000001",
             "text": "Explosions reported in the capital tonight, air defense active.",
             "date": "2024-10-17",
@@ -64,6 +65,33 @@ class TestNormalizeItem:
     def test_twitterurl_fallback(self):
         item = _apify_item(url=None, twitterUrl="https://x.com/a/status/1")
         assert xfetcher._normalize_item(item)["url"] == "https://x.com/a/status/1"
+
+    def test_no_media_gives_empty_list(self):
+        assert xfetcher._normalize_item(_apify_item())["media"] == []
+
+    def test_photo_media_extracted(self):
+        item = _apify_item(extendedEntities={"media": [{
+            "type": "photo",
+            "media_url_https": "https://pbs.twimg.com/media/ABC.jpg",
+            "expanded_url": "https://x.com/a/status/1/photo/1",
+        }]})
+        assert xfetcher._normalize_item(item)["media"] == [
+            {"type": "photo", "thumb": "https://pbs.twimg.com/media/ABC.jpg"}
+        ]
+
+    def test_video_media_inferred_without_type(self):
+        item = _apify_item(extendedEntities={"media": [{
+            "media_url_https": "https://pbs.twimg.com/amplify_video_thumb/1/img/x.jpg",
+            "expanded_url": "https://x.com/a/status/1/video/1",
+        }]})
+        assert xfetcher._normalize_item(item)["media"][0]["type"] == "video"
+
+    def test_media_capped_at_four(self):
+        entries = [{"type": "photo",
+                    "media_url_https": f"https://pbs.twimg.com/media/{i}.jpg"}
+                   for i in range(6)]
+        item = _apify_item(extendedEntities={"media": entries})
+        assert len(xfetcher._normalize_item(item)["media"]) == 4
 
 
 class TestParseCreatedAt:

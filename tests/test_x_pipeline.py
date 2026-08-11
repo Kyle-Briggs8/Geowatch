@@ -152,6 +152,23 @@ class TestDashboardXTab:
                                x_events=[], x_status="ok")
         assert "No relevant X posts" in html
 
+    def test_post_media_renders_thumbnail_and_play(self, sample_events, sample_x_events):
+        sample_x_events[0]["post"]["media"] = [
+            {"type": "video", "thumb": "https://pbs.twimg.com/amplify_video_thumb/1/img/x.jpg"},
+            {"type": "photo", "thumb": "https://pbs.twimg.com/media/ABC.jpg"},
+        ]
+        html = build_dashboard(sample_events, "Ukraine", 30,
+                               x_events=sample_x_events, x_status="ok")
+        assert "xp-media" in html
+        assert "amplify_video_thumb" in html
+        assert "xp-play" in html          # video overlay
+        assert ">+1</span>" in html       # second media badge
+
+    def test_posts_without_media_render_no_thumbnail(self, sample_events, sample_x_events):
+        html = build_dashboard(sample_events, "Ukraine", 30,
+                               x_events=sample_x_events, x_status="ok")
+        assert "xp-media" not in html or 'class="xp-media"' not in html
+
 
 class TestFmtCount:
 

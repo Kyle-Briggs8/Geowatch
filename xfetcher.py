@@ -47,6 +47,30 @@ def _parse_created_at(raw: str) -> str:
         return ""
 
 
+def _extract_media(item: dict) -> list[dict]:
+    """Extract photo/video thumbnails from a tweet's extendedEntities.
+
+    Returns up to 4 entries of {"type": "photo"|"video", "thumb": url}.
+    Video entries use X's pre-rendered thumbnail; the post URL plays the video.
+    """
+    media = []
+    for m in (item.get("extendedEntities") or {}).get("media") or []:
+        thumb = m.get("media_url_https")
+        if not thumb:
+            continue
+        mtype = m.get("type") or ""
+        if not mtype:  # infer when absent: video thumbs live under amplify/video paths
+            is_video = "video" in (m.get("expanded_url") or "") or "video" in thumb
+            mtype = "video" if is_video else "photo"
+        media.append({
+            "type": "video" if mtype in ("video", "animated_gif") else "photo",
+            "thumb": thumb,
+        })
+        if len(media) == 4:
+            break
+    return media
+
+
 def _normalize_item(item: dict) -> dict | None:
     """Normalize one Apify tweet item to the GeoWatch post dict, or None to skip.
 
@@ -60,6 +84,7 @@ def _normalize_item(item: dict) -> dict | None:
     if not text:
         return None
     return {
+        "media":       _extract_media(item),
         "id":          str(item.get("id") or ""),
         "text":        text,
         "date":        _parse_created_at(item.get("createdAt") or ""),

@@ -454,6 +454,27 @@ def _x_feed_html(x_events: list[dict]) -> str:
         meta = (f"{author}{vbadge} &middot; {_fmt_count(p.get('followers', 0))} followers &middot; "
                 f"&#9829; {_fmt_count(p.get('likes', 0))} &middot; "
                 f"&#10561; {_fmt_count(p.get('retweets', 0))}")
+
+        media_html = ""
+        media = p.get("media") or []
+        if media:
+            first = media[0]
+            thumb = _html.escape(first["thumb"])
+            # smaller pbs.twimg.com rendition for photo thumbnails
+            if "/media/" in thumb and "?" not in thumb:
+                thumb += "?name=small"
+            play = ('<span class="xp-play">&#9654;</span>'
+                    if first["type"] == "video" else "")
+            more = (f'<span class="xp-more">+{len(media) - 1}</span>'
+                    if len(media) > 1 else "")
+            hint = "Video — plays on X" if first["type"] == "video" else "View post on X"
+            media_html = (
+                f'<span class="xp-media" title="{hint}">'
+                f'<img src="{thumb}" alt="" loading="lazy" referrerpolicy="no-referrer" '
+                f'onerror="this.parentNode.style.display=\'none\'">'
+                f'{play}{more}</span>'
+            )
+
         rows += f"""
       <a class="ev xp-post" href="{url}" target="_blank" rel="noopener">
         <span class="ev-date">{date_s}</span>
@@ -461,6 +482,7 @@ def _x_feed_html(x_events: list[dict]) -> str:
         <span class="ev-main">
           <span class="ev-title xp-text">{text}</span>
           <span class="ev-tags"><span class="sev-pill" style="color:{pt};background:{pb}">{sev.upper()}</span><span class="type-tag">{etype}</span></span>
+          {media_html}
         </span>
         <span class="ev-meta">{meta} <span class="grade" title="{gdesc}">{grade}</span></span>
       </a>"""
@@ -834,6 +856,14 @@ _SHARED_CSS = """
     .xp-day i { display: block; border-radius: 1.5px 1.5px 0 0; }
     .xp-post .ev-title.xp-text { white-space: normal; line-height: 1.45; }
     .xp-verified { color: #2563eb; font-size: 10px; }
+    .xp-media { position: relative; display: inline-block; margin-top: 8px; }
+    .xp-media img { display: block; height: 110px; max-width: 260px; object-fit: cover;
+      border-radius: 8px; border: 1px solid #e7e5e0; }
+    .xp-play { position: absolute; inset: 0; display: flex; align-items: center;
+      justify-content: center; color: #fff; font-size: 22px; border-radius: 8px;
+      background: rgba(0,0,0,0.28); text-shadow: 0 1px 6px rgba(0,0,0,0.6); }
+    .xp-more { position: absolute; right: 6px; bottom: 6px; background: rgba(0,0,0,0.65);
+      color: #fff; font-size: 10.5px; font-weight: 600; border-radius: 999px; padding: 1px 8px; }
 """
 
 _DASH_TMPL = """\
