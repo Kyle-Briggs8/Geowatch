@@ -150,6 +150,12 @@ def grade_event(event: dict) -> str:
     return f"{letter}{digit}"
 
 
+def grade_post(x_event: dict) -> str:
+    """Return the Admiralty code for a social post: reliability is always 'F'
+    (individual account reliability cannot be judged); credibility per-post."""
+    return f"F{_credibility_digit(x_event.get('analysis'))}"
+
+
 def describe_grade(grade: str) -> str:
     """Return a human-readable gloss for a two-character Admiralty code."""
     if len(grade) != 2:

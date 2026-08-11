@@ -23,8 +23,13 @@ def has_demo(location: str) -> bool:
     return os.path.isfile(_demo_path(location))
 
 
-def save_demo_events(location: str, days: int, events: list[dict]) -> str:
-    """Write analyzed events to the demo cache. Returns the file path."""
+def save_demo_events(location: str, days: int, events: list[dict],
+                     x_events: list[dict] | None = None) -> str:
+    """Write analyzed events (and optionally X posts) to the demo cache.
+
+    Returns the file path. The x_events key is only present when captured,
+    so older cache files remain valid.
+    """
     os.makedirs(DEMO_DIR, exist_ok=True)
     path = _demo_path(location)
     payload = {
@@ -33,6 +38,8 @@ def save_demo_events(location: str, days: int, events: list[dict]) -> str:
         "captured_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
         "events": events,
     }
+    if x_events is not None:
+        payload["x_events"] = x_events
     with open(path, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=1)
     return path

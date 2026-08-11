@@ -15,6 +15,7 @@ Open-source geospatial intelligence from live news. GeoWatch fetches recent news
 - **Daily brief** (`--brief`) — generates a one-page markdown intelligence report
 - **Alert threshold** (`--alert-threshold`) — prints a terminal alert and injects a dashboard banner if >30% of recent events hit the threshold
 - **IC tradecraft grading** — every event carries a NATO Admiralty System code (source reliability A–F from a curated outlet table, information credibility 1–6 assessed per-article by the LLM); briefings and the dashboard assessment strip use ICD 203 estimative language, with analytic confidence derived from breadth and quality of sourcing
+- **X Pulse** (`--x` / web checkbox) — social-signal tab alongside the news analysis: X/Twitter posts fetched via an Apify actor, triaged by a single batched LLM call (relevance, severity, type, credibility), shown as a posts-per-day tempo strip and a graded post feed. Social posts are deliberately kept out of the news event log and graded F on the Admiralty reliability scale — leads, not confirmation
 - **Demo mode** (`--demo` / web checkbox) — renders instantly from a cached dataset in `demo_data/`, no API calls; capture a dataset from any live run with `--save-demo`
 
 ---
@@ -32,10 +33,12 @@ Create a `.env` file with your API keys:
 ```
 NEWSAPI_KEY=your_key_here
 GROQ_API_KEY=your_key_here
+APIFY_TOKEN=your_apify_token_here   # optional — enables the X Pulse tab
 ```
 
 - Free NewsAPI key: https://newsapi.org/register
 - Free Groq key: https://console.groq.com
+- Free Apify token: https://apify.com (no card; the free plan's $5/month credit covers ~150 X fetches at $0.25 per 1,000 posts via the [pay-per-result tweet scraper](https://apify.com/kaitoeasyapi/twitter-x-data-tweet-scraper-pay-per-result-cheapest))
 
 ---
 
@@ -68,9 +71,12 @@ python main.py --location "Syria" --days 7 --brief
 # Alert if >30% of last-7-day events are HIGH or above
 python main.py --location "Yemen" --days 14 --alert-threshold high
 
+# Include the X Pulse social-signal tab (requires APIFY_TOKEN)
+python main.py --location "Ukraine" --days 30 --x
+
 # Capture a live run as a reusable demo dataset, then replay it offline
-python main.py --location "Ukraine" --days 30 --save-demo
-python main.py --location "Ukraine" --demo --brief
+python main.py --location "Ukraine" --days 30 --x --save-demo
+python main.py --location "Ukraine" --demo --x --brief
 ```
 
 ### CLI flags
@@ -84,8 +90,9 @@ python main.py --location "Ukraine" --demo --brief
 | `--output` | auto | Output HTML filename |
 | `--brief` | off | Write a markdown intelligence briefing |
 | `--alert-threshold` | off | `low` / `medium` / `high` / `critical` |
+| `--x` | off | Add the X Pulse social-signal tab (requires `APIFY_TOKEN`) |
 | `--demo` | off | Render from the cached dataset in `demo_data/` — no API calls |
-| `--save-demo` | off | Save this run's analyzed events to `demo_data/` for later `--demo` use |
+| `--save-demo` | off | Save this run's analyzed events (and X posts with `--x`) to `demo_data/` |
 
 ---
 

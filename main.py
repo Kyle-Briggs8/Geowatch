@@ -8,12 +8,13 @@ from datetime import datetime, timedelta
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-from analyzer import analyze_article
+from analyzer import analyze_article, analyze_posts
 from briefer import generate_brief
 from demo import load_demo_events, save_demo_events
 from entities import build_entity_cooccurrence
 from fetcher import get_news
 from visualizer import build_dashboard, build_comparison_dashboard, _compute_trend
+from xfetcher import get_x_posts, has_x_token
 
 _SEV_VALUE = {"low": 1, "medium": 2, "high": 3, "critical": 4}
 
@@ -134,15 +135,22 @@ def _run_single(args: argparse.Namespace) -> None:
         except FileNotFoundError as exc:
             print(f"[ERROR] {exc}", file=sys.stderr)
             sys.exit(1)
-        events = payload["events"]
-        days   = payload.get("days", args.days)
+        events   = payload["events"]
+        days     = payload.get("days", args.days)
+        x_events = payload.get("x_events") if args.x else None
+        x_status = "ok" if x_events is not None else None
         print(f'\n[DEMO] Using cached dataset for "{args.location}" '
               f'(captured {payload.get("captured_at", "unknown")}, '
-              f'{len(events)} events)')
+              f'{len(events)} events'
+              + (f', {len(x_events)} X posts' if x_events else '') + ')')
+        if args.x and x_events is None:
+            print("  [WARN] Demo cache has no X posts — re-capture with --x --save-demo",
+                  file=sys.stderr)
         alert = _check_alert(events, alert_threshold) if alert_threshold else None
         if alert:
             _print_alert_box(alert, args.location)
-        dashboard_html = build_dashboard(events, args.location, days, alert=alert)
+        dashboard_html = build_dashboard(events, args.location, days, alert=alert,
+                                         x_events=x_events, x_status=x_status)
         with open(output, "w", encoding="utf-8") as f:
             f.write(dashboard_html)
         _print_summary(args.location, days, events, output)
@@ -152,6 +160,20 @@ def _run_single(args: argparse.Namespace) -> None:
                 f.write(generate_brief(events, args.location, days))
             print(f"\n  Brief saved to → {brief_path}")
         return
+
+    # ── X fetch runs in the background while news is fetched and analyzed ────
+    x_fut = None
+    x_status = None
+    x_executor = None
+    if args.x:
+        if not has_x_token():
+            print("\n  [WARN] --x requested but APIFY_TOKEN is not set — "
+                  "continuing without X data. Get a free token at apify.com.",
+                  file=sys.stderr)
+            x_status = "no_token"
+        else:
+            x_executor = ThreadPoolExecutor(max_workers=1)
+            x_fut = x_executor.submit(get_x_posts, args.location, args.days)
 
     print(f'\nFetching news for "{args.location}" (last {args.days} days)...')
     try:
@@ -191,8 +213,24 @@ def _run_single(args: argparse.Namespace) -> None:
         else:
             print("    └─ [WARN] Could not parse analysis for this article")
 
+    # ── Collect + classify X posts (fetch has been running in the background) ─
+    x_events: list[dict] | None = None
+    if x_fut is not None:
+        posts, _ = x_fut.result()
+        x_executor.shutdown(wait=False)
+        if posts:
+            print(f"\n  Classifying {len(posts)} X posts (batched)...")
+            analyses = analyze_posts(posts, args.location)
+            x_events = [{"post": p, "analysis": a}
+                        for p, a in zip(posts, analyses) if a]
+            print(f"  X Pulse: {len(posts)} posts fetched, {len(x_events)} relevant")
+            x_status = "ok"
+        else:
+            x_events = None
+            x_status = "error"
+
     if args.save_demo:
-        demo_path = save_demo_events(args.location, args.days, events)
+        demo_path = save_demo_events(args.location, args.days, events, x_events=x_events)
         print(f"\n  Demo dataset saved to → {demo_path}")
 
     # ── Alert threshold check ─────────────────────────────────────────────────
@@ -207,7 +245,8 @@ def _run_single(args: argparse.Namespace) -> None:
     # ── Dashboard ─────────────────────────────────────────────────────────────
     print()
     print("Building dashboard (map + charts)...")
-    dashboard_html = build_dashboard(events, args.location, args.days, alert=alert)
+    dashboard_html = build_dashboard(events, args.location, args.days, alert=alert,
+                                     x_events=x_events, x_status=x_status)
     with open(output, "w", encoding="utf-8") as f:
         f.write(dashboard_html)
 
@@ -333,6 +372,10 @@ def main() -> None:
         help="Generate a one-page markdown intelligence briefing alongside the dashboard",
     )
     parser.add_argument(
+        "--x", action="store_true",
+        help="Include X/Twitter social signal as an 'X Pulse' tab (requires APIFY_TOKEN)",
+    )
+    parser.add_argument(
         "--demo", action="store_true",
         help="Render from the cached demo dataset for this location — no API calls",
     )
@@ -350,6 +393,9 @@ def main() -> None:
 
     if args.compare and (args.demo or args.save_demo):
         parser.error("--demo/--save-demo are only supported with --location (single mode)")
+
+    if args.compare and args.x:
+        parser.error("--x is only supported with --location (single mode)")
 
     if args.compare:
         _run_compare(args)

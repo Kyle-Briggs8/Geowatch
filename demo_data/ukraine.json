@@ -1,443 +1,2101 @@
 {
  "location": "Ukraine",
  "days": 30,
- "captured_at": "2026-08-09 08:37 UTC",
+ "captured_at": "2026-08-11 00:58 UTC",
  "events": [
   {
    "article": {
-    "title": "Ukraine building Patriots is in Lockheed’s interest, McCaul says",
-    "date": "2026-07-11",
-    "source": "Biztoc.com",
-    "url": "https://biztoc.com/x/937cba6d2f06617c",
-    "description": "US defense contractors including Lockheed Martin Corp. have every interest to let Ukraine manufacture Patriot missile interceptors after President Donald Trump pledged the US would grant a license for the weapons system, a senior Republican lawmaker said.\n“I …",
-    "image_url": "https://biztoc.com/cdn/937cba6d2f06617c_s.webp"
+    "title": "Polish politician throws ‘Hitler’ Zelensky portrait in trash (VIDEO)",
+    "date": "2026-07-13",
+    "source": "RT",
+    "url": "https://www.rt.com/news/642956-poland-ukraine-zelensky-hitler/",
+    "description": "Krakow mayoral candidate Marianna Schreiber has thrown Vladimir Zelensky’s portrait into the trash in a social media video, accusing the Ukrainian leader of glorifying Nazi collaborators",
+    "image_url": "https://mf.b37mrtl.ru/files/2026.07/article/6a55053985f5406ce76e752a.png"
+   },
+   "analysis": {
+    "event_type": "political",
+    "entities": [
+     "Marianna Schreiber",
+     "Vladimir Zelensky"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Krakow",
+    "one_line_summary": "Polish politician Marianna Schreiber threw a portrait of Ukrainian leader Vladimir Zelensky into the trash, accusing him of glorifying Nazi collaborators",
+    "credibility": "2"
+   }
+  },
+  {
+   "article": {
+    "title": "Ukraine and its allies hope Graham isn’t their last ally with Trump’s ear - Politico",
+    "date": "2026-07-15",
+    "source": "Slashdot.org",
+    "url": "https://slashdot.org/firehose.pl?op=view&amp;id=184473242",
+    "description": "Ukraine and its allies hope Graham isn’t their last ally with Trump’s earPolitico Opinion | Honor Lindsey Graham By Helping UkraineWSJ For Lindsey Graham, foreign policy may be where his influence was felt mostNPR China can help end Ukraine war by pressuring …",
+    "image_url": null
    },
    "analysis": {
     "event_type": "political",
     "entities": [
      "Ukraine",
-     "Lockheed Martin Corp.",
-     "Donald Trump",
-     "US"
-    ],
-    "severity": "medium",
-    "location_mentioned": "Ukraine",
-    "one_line_summary": "A senior Republican lawmaker says US defense contractors have an interest in letting Ukraine manufacture Patriot missile interceptors",
-    "credibility": "2"
-   }
-  },
-  {
-   "article": {
-    "title": "Prominent Putin Critic Fans the Flames on Lindsey Graham Conspiracy Theories: ‘Russians Are Expert at Administration of Poisons’",
-    "date": "2026-07-12",
-    "source": "Mediaite",
-    "url": "https://www.mediaite.com/politics/prominent-putin-critic-fans-the-flames-on-lindsey-graham-conspiracy-theories-russians-are-expert-at-administration-of-poisons/",
-    "description": "Putin critic Bill Browder said he believed Russian agents could have poisoned Sen. Lindsey Graham during the senator's trip to Ukraine right before he died\nThe post Prominent Putin Critic Fans the Flames on Lindsey Graham Conspiracy Theories: ‘Russians Are Ex…",
-    "image_url": "https://www.mediaite.com/wp-content/uploads/2026/07/Untitled-design-2026-07-12T155614-853.jpg"
-   },
-   "analysis": {
-    "event_type": "political",
-    "entities": [
-     "Bill Browder",
      "Lindsey Graham",
-     "Putin",
-     "Russian agents"
+     "Donald Trump",
+     "China"
     ],
     "severity": "medium",
     "location_mentioned": "Ukraine",
-    "one_line_summary": "Bill Browder suggests Russian agents may have poisoned Sen. Lindsey Graham during his trip to Ukraine",
-    "credibility": "5"
-   }
-  },
-  {
-   "article": {
-    "title": "Wednesday, July 15. Russia’s War On Ukraine: News And Information From Ukraine",
-    "date": "2026-07-15",
-    "source": "Forbes",
-    "url": "https://www.forbes.com/sites/katyasoldak/2026/07/15/wednesday-july-15-russias-war-on-ukraine-news-and-information-from-ukraine/",
-    "description": "Dispatches from Ukraine. Day 1603.",
-    "image_url": "https://imageio.forbes.com/specials-images/imageserve/6a581954492c5b3f5be56934/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds"
-   },
-   "analysis": {
-    "event_type": "conflict",
-    "entities": [
-     "Russia",
-     "Ukraine"
-    ],
-    "severity": "high",
-    "location_mentioned": "Ukraine",
-    "one_line_summary": "Russia continues its ongoing war against Ukraine on day 1603 of the conflict",
-    "credibility": "1"
-   }
-  },
-  {
-   "article": {
-    "title": "Thirteen killed in Russia and Ukraine strikes - officials",
-    "date": "2026-07-16",
-    "source": "RTE",
-    "url": "https://www.rte.ie/news/2026/0716/1583763-russia-ukraine-strikes/",
-    "description": "Russian and Ukrainian attacks on civilian areas in towns and cities, many on the ⁠front line of the more than four-year-old war, killed at least 13 people yesterday, local officials said.",
-    "image_url": "https://www.rte.ie/images/002422f9-1600.jpg"
-   },
-   "analysis": {
-    "event_type": "conflict",
-    "entities": [
-     "Russia",
-     "Ukraine"
-    ],
-    "severity": "high",
-    "location_mentioned": "Russia and Ukraine",
-    "one_line_summary": "At least 13 people were killed in Russian and Ukrainian strikes on civilian areas",
-    "credibility": "1"
-   }
-  },
-  {
-   "article": {
-    "title": "Would Europeans fight, if it came to that?",
-    "date": "2026-07-18",
-    "source": "Www.nrc.nl",
-    "url": "https://www.nrc.nl/nieuws/2026/07/18/would-europeans-fight-if-it-came-to-that-a4932663",
-    "description": "Putting boots on the ground would not help Ukraine, but it might help Europe find the stomach for war, writes Nathalie Tocci.",
-    "image_url": "https://images.nrc.nl/rFjJoK3pkBQWECY8RshkDYtbh2U=/1200x627/smart/filters:no_upscale()/s3/static.nrc.nl/wp-content/uploads/2026/07/17093737/180726OPI_2035288505_WEB_ILLU_Economist_Europeans-Fight_Dan-Williams.jpg"
-   },
-   "analysis": {
-    "event_type": "political",
-    "entities": [
-     "Nathalie Tocci",
-     "Europe",
-     "Ukraine"
-    ],
-    "severity": "medium",
-    "location_mentioned": "Ukraine",
-    "one_line_summary": "Nathalie Tocci suggests that European involvement in the conflict in Ukraine could help Europe prepare for war",
+    "one_line_summary": "Ukraine and its allies are concerned about losing influential allies with President Trump's ear, particularly after Lindsey Graham's efforts to support them",
     "credibility": "2"
    }
   },
   {
    "article": {
-    "title": "At least one killed as Russia launches overnight missile and drone attack on Kyiv",
-    "date": "2026-07-19",
-    "source": "euronews.com",
-    "url": "https://www.euronews.com/my-europe/2026/07/19/at-least-one-killed-as-russia-launches-overnight-missile-and-drone-attack-on-kyiv",
-    "description": "",
-    "image_url": null
+    "title": "British families 'unwittingly funding Russian kidnap of Ukrainian children after Labour watered down oil sanctions', researchers warn",
+    "date": "2026-07-17",
+    "source": "Dailymail.com",
+    "url": "https://www.dailymail.com/news/article-15968017/British-families-Russian-kidnap-Ukrainian-children-oil-sanctions.html",
+    "description": "British families are unwittingly funding Vladimir Putin's industrial scale kidnap of Ukrainian children after Labour watered down oil sanctions, researchers have warned.",
+    "image_url": "https://i.dailymail.com/1s/2026/07/17/23/110095425-0-image-m-10_1784327098140.jpg"
    },
    "analysis": {
     "event_type": "conflict",
     "entities": [
+     "Vladimir Putin",
+     "Labour",
+     "British families",
+     "Ukrainian children"
+    ],
+    "severity": "high",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "British families are unwittingly funding Vladimir Putin's kidnap of Ukrainian children due to watered down oil sanctions by Labour",
+    "credibility": "3"
+   }
+  },
+  {
+   "article": {
+    "title": "Kiev hit by several waves of missile strikes – reports (VIDEOS)",
+    "date": "2026-07-18",
+    "source": "RT",
+    "url": "https://www.rt.com/russia/643219-kiev-missiles-strikes-fires/",
+    "description": "The Ukrainian capital was hit by a combined drone and missile strike early Sunday morning, according to local officials and media reports Read Full Article at RT.com",
+    "image_url": "https://mf.b37mrtl.ru/files/2026.07/article/6a5c10bf85f5401b9c59caf9.jpg"
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "entities": [
+     "Ukraine",
+     "Kiev"
+    ],
+    "severity": "high",
+    "location_mentioned": "Kiev",
+    "one_line_summary": "Kiev was hit by a combined drone and missile strike early Sunday morning",
+    "credibility": "3"
+   }
+  },
+  {
+   "article": {
+    "title": "Andy Burnham’s in-tray: The challenges facing the new UK PM",
+    "date": "2026-07-19",
+    "source": "Al Jazeera English",
+    "url": "https://www.aljazeera.com/economy/2026/7/19/andy-burnhams-in-tray-the-challenges-facing-the-new-uk-pm",
+    "description": "Andy Burnham will become Britain's next prime minister on Monday, with huge challenges and opportunities.",
+    "image_url": "https://www.aljazeera.com/wp-content/uploads/2026/07/ap_6a5d16db77651-1784485595.jpg?resize=1920%2C1440"
+   },
+   "analysis": {
+    "event_type": "political",
+    "entities": [
+     "Andy Burnham"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Britain",
+    "one_line_summary": "Andy Burnham is set to become Britain's next prime minister, facing significant challenges and opportunities",
+    "credibility": "2"
+   }
+  },
+  {
+   "article": {
+    "title": "Azerbaijan confirms secret German-Russian talks in Baku on Ukraine conflict",
+    "date": "2026-07-21",
+    "source": "Crypto Briefing",
+    "url": "https://cryptobriefing.com/azerbaijan-confirms-secret-german-russian-talks-in-baku-on-ukraine-conflict/",
+    "description": "Azerbaijan confirms secret talks between Germany and Russia on Ukraine. Ceasefire agreement by December 31, 2026 at 35.5% YES.\nThe post Azerbaijan confirms secret German-Russian talks in Baku on Ukraine conflict appeared first on Crypto Briefing.",
+    "image_url": "https://static.cryptobriefing.com/wp-content/uploads/2026/07/21193041/the-three-flame-towers-in-baku-azerbaijan-look-blueish-purpl-1-1-800x420.jpeg"
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "entities": [
+     "Azerbaijan",
+     "Germany",
      "Russia"
     ],
-    "severity": "high",
-    "location_mentioned": "Kyiv",
-    "one_line_summary": "Russia launched a missile and drone attack on Kyiv, resulting in at least one death",
-    "credibility": "1"
-   }
-  },
-  {
-   "article": {
-    "title": "Zelenskyy replaces military leader and brings back defence minister he sacked - The Guardian",
-    "date": "2026-07-21",
-    "source": "Slashdot.org",
-    "url": "https://slashdot.org/firehose.pl?op=view&amp;id=184570006",
-    "description": "Zelenskyy replaces military leader and brings back defence minister he sackedThe Guardian Zelensky sacks Ukraine’s military chief following widespread protestsCNN Zelenskyy replaces Ukraine military chief after protestsAl Jazeera Ukraine’s Zelenskyy fires his…",
-    "image_url": null
-   },
-   "analysis": {
-    "event_type": "political",
-    "entities": [
-     "Zelenskyy",
-     "Ukraine"
-    ],
     "severity": "medium",
-    "location_mentioned": "Ukraine",
-    "one_line_summary": "Ukrainian President Zelenskyy replaces the country's military leader and reinstates a previously sacked defence minister amid widespread protests",
-    "credibility": "2"
+    "location_mentioned": "Baku",
+    "one_line_summary": "Azerbaijan has confirmed secret talks between Germany and Russia regarding the Ukraine conflict, with a potential ceasefire agreement by December 31, 2026",
+    "credibility": "3"
    }
   },
   {
    "article": {
-    "title": "Russia's businesses under strain from Ukraine's attacks on Wildberries",
+    "title": "Ukraine appears to change tactics in Russia attacks",
     "date": "2026-07-22",
-    "source": "BBC News",
-    "url": "https://www.bbc.co.uk/news/articles/cvg9n2y61w6o",
-    "description": "Ukrainian drones have hit several retail warehouses belonging to Russia's biggest online retailer Wildberries in a matter of days.",
-    "image_url": "https://ichef.bbci.co.uk/ace/branded_news/1200/cpsprodpb/3c64/live/d7b13ca0-85f3-11f1-8ade-a7a676c613b9.jpg"
+    "source": "Biztoc.com",
+    "url": "https://biztoc.com/x/7dd98e1d2e3c1fd8",
+    "description": "Ukraine appears to be shifting its strategy in its attacks on Russia. Kyiv is letting up on its strikes on Russian oil refineries — easing Moscow’s fuel crunch and pushing gas prices back down — and is instead hitting ships: More than 120 Russia-linked vessel…",
+    "image_url": "https://biztoc.com/cdn/7dd98e1d2e3c1fd8_s.webp"
    },
    "analysis": {
     "event_type": "conflict",
     "entities": [
-     "Russia",
      "Ukraine",
-     "Wildberries"
+     "Russia",
+     "Kyiv",
+     "Moscow"
     ],
     "severity": "medium",
     "location_mentioned": "Russia",
-    "one_line_summary": "Ukrainian drones have attacked several Russian retail warehouses belonging to Wildberries",
+    "one_line_summary": "Ukraine appears to be shifting its strategy in its attacks on Russia, targeting ships instead of oil refineries",
     "credibility": "2"
    }
   },
   {
    "article": {
-    "title": "How volunteers with 3D printers make weapons for Ukraine",
-    "date": "2026-07-24",
-    "source": "Biztoc.com",
-    "url": "https://biztoc.com/x/717b6070b188aa79",
-    "description": "Last week, Ukrainian President Zelenskyy dismissed his tech-savvy defense minister. That sparked protests among supporters who credit him with helping transform Ukraine's defense capabilities. Special correspondent Simon Ostrovsky and producer Katia Patin rep…",
-    "image_url": "https://biztoc.com/cdn/717b6070b188aa79_s.webp"
+    "title": "'Not Trump's kind of guy': White House insider leaks President's private thoughts about 'dorky' new UK Prime Minister, by MARK HALPERIN",
+    "date": "2026-07-23",
+    "source": "Dailymail.com",
+    "url": "https://www.dailymail.com/debate/article-16000225/Trump-British-Prime-Minister-Burnham-dorky-mark-halperin.html",
+    "description": "'He has a clean slate,' the person said of Trump world's view of Burnham, 'but he's going to run into the same problems. People are unhappy.'",
+    "image_url": "https://i.dailymail.com/1s/2026/07/23/18/110209685-0-image-a-8_1784826723616.jpg"
+   },
+   "analysis": {
+    "event_type": "political",
+    "entities": [
+     "Donald Trump",
+     "UK Prime Minister",
+     "Mark Halperin"
+    ],
+    "severity": "low",
+    "location_mentioned": "UK",
+    "one_line_summary": "A White House insider has leaked President Trump's private thoughts about the new UK Prime Minister, describing him as 'dorky'",
+    "credibility": "3"
+   }
+  },
+  {
+   "article": {
+    "title": "Ukrainian Armed Forces attacked an Iranian vessel in the Caspian Sea. Iran's Foreign Ministry: Kyiv attacked an Iranian merchant vessel in the Caspian Sea",
+    "date": "2026-07-25",
+    "source": "Freerepublic.com",
+    "url": "https://freerepublic.com/focus/f-news/4389355/posts",
+    "description": "TEHRAN, Juy 25--RIA Novosti. The Ukrainian Armed Forces attacked an Iranian merchant vessel in the Caspian Sea, the Islamic Republic's Foreign Ministry reported. \"The Iranian Foreign Ministry strongly condemns Ukraine's attack on an Iranian merchant vessel in…",
+    "image_url": null
    },
    "analysis": {
     "event_type": "conflict",
     "entities": [
-     "Ukrainian President Zelenskyy",
-     "Simon Ostrovsky",
-     "Katia Patin"
+     "Ukrainian Armed Forces",
+     "Iran's Foreign Ministry",
+     "Iran"
     ],
     "severity": "medium",
-    "location_mentioned": "Ukraine",
-    "one_line_summary": "Ukrainian President Zelenskyy dismissed his defense minister, sparking protests among supporters who credit him with transforming Ukraine's defense capabilities",
-    "credibility": "2"
+    "location_mentioned": "Caspian Sea",
+    "one_line_summary": "The Ukrainian Armed Forces attacked an Iranian merchant vessel in the Caspian Sea, according to Iran's Foreign Ministry",
+    "credibility": "3"
    }
   },
   {
    "article": {
-    "title": "Russia Wants 30,000 More North Korean Troops for Ukraine War, Zelensky Says",
-    "date": "2026-07-25",
-    "source": "Biztoc.com",
-    "url": "https://biztoc.com/x/19b091a8580d2ee4",
-    "description": "Ukrainian President Volodymyr Zelensky said Saturday that Russia is preparing to bring an additional 30,000 North Korean troops into its war against Ukraine, a move that would dramatically expand Pyongyang's direct involvement in the conflict if confirmed.\n\"W…",
-    "image_url": "https://biztoc.com/cdn/19b091a8580d2ee4_s.webp"
+    "title": "Vessel sinks a week after being struck by Russian fire, Ukrainian officials say - Reuters",
+    "date": "2026-07-26",
+    "source": "Slashdot.org",
+    "url": "https://slashdot.org/firehose.pl?op=view&amp;id=184710510",
+    "description": "Vessel sinks a week after being struck by Russian fire, Ukrainian officials sayReuters 2 Indians Missing After Another Attack On Ship At Odesa Port In UkraineNDTV Ukraine war briefing: Russia behind deadly strike on cargo ship, says Ukraine, as Putin thanks N…",
+    "image_url": null
    },
    "analysis": {
     "event_type": "conflict",
     "entities": [
      "Russia",
-     "North Korea",
      "Ukraine",
-     "Volodymyr Zelensky"
+     "Putin"
     ],
     "severity": "high",
-    "location_mentioned": "Ukraine",
-    "one_line_summary": "Russia is preparing to bring 30,000 North Korean troops into its war against Ukraine, according to Ukrainian President Volodymyr Zelensky",
+    "location_mentioned": "Odesa Port",
+    "one_line_summary": "A vessel sank a week after being struck by Russian fire, with two Indians reported missing, according to Ukrainian officials",
     "credibility": "2"
    }
   },
   {
    "article": {
-    "title": "Need out-of-box thinking to plug paper leaks, says Supreme Court",
-    "date": "2026-07-27",
-    "source": "The Times of India",
-    "url": "https://timesofindia.indiatimes.com/india/need-out-of-box-thinking-to-plug-paper-leaks-says-supreme-court/articleshow/132672742.cms",
-    "description": "A high-powered committee for education reform has been formed. The Supreme Court seeks \"out-of-box thinking\" to address sector problems. The court will hear the NEET paper leak petition on August 3. Government needs to examine additional safeguards for online…",
-    "image_url": "https://static.toiimg.com/thumb/msid-132672747,width-1280,height-720,resizemode-6,overlay-toi_sw,pt-32,y_pad-600/photo.jpg"
+    "title": "Even in death, Lindsey Graham is driving diplomacy forward",
+    "date": "2026-07-28",
+    "source": "New York Post",
+    "url": "https://nypost.com/2026/07/28/us-news/even-in-death-lindsey-graham-is-driving-diplomacy-forward/",
+    "description": "WASHINGTON – Lindsey Graham’s bipartisan relationships and stature on the global stage drove world events one last time Tuesday, as a gathering for his funeral produced a possibility for peace. Ukrainian President Volodymyr Zelensky, in town for Graham’s memo…",
+    "image_url": "https://nypost.com/wp-content/uploads/sites/2/2026/07/crop-40115019_9c2f0f.jpg?quality=75&strip=all&w=1200"
    },
    "analysis": {
     "event_type": "political",
     "entities": [
-     "Supreme Court",
-     "Government"
+     "Lindsey Graham",
+     "Volodymyr Zelensky"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Washington",
+    "one_line_summary": "The funeral of Lindsey Graham brought together world leaders, including Ukrainian President Volodymyr Zelensky, and sparked a possibility for peace",
+    "credibility": "2"
+   }
+  },
+  {
+   "article": {
+    "title": "GOP Lawmaker Calls Trump's Framing of Ukraine War 'Embarrassing'",
+    "date": "2026-07-30",
+    "source": "Biztoc.com",
+    "url": "https://biztoc.com/x/d36655ec868aa7f6",
+    "description": "Representative Don Bacon, one of Congress' most outspoken Republican supporters of Ukraine, publicly rebuked President Donald Trump after the president responded to a question about his meeting with Ukrainian President Volodymyr Zelensky by saying he wants th…",
+    "image_url": "https://biztoc.com/cdn/d36655ec868aa7f6_s.webp"
+   },
+   "analysis": {
+    "event_type": "political",
+    "entities": [
+     "Don Bacon",
+     "Donald Trump",
+     "Volodymyr Zelensky"
+    ],
+    "severity": "low",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "Representative Don Bacon publicly rebuked President Donald Trump over his comments on the Ukraine war",
+    "credibility": "2"
+   }
+  },
+  {
+   "article": {
+    "title": "News Wrap: Death toll from Japan earthquake rises to 34",
+    "date": "2026-07-31",
+    "source": "Biztoc.com",
+    "url": "https://biztoc.com/x/a716a1a9e0596111",
+    "description": "In our news wrap Friday, this week's powerful earthquake in Japan has claimed at least 34 lives, a sweltering heat dome descended over much of the West, a Marine Corps fighter jet crashed at Miramar Air Station in California and President Trump says the U.S. …",
+    "image_url": "https://biztoc.com/cdn/a716a1a9e0596111_s.webp"
+   },
+   "analysis": {
+    "event_type": "natural_disaster",
+    "entities": [
+     "Japan",
+     "President Trump",
+     "Marine Corps"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Japan",
+    "one_line_summary": "A powerful earthquake in Japan has claimed at least 34 lives",
+    "credibility": "2"
+   }
+  },
+  {
+   "article": {
+    "title": "Russia destroys 1.5M Ukrainian books in drone strike targeting culture",
+    "date": "2026-08-01",
+    "source": "Crypto Briefing",
+    "url": "https://cryptobriefing.com/russia-destroys-15m-ukrainian-books-in-drone-strike-targeting-culture/",
+    "description": "The destruction of Ukrainian cultural assets may signal a strategic shift, complicating Ukraine's efforts and impacting military dynamics.\nThe post Russia destroys 1.5M Ukrainian books in drone strike targeting culture appeared first on Crypto Briefing.",
+    "image_url": "https://static.cryptobriefing.com/wp-content/uploads/2026/08/01165505/the-theater-courage-and-survival-in-the-defining-atrocity-of-1-800x420.jpeg"
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "entities": [
+     "Russia",
+     "Ukraine"
+    ],
+    "severity": "high",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "Russia has destroyed 1.5 million Ukrainian books in a drone strike targeting Ukrainian culture",
+    "credibility": "3"
+   }
+  },
+  {
+   "article": {
+    "title": "News Wrap: Michigan reports 2 deaths related to cyclosporiasis outbreak",
+    "date": "2026-08-03",
+    "source": "PBS",
+    "url": "https://www.pbs.org/newshour/show/news-wrap-michigan-reports-2-deaths-related-to-cyclosporiasis-outbreak",
+    "description": "In our news wrap Monday, health officials in Michigan reported the first deaths in the U.S. related to a cyclosporiasis outbreak, more than two dozen states are suing the Trump administration over its latest tariffs and officials in southern Ukraine say Russi…",
+    "image_url": "https://d3i6fh83elv35t.cloudfront.net/static/2026/08/newswrapaugust3-1024x683.jpg"
+   },
+   "analysis": {
+    "event_type": "natural_disaster",
+    "entities": [
+     "Michigan",
+     "Trump administration"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Michigan",
+    "one_line_summary": "Michigan reports 2 deaths related to a cyclosporiasis outbreak",
+    "credibility": "2"
+   }
+  },
+  {
+   "article": {
+    "title": "Oil Spill From Sanctioned Tanker Is Growing Fast",
+    "date": "2026-08-04",
+    "source": "Newser",
+    "url": "https://www.newser.com/story/394083/oil-spill-from-sanctioned-tanker-is-growing-fast.html",
+    "description": "An oil spill caused by leakage from a UK-sanctioned tanker grounded for weeks off Oman appears to be expanding dramatically, reaching shorelines and far out to sea, according to experts and satellite images reviewed by the AP . Greenpeace Germany said in a st…",
+    "image_url": "https://cdn.newser.com/image/1703213-12-20260804172808.jpeg"
+   },
+   "analysis": {
+    "event_type": "natural_disaster",
+    "entities": [
+     "Greenpeace Germany",
+     "UK"
+    ],
+    "severity": "high",
+    "location_mentioned": "Oman",
+    "one_line_summary": "An oil spill from a UK-sanctioned tanker grounded off Oman is expanding dramatically, reaching shorelines and far out to sea",
+    "credibility": "2"
+   }
+  },
+  {
+   "article": {
+    "title": "Retired Army colonel explains why Patriot missiles are so valuable and in short supply",
+    "date": "2026-08-05",
+    "source": "PBS",
+    "url": "https://www.pbs.org/newshour/show/retired-army-colonel-explains-why-patriot-missiles-are-so-valuable-and-in-short-supply",
+    "description": "To discuss the air defense shortage in Ukraine and the impact on its ability to defend itself from Russia, Amna Nawaz spoke with retired Army Col. Robert Hamilton. He's now president of the Delphi Global Research Center, a military consulting firm. PBS News i…",
+    "image_url": "https://d3i6fh83elv35t.cloudfront.net/static/2026/08/ukrainediss-1024x683.jpg"
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "entities": [
+     "Robert Hamilton",
+     "Ukraine",
+     "Russia",
+     "Delphi Global Research Center"
+    ],
+    "severity": "medium",
+    "location_mentioned": "Ukraine",
+    "one_line_summary": "A retired Army colonel discusses the air defense shortage in Ukraine and the importance of Patriot missiles in its defense against Russia",
+    "credibility": "2"
+   }
+  },
+  {
+   "article": {
+    "title": "Mercer International Inc. Reports Second Quarter 2026 Results",
+    "date": "2026-08-06",
+    "source": "GlobeNewswire",
+    "url": "https://www.globenewswire.com/news-release/2026/08/06/3340823/10647/en/Mercer-International-Inc-Reports-Second-Quarter-2026-Results.html",
+    "description": "Selected Highlights  Second quarter Operating EBITDA* of negative $21.0 million (net loss of $76.0 million), including a non-cash inventory impairment of...",
+    "image_url": "https://ml.globenewswire.com/Resource/Download/3ff20124-4ccd-43ca-a482-d421d047632d"
+   },
+   "analysis": {
+    "event_type": "economic",
+    "entities": [
+     "Mercer International Inc."
     ],
     "severity": "medium",
     "location_mentioned": null,
-    "one_line_summary": "The Supreme Court has called for out-of-box thinking to address issues in the education sector, including the NEET paper leak.",
-    "credibility": "1"
-   }
-  },
-  {
-   "article": {
-    "title": "Zelensky says he asked Trump for emergency package of Patriot missiles",
-    "date": "2026-07-29",
-    "source": "Freerepublic.com",
-    "url": "https://freerepublic.com/focus/f-news/4389866/posts",
-    "description": "Ukrainian President Volodymyr Zelensky on Tuesday said he'd asked President Trump for a \"winter package\" consisting of 300 Patriot interceptors to fend off the Kremlin amid Kyiv's war with Russia.The request follows Trump's approval for Ukraine to manufacture…",
-    "image_url": null
-   },
-   "analysis": {
-    "event_type": "conflict",
-    "entities": [
-     "Volodymyr Zelensky",
-     "Donald Trump",
-     "Ukraine",
-     "Russia",
-     "Kremlin",
-     "Kyiv"
-    ],
-    "severity": "high",
-    "location_mentioned": "Kyiv",
-    "one_line_summary": "Ukrainian President Volodymyr Zelensky asked President Trump for a package of 300 Patriot missiles to aid in the war against Russia",
+    "one_line_summary": "Mercer International Inc. reports a net loss of $76.0 million for the second quarter of 2026.",
     "credibility": "2"
    }
   },
   {
    "article": {
-    "title": "Russia hockey ban extended through 2027 IIHF Men's World Championship",
-    "date": "2026-07-30",
-    "source": "NBCSports.com",
-    "url": "https://www.nbcsports.com/olympics/news/russia-hockey-ban-iihf-world-championship",
-    "description": "Russia has been banned from international hockey since shortly after the nation invaded Ukraine in February 2022.",
-    "image_url": "https://s.yimg.com/lo/mysterio/api/eff882eba6434289033f0ad5705d5053aed4e4dbcc6e08b2c141b2ebe8f78bb8/lightyear_networkapi/resizefill_w1200;quality_80;format_webp/https:%2F%2Fmedia.zenfs.com%2Fen%2Fnbcsports.com%2Fd12829f57a9be705b924862abfd28831"
+    "title": "Ukrainian Drone With Huge Explosive Payload Hits Bulgaria Near Vital Gas Pipeline",
+    "date": "2026-08-08",
+    "source": "Biztoc.com",
+    "url": "https://biztoc.com/x/116f6cfdac01f6df",
+    "description": "Ukrainian Drone With Huge Explosive Payload Hits Bulgaria Near Vital Gas Pipeline\n \nA major border and aerial incident has occurred between Ukraine and Bulgaria, and Bulgarian officials are outraged and demanding answers - ironically on the heels of a politic…",
+    "image_url": "https://biztoc.com/cdn/116f6cfdac01f6df_s.webp"
    },
    "analysis": {
     "event_type": "conflict",
     "entities": [
-     "Russia",
      "Ukraine",
-     "IIHF"
+     "Bulgaria"
+    ],
+    "severity": "high",
+    "location_mentioned": "Bulgaria",
+    "one_line_summary": "A Ukrainian drone with a large explosive payload has hit Bulgaria near a vital gas pipeline, sparking outrage and demands for answers from Bulgarian officials",
+    "credibility": "3"
+   }
+  },
+  {
+   "article": {
+    "title": "FBI Chief Kash Patel plans Russia trip in October; Kremlin-friendly newspaper hints at a give and take",
+    "date": "2026-08-09",
+    "source": "The Times of India",
+    "url": "https://economictimes.indiatimes.com/news/international/world-news/fbi-chief-kash-patel-plans-russia-trip-in-october-kremlin-friendly-newspaper-hints-at-a-give-and-take/articleshow/133073033.cms",
+    "description": "FBI Director Kash Patel plans an unusual trip to Russia in mid-October.  This visit occurs amid ongoing geopolitical tensions and heightened congressional scrutiny.  Patel's history involves controversial Russia-related developments from Donald Trump's first …",
+    "image_url": "https://img.etimg.com/thumb/msid-133073082,width-1200,height-630,imgsize-84532,overlay-economictimes/articleshow.jpg"
+   },
+   "analysis": {
+    "event_type": "political",
+    "entities": [
+     "Kash Patel",
+     "FBI",
+     "Kremlin",
+     "Donald Trump"
     ],
     "severity": "medium",
-    "location_mentioned": "Ukraine",
-    "one_line_summary": "Russia's ban from international hockey has been extended through the 2027 IIHF Men's World Championship due to its invasion of Ukraine",
-    "credibility": "1"
-   }
-  },
-  {
-   "article": {
-    "title": "Homemade bomb goes off outside upscale Moscow restaurant state officials say",
-    "date": "2026-08-01",
-    "source": "DW (English)",
-    "url": "https://www.dw.com/en/homemade-bomb-goes-off-outside-upscale-moscow-restaurant-state-officials-say/a-78205022",
-    "description": "Russian authorities said the blast occurred outside a restaurant on Kudrinskaya Square when a woman allegedly carrying explosives was stopped by a security guard.",
-    "image_url": "https://static.dw.com/image/78205163_6.jpg"
-   },
-   "analysis": {
-    "event_type": "terrorism",
-    "entities": [
-     "Russian authorities"
-    ],
-    "severity": "high",
-    "location_mentioned": "Kudrinskaya Square, Moscow",
-    "one_line_summary": "A homemade bomb exploded outside an upscale restaurant in Moscow after a woman carrying explosives was stopped by a security guard.",
+    "location_mentioned": "Russia",
+    "one_line_summary": "FBI Director Kash Patel plans to visit Russia in October amid ongoing geopolitical tensions and congressional scrutiny",
     "credibility": "2"
    }
-  },
+  }
+ ],
+ "x_events": [
   {
-   "article": {
-    "title": "Ukraine says major Russian oil refinery and airfield hit , as Moscow reports eight deaths",
-    "date": "2026-08-02",
-    "source": "bbc.co.uk",
-    "url": "https://www.bbc.co.uk/news/articles/c998gg5pe09o",
-    "description": "",
-    "image_url": null
+   "post": {
+    "id": "2079415454578446394",
+    "text": "Since the beginning of its full scale aggression against Ukraine, Russia has been deliberately targeting 🇺🇦 cultural heritage, including @UNESCO World Heritage List sites. 🇷🇺 continues violating in a blatant manner its obligations under UNESCO Constitution. #StandWithUkraine",
+    "date": "2026-07-21",
+    "author": "@PLinUNESCO",
+    "author_name": "Poland in UNESCO",
+    "followers": 1492,
+    "verified": false,
+    "url": "https://x.com/PLinUNESCO/status/2079415454578446394",
+    "likes": 2,
+    "retweets": 2,
+    "replies": 0,
+    "views": 225
    },
    "analysis": {
     "event_type": "conflict",
-    "entities": [
-     "Ukraine",
-     "Russia",
-     "Moscow"
-    ],
     "severity": "high",
-    "location_mentioned": "Ukraine",
-    "one_line_summary": "Ukraine has struck a major Russian oil refinery and airfield, resulting in eight reported deaths according to Moscow",
-    "credibility": "2"
+    "credibility": 3
    }
   },
   {
-   "article": {
-    "title": "Ukrainian studies in  crisi despite rising demand in Europe",
-    "date": "2026-08-03",
-    "source": "timeshighereducation.com",
-    "url": "https://www.timeshighereducation.com/news/ukrainian-studies-crisis-despite-rising-demand-europe",
-    "description": "",
-    "image_url": null
+   "post": {
+    "id": "2079415304833437706",
+    "text": "North Korea reaffirmed its support for Moscow's war on Ukraine as the two foreign ministers held talks in Moscow, Pyongyang's state media reported Tuesday.\n\n#NorthKorea #Russia #UkraineWar #Geopolitics #PakistanTV https://t.co/2VEsc3RfPA",
+    "date": "2026-07-21",
+    "author": "@PakTVGlobal",
+    "author_name": "Pakistan TV",
+    "followers": 545889,
+    "verified": false,
+    "url": "https://x.com/PakTVGlobal/status/2079415304833437706",
+    "likes": 3,
+    "retweets": 0,
+    "replies": 0,
+    "views": 370
+   },
+   "analysis": {
+    "event_type": "political",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2079414279569346838",
+    "text": "Fat target eliminated.\nRussian FSB Major Zhuravlev bites the dust in Ukraine.\nRest in manure. https://t.co/xz7pBzVXic",
+    "date": "2026-07-21",
+    "author": "@ChurchillFella",
+    "author_name": "Churchill MGᵀᴹ 🇺🇦🇨🇦🇬🇧🇪🇺🇺🇸",
+    "followers": 24997,
+    "verified": true,
+    "url": "https://x.com/ChurchillFella/status/2079414279569346838",
+    "likes": 3324,
+    "retweets": 409,
+    "replies": 103,
+    "views": 23962
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2079414085549019593",
+    "text": "Russian losses as of July 21st, Day 1609 of Russia’s War of Aggression Against the People of Ukraine.\n\n🚨 WOW! 1370 Russian men KIA/WIA! \n\n🚨 Another 453 fuel trucks and soft targets hit as the UAF strangles Russian logistics!\n\nRussia will not survive this! https://t.co/kVwkfJ3VD9",
+    "date": "2026-07-21",
+    "author": "@PytorAlexievich",
+    "author_name": "Pytor Alexievich",
+    "followers": 130,
+    "verified": false,
+    "url": "https://x.com/PytorAlexievich/status/2079414085549019593",
+    "likes": 60,
+    "retweets": 8,
+    "replies": 1,
+    "views": 330
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2079412869150449818",
+    "text": "🇺🇦🇷🇺 Footage reportedly shows a Ukrainian drone, estimated to cost around $500, striking and destroying a Russian T-90 tank reportedly valued at approximately $3 million.\n#RussiaUkraineWar #CombatFootage #Ukraine #Russia #DroneWarfare #T90 #Military #WarFootage https://t.co/QcMqCyuqVd",
+    "date": "2026-07-21",
+    "author": "@kfaizan7051",
+    "author_name": "combat archive videos",
+    "followers": 4258,
+    "verified": false,
+    "url": "https://x.com/kfaizan7051/status/2079412869150449818",
+    "likes": 51,
+    "retweets": 3,
+    "replies": 2,
+    "views": 8317
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2079412298603766046",
+    "text": "Over a thousand kilometers of roads in Ukraine are protected against small drones by nets—highlighting the importance of passive defenses against this growing threat. Are US Army units prepared to employ them? https://t.co/f0qnKsh5pS",
+    "date": "2026-07-21",
+    "author": "@WarInstitute",
+    "author_name": "Modern War Institute Editor",
+    "followers": 90167,
+    "verified": false,
+    "url": "https://x.com/WarInstitute/status/2079412298603766046",
+    "likes": 9,
+    "retweets": 2,
+    "replies": 0,
+    "views": 1996
    },
    "analysis": {
     "event_type": "other",
-    "entities": [
-     "Ukraine",
-     "Europe"
-    ],
-    "severity": "medium",
-    "location_mentioned": "Europe",
-    "one_line_summary": "Ukrainian studies are in crisis despite a rising demand for them in Europe",
-    "credibility": "2"
+    "severity": "low",
+    "credibility": 3
    }
   },
   {
-   "article": {
-    "title": "Strathcona Resources Ltd. Reports Second Quarter 2026 Financial and Operating Results and Announces Quarterly Dividend",
+   "post": {
+    "id": "2079411677284520181",
+    "text": "📌 Russian Operations Focus on Ukrainian Logistics as Drone War Intensifies\n\n🔶 Long-Range Strikes\nRussia continued long-range strikes against targets in the Odesa region, including naval facilities near the ports. Attack drones also struck fuel depots and logistics sites, including the Epicenter hypermarket in Sumy, as part of efforts to disrupt Ukrainian supply networks.\n🔶 Ukrainian Drone Campaign\nUkraine maintained a high tempo of drone attacks. Russia claimed to have intercepted 161 Ukrainian UAVs in one day. Drones reportedly struck logistics facilities in the Moscow and Lipetsk regions, while Crimea and Sevastopol were also targeted overnight.\n\n🔶 Belgorod and Bryansk\nCivilian casualties were reported in Russia's border regions. In Shebekino, Belgorod region, a bus strike reportedly killed five people and injured 23. Additional attacks across Belgorod left several more civilians dead and wounded. In Bryansk, a firefighter was killed and several civilians were injured in separate strikes.\n🔶 Sumy Border\nHeavy fighting continued along the Sumy border. Clashes were reported around Ulanovo, Malaya Sloboda, Ryzhevka, Pisarevka, Mogritsa, Maryino, Novaya Sech, Khoten, and Prokhody, with both sides engaged in ongoing firefights.\n\n🔶 Kursk\nA Ukrainian drone strike near the railway station in Lgov reportedly injured five railway workers. Rail operations at the station were temporarily suspended under the counter-terrorism regime.\n🔶 Kupyansk\nFighting continued around Kupyansk as Ukrainian forces reportedly attempted to reinforce the area. No major territorial changes were reported farther south.\n\n🔶 Konstantinovka–Dobropolye\nRussian sources claimed clearing operations continued in Konstantinovka. In the Dobropolye direction, fighting was reported around Belitskoye while Russian forces expanded their control around the previously captured village of Mirne.\n🔶 Dnipropetrovsk and Zaporizhzhia\nRussian sources claimed the capture of Volnoye in Dnipropetrovsk region. West of Rovne and Kopani in Zaporizhzhia, Russian units reportedly broke through Ukrainian defensive positions and consolidated newly gained ground.\n\n🔶 Kherson\nRussian-controlled areas of Kherson remained under Ukrainian drone attacks. Authorities reported civilian casualties in Skadovsk and damage to infrastructure across several settlements, including Antonovka, Nova Kakhovka, Kalanchak, and Hola Prystan.\nForward assessment: Drone strikes and long-range attacks are likely to continue as both sides focus on disrupting logistics while ground fighting remains active.\n\nPersonal analysis: The battlefield remains dominated by attrition. Both Russia and Ukraine continue targeting logistics, infrastructure, and rear areas while seeking limited tactical gains along multiple sectors.\n(According to maps and analysis from Two Majors.)\n\nhttps://t.co/1030yHisFE\n\n#Russia #Ukraine #Donbas #Sumy #Kupyansk #Zaporizhzhia #Kherson #Belgorod #OSINT #MilitaryAnalysis",
+    "date": "2026-07-21",
+    "author": "@Nordexium",
+    "author_name": "Nordexium (🇫🇷 🇩🇰)",
+    "followers": 6078,
+    "verified": true,
+    "url": "https://x.com/Nordexium/status/2079411677284520181",
+    "likes": 2,
+    "retweets": 2,
+    "replies": 0,
+    "views": 161
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2079411552139313581",
+    "text": "‘The 4 yr stalemate in Ukraine has suddenly broken. For the first time in modern memory, Russia is having to import fuel to keep its economy &amp; society afloat.’ \n\nThis is one of the best articles I’ve read about the ‘tectonic shifts’ in balance of power. \n\nhttps://t.co/JrrsOh3t8Q",
+    "date": "2026-07-21",
+    "author": "@JosieMcskimming",
+    "author_name": "Dr Josie McSkimming",
+    "followers": 7344,
+    "verified": false,
+    "url": "https://x.com/JosieMcskimming/status/2079411552139313581",
+    "likes": 5,
+    "retweets": 1,
+    "replies": 0,
+    "views": 158
+   },
+   "analysis": {
+    "event_type": "economic",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2079410250898174105",
+    "text": "Tomorrow is the 1 year anniversary of the terrible day our family was told our precious 1st grandson was missing &amp; presumed dead in the Ukraine.  I hate that utterly unnecessary war.  So many dead. We honor his &amp; all these fallen heroes.",
+    "date": "2026-07-21",
+    "author": "@Nanalise",
+    "author_name": "Texan Patriot",
+    "followers": 3107,
+    "verified": false,
+    "url": "https://x.com/Nanalise/status/2079410250898174105",
+    "likes": 3,
+    "retweets": 0,
+    "replies": 1,
+    "views": 68
+   },
+   "analysis": {
+    "event_type": "other",
+    "severity": "low",
+    "credibility": 6
+   }
+  },
+  {
+   "post": {
+    "id": "2079410204626604151",
+    "text": "Botswana 🇧🇼 has reported a sharp increase in cases of citizens being deceived by fake overseas job offers and ending up on the battlefield in Ukraine. \n\nThe government has issued an official warning, saying recruiters promise civilian jobs abroad but force victims to fight for Russia after they arrive. \n\nOfficials say they have received distress calls from Batswana already on the front lines and are urging the public to verify overseas job offers carefully.",
+    "date": "2026-07-21",
+    "author": "@AfricaViewFacts",
+    "author_name": "Africa View Facts",
+    "followers": 127931,
+    "verified": true,
+    "url": "https://x.com/AfricaViewFacts/status/2079410204626604151",
+    "likes": 18,
+    "retweets": 4,
+    "replies": 1,
+    "views": 2344
+   },
+   "analysis": {
+    "event_type": "other",
+    "severity": "low",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2079409039637692626",
+    "text": "North Korea announced it had reached a common understanding with Russia following the talks between its foreign ministers:\n\n\"The Russian side expressed 'full support' for North Korea's efforts to counter threats to its sovereignty, security, and right to development. Pyongyang reaffirmed its unwavering support for Russia's policy aimed at 'eliminating the root cause of the crisis in Ukraine,' protecting state sovereignty, territorial integrity, and international justice.\n\nThe parties agreed to further develop their comprehensive strategic partnership under the leadership of the two countries' leaders, uphold the purposes and principles of the UN Charter and international law, continue to exchange views between their foreign ministries at various levels, and coordinate efforts on regional and international security issues.\"",
+    "date": "2026-07-21",
+    "author": "@vick55top",
+    "author_name": "Victor vicktop55 commentary",
+    "followers": 11667,
+    "verified": true,
+    "url": "https://x.com/vick55top/status/2079409039637692626",
+    "likes": 94,
+    "retweets": 22,
+    "replies": 0,
+    "views": 3082
+   },
+   "analysis": {
+    "event_type": "political",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2079408735286415575",
+    "text": "This is very unexpected. Laura Loomer became a big supporter of Ukraine, fighting and dismantling russian propaganda.\n\nEven russian propagandists are fighting her now.\n\nJust read the screenshots. https://t.co/pflmH7FPZM",
+    "date": "2026-07-21",
+    "author": "@rshereme",
+    "author_name": "Roman Sheremeta 🇺🇸🇺🇦",
+    "followers": 94160,
+    "verified": true,
+    "url": "https://x.com/rshereme/status/2079408735286415575",
+    "likes": 745,
+    "retweets": 122,
+    "replies": 37,
+    "views": 17188
+   },
+   "analysis": {
+    "event_type": "other",
+    "severity": "low",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2079408679896727792",
+    "text": "#NewsUpdate #India #Ukraine #RussiaNews \nFour Indian sailors dead and one critically injured. @the_hindu https://t.co/oSSQZyUMTk",
+    "date": "2026-07-21",
+    "author": "@LBS_IND21",
+    "author_name": "Little Bhagat Singh",
+    "followers": 2255,
+    "verified": true,
+    "url": "https://x.com/LBS_IND21/status/2079408679896727792",
+    "likes": 3,
+    "retweets": 2,
+    "replies": 0,
+    "views": 30
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2079408519862780129",
+    "text": "If Ukraine is freed up for defense production before China invades Taiwan, Taiwan can buy like 10x as many missiles and drones (including USV) from them for the same price as anywhere else. (Ukraine and Taiwan make natural long distance partners...)",
+    "date": "2026-07-21",
+    "author": "@Robotbeat",
+    "author_name": "Robotbeat🗽 ➐",
+    "followers": 14553,
+    "verified": true,
+    "url": "https://x.com/Robotbeat/status/2079408519862780129",
+    "likes": 35,
+    "retweets": 0,
+    "replies": 6,
+    "views": 952
+   },
+   "analysis": {
+    "event_type": "other",
+    "severity": "low",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2079408242950598713",
+    "text": "Ukraine may have attacked a thermal power plant in Lipetsk, near Moscow.\nFootage from Lipetsk.\nSomething is ablaze near the thermal power plant—or the plant itself is on fire! https://t.co/X8BYNdkQ97",
+    "date": "2026-07-21",
+    "author": "@MKvarkm",
+    "author_name": "Михаил Квартерников",
+    "followers": 67,
+    "verified": true,
+    "url": "https://x.com/MKvarkm/status/2079408242950598713",
+    "likes": 2,
+    "retweets": 1,
+    "replies": 1,
+    "views": 151
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2079407449388499048",
+    "text": ".@MOFA_Taiwan🇹🇼 cultivates drone development cooperation with #Ukraine🇺🇦\n\nhttps://t.co/UZhOgSiktI https://t.co/hsV9OICTgD",
+    "date": "2026-07-21",
+    "author": "@Taiwan_Today",
+    "author_name": "Taiwan Today",
+    "followers": 167025,
+    "verified": false,
+    "url": "https://x.com/Taiwan_Today/status/2079407449388499048",
+    "likes": 12,
+    "retweets": 2,
+    "replies": 0,
+    "views": 9487
+   },
+   "analysis": {
+    "event_type": "other",
+    "severity": "low",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2079406301315289475",
+    "text": "Great to see Laura Loomer visiting the great nation of Ukraine. Many people on the American right are waking up to the disgusting Tucker-Candace third worldist slop propaganda of the past few years",
+    "date": "2026-07-21",
+    "author": "@DrewPavlou",
+    "author_name": "Drew Pavlou 🇦🇺🇺🇸🇺🇦🇹🇼",
+    "followers": 260689,
+    "verified": true,
+    "url": "https://x.com/DrewPavlou/status/2079406301315289475",
+    "likes": 2875,
+    "retweets": 244,
+    "replies": 108,
+    "views": 77670
+   },
+   "analysis": {
+    "event_type": "other",
+    "severity": "low",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2079406264832942553",
+    "text": "Yes, Biden drained the Strategic Petroleum Reserve for petty political purposes and to backstop Ukraine during his presidency. \n\nBut he still left 400 million barrels of oil in there. Trump is the one who is blowing through the SPR the same way he blew through his father's money in the 1990s. \n\nCan Trump get bailed out again? Will we get bailed out?",
+    "date": "2026-07-21",
+    "author": "@WeTheBrandon",
+    "author_name": "Brandon Weichert",
+    "followers": 72121,
+    "verified": true,
+    "url": "https://x.com/WeTheBrandon/status/2079406264832942553",
+    "likes": 929,
+    "retweets": 119,
+    "replies": 50,
+    "views": 28559
+   },
+   "analysis": {
+    "event_type": "economic",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2079404903005323327",
+    "text": "🇷🇺🇺🇦 Ukraine continues executing highly targeted strikes on Russian rear logistics. The drone strike hitting the Almaznaya logistics complex in Lipetsk highlights the vulnerability of Russian supply nodes and Kyiv’s growing long-range precision capabilities. \n​#Lipetsk #Russia https://t.co/b1xgJZKZ9P",
+    "date": "2026-07-21",
+    "author": "@Burak_Keskin85",
+    "author_name": "Burak Keskin",
+    "followers": 881,
+    "verified": true,
+    "url": "https://x.com/Burak_Keskin85/status/2079404903005323327",
+    "likes": 58,
+    "retweets": 7,
+    "replies": 1,
+    "views": 1468
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2079404390172311701",
+    "text": "▪️4 Indians killed in Black  Sea attack\n▪️Keralam's Akhil Joyan among those killed\n▪️Keralam CM assures all support\n#Keralam #BlackSea #Ukraine #News #ITVideo https://t.co/NuTBHi1EUA",
+    "date": "2026-07-21",
+    "author": "@IndiaToday",
+    "author_name": "IndiaToday",
+    "followers": 6213816,
+    "verified": true,
+    "url": "https://x.com/IndiaToday/status/2079404390172311701",
+    "likes": 4,
+    "retweets": 2,
+    "replies": 0,
+    "views": 5189
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2082315104880881967",
+    "text": "Ukraine is using child labor to produce drone components for its war against Russia https://t.co/0fmCXmEj8B",
+    "date": "2026-07-29",
+    "author": "@JnglJourney",
+    "author_name": "Jungle Journey",
+    "followers": 5075,
+    "verified": true,
+    "url": "https://x.com/JnglJourney/status/2082315104880881967",
+    "likes": 48,
+    "retweets": 19,
+    "replies": 1,
+    "views": 7909
+   },
+   "analysis": {
+    "event_type": "economic",
+    "severity": "medium",
+    "credibility": 5
+   }
+  },
+  {
+   "post": {
+    "id": "2082314838273921374",
+    "text": "Hannity: \"Is Crimea back on the table?\"\n\nZelensky: \"Not yet. It is important not to lose the people.\"\n\nThe exchange comes as Ukraine continues to target military assets in Crimea, highlighting the tension between preserving long-term political objectives and ongoing military operations in the region.\n\nhttps://t.co/r2rSofPFYf",
+    "date": "2026-07-29",
+    "author": "@bojakmarkets",
+    "author_name": "Bojak Markets",
+    "followers": 6347,
+    "verified": true,
+    "url": "https://x.com/bojakmarkets/status/2082314838273921374",
+    "likes": 3,
+    "retweets": 2,
+    "replies": 1,
+    "views": 889
+   },
+   "analysis": {
+    "event_type": "political",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2082313553923441005",
+    "text": "BREAKING:\n\nUkraine has struck another Wildberries logistics center.\n\nThe site in Ryazan measures more than 170 000 sqm and is one of the largest logistics centers in Russia. It looks like all of it is burning down. https://t.co/1Czgcis47s",
+    "date": "2026-07-29",
+    "author": "@visegrad24",
+    "author_name": "Visegrád 24",
+    "followers": 2014084,
+    "verified": false,
+    "url": "https://x.com/visegrad24/status/2082313553923441005",
+    "likes": 3983,
+    "retweets": 513,
+    "replies": 49,
+    "views": 73194
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2082313326508364008",
+    "text": "I’ve seen hundreds of these videos now. These guys will be front line targets for drones. \n\nHuman bait. They get hit then Ukraine can fire back on the Russian drone operators as they give away their position. \n\nIf they try to leave they are shot in the back.",
+    "date": "2026-07-29",
+    "author": "@DanCollins2011",
+    "author_name": "Dan Collins",
+    "followers": 23229,
+    "verified": true,
+    "url": "https://x.com/DanCollins2011/status/2082313326508364008",
+    "likes": 26,
+    "retweets": 4,
+    "replies": 5,
+    "views": 1682
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2082311395396436440",
+    "text": "‘Russia is in the driver’s seat’\n\nProfessor John Mearsheimer argues the only war Ukraine is winning, is in disinformation https://t.co/RvKPI1WQEg",
+    "date": "2026-07-29",
+    "author": "@HatsOffff",
+    "author_name": "HatsOff",
+    "followers": 44506,
+    "verified": true,
+    "url": "https://x.com/HatsOffff/status/2082311395396436440",
+    "likes": 151,
+    "retweets": 27,
+    "replies": 17,
+    "views": 64245
+   },
+   "analysis": {
+    "event_type": "political",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2082310452155949534",
+    "text": "🇷🇺🇺🇦 Ukraine reportedly intercepted one of Russia's more sophisticated reconnaissance and strike drones over the Kursk region using a domestically developed interceptor drone.\n\nAccording to reports, the interception took place at an altitude of roughly 4,300 meters, a height where these larger Russian UAVs have traditionally operated with relatively little threat. The aircraft is designed for long endurance missions, capable of conducting surveillance while also carrying guided bombs.\n\nIf confirmed, the incident suggests Ukraine is steadily extending the reach of its air defense capabilities, making it increasingly difficult for Russian drones to operate uncontested at medium altitudes.\n\nhttps://t.co/xD5v6KYyD9",
+    "date": "2026-07-29",
+    "author": "@bojakmarkets",
+    "author_name": "Bojak Markets",
+    "followers": 6347,
+    "verified": true,
+    "url": "https://x.com/bojakmarkets/status/2082310452155949534",
+    "likes": 3,
+    "retweets": 1,
+    "replies": 2,
+    "views": 3042
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2082310343179599933",
+    "text": "Israeli Prime Minister Benjamin Netanyahu and Ukrainian President Volodymyr Zelensky shared a cordial but serious conversation and handshake Tuesday before the funeral of Sen. Lindsey Graham, marking their first in-person meeting since September 2023. Both leaders had met separately with President Trump at the White House earlier in the day. \n\nGraham was one of Congress’ strongest advocates for both Israel and Ukraine, consistently pressing for robust U.S. military and financial support for the two allies throughout their wars.\n\nWhile relations between Jerusalem and Kyiv have often been complicated by Israel’s effort to avoid directly confronting Russia, the two countries are increasingly united by a common challenge: Iran. Over the weekend, Ukraine targeted at least one Iranian-linked vessel in the Caspian Sea that Kyiv says was supporting Russia’s war effort. \n\nThe evolving battlefield has also created new opportunities for cooperation. Ukraine has long sought Israel’s Iron Dome missile defense system, while Israel could benefit from Kyiv’s experience countering the cheap Iranian-designed Shahed drones that Russia has deployed throughout the war. Ukraine has increasingly relied on low-cost interceptor drones and electronic warfare—capabilities that could help Israel reduce its reliance on expensive missile interceptors against relatively inexpensive Iranian drones. So far, however, the two countries have not announced any major defense agreements.",
+    "date": "2026-07-29",
+    "author": "@Mosheh",
+    "author_name": "Mosheh Oinounou",
+    "followers": 13631,
+    "verified": true,
+    "url": "https://x.com/Mosheh/status/2082310343179599933",
+    "likes": 3,
+    "retweets": 1,
+    "replies": 0,
+    "views": 486
+   },
+   "analysis": {
+    "event_type": "political",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2082310269628555751",
+    "text": "Ukraine drone strike hits Russian oil refinery and Wildberries warehouse\n\nA Ukrainian drone strike on July 29 targeted a major oil refinery and a Wildberries e-commerce warehouse in Russia's Ryazan Oblast. The Ryazan Oil Refinery, owned by Rosneft, is one of Russia's largest processing facilities. This attack follows a series of strikes by Ukraine against Wildberries warehouses, which are used to process dual-use goods. https://t.co/76T4Ofd1ol",
+    "date": "2026-07-29",
+    "author": "@PiQMarkets",
+    "author_name": "PiQ",
+    "followers": 132150,
+    "verified": true,
+    "url": "https://x.com/PiQMarkets/status/2082310269628555751",
+    "likes": 3,
+    "retweets": 0,
+    "replies": 0,
+    "views": 2569
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2082310143056728569",
+    "text": "Breaking: Ukraine President Zelensky thanks US Senators for bill that threatens India and four other countries with up to 100% tariffs for buying Russian oil and gas https://t.co/jHXeB9URH1",
+    "date": "2026-07-29",
+    "author": "@MattooShashank",
+    "author_name": "Shashank Mattoo",
+    "followers": 99857,
+    "verified": true,
+    "url": "https://x.com/MattooShashank/status/2082310143056728569",
+    "likes": 771,
+    "retweets": 158,
+    "replies": 70,
+    "views": 206354
+   },
+   "analysis": {
+    "event_type": "political",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2082309807084814716",
+    "text": "Zelensky's visit to Oval Office offers him an opportunity to shore up military support at a moment when US-Ukraine relations are warmer than they have been in months.\n\nhttps://t.co/vNwnw2P0uN",
+    "date": "2026-07-29",
+    "author": "@dawn_com",
+    "author_name": "Dawn.com",
+    "followers": 1381790,
+    "verified": true,
+    "url": "https://x.com/dawn_com/status/2082309807084814716",
+    "likes": 4,
+    "retweets": 0,
+    "replies": 0,
+    "views": 594
+   },
+   "analysis": {
+    "event_type": "political",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2082309749375152244",
+    "text": "🇺🇦🇷🇺 #BREAKING Double strike in Ryazan! The attack targeted not only the Wildberries logistics warehouse but also the Ryazan Oil Refinery (NPZ) area. Ukraine simultaneously paralyzes Russia's fuel and military logistics infrastructure.\n​#Ryazan #Russia #UkraineWar https://t.co/99wqPEOcBJ",
+    "date": "2026-07-29",
+    "author": "@Burak_Keskin85",
+    "author_name": "Burak Keskin",
+    "followers": 881,
+    "verified": true,
+    "url": "https://x.com/Burak_Keskin85/status/2082309749375152244",
+    "likes": 76,
+    "retweets": 10,
+    "replies": 1,
+    "views": 1400
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 2
+   }
+  },
+  {
+   "post": {
+    "id": "2082309000159178780",
+    "text": "⚡️Wildberries warehouse, major oil refinery burn as Ukraine strikes Russia's Ryazan Oblast, media says. \n\nKyiv launched \"a massive drone attack\" on July 29, Ryazan officials said. Residents reported fires at the Ryazan Oil Refinery and a Wildberries hub.\nhttps://t.co/rnmXhxp0kI",
+    "date": "2026-07-29",
+    "author": "@KyivIndependent",
+    "author_name": "The Kyiv Independent",
+    "followers": 1851251,
+    "verified": true,
+    "url": "https://x.com/KyivIndependent/status/2082309000159178780",
+    "likes": 788,
+    "retweets": 128,
+    "replies": 12,
+    "views": 57046
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 2
+   }
+  },
+  {
+   "post": {
+    "id": "2082307899729080472",
+    "text": "The reason Putin is no longer interested in negotiations is because every time he has tried to negotiate in the past he has been betrayed. \n\nIn May 2022, they had a fully ratified ceasefire agreement that led to the Russians pulling out of Kiev and not taking the city. Ukraine then reneged and later invaded the Russian province of Kursk, attempting to blow up a nuclear power plant in Russia.",
+    "date": "2026-07-29",
+    "author": "@GhostofBPH",
+    "author_name": "GBPH",
+    "followers": 20687,
+    "verified": true,
+    "url": "https://x.com/GhostofBPH/status/2082307899729080472",
+    "likes": 197,
+    "retweets": 66,
+    "replies": 10,
+    "views": 4066
+   },
+   "analysis": {
+    "event_type": "political",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2082307861460230492",
+    "text": "This video is sad to watch.\nIn Ukraine, home ownership is extremely common, especially in sparsely populated areas; the pain must be immense when people are forced to leave their homes and possessions behind. Childhood is nothing like it should be, and it must be difficult for the elderly to adjust as well. Of course, rents are skyrocketing in the western parts of the country, too.",
+    "date": "2026-07-29",
+    "author": "@AOPIRS",
+    "author_name": "Ariolavi",
+    "followers": 612,
+    "verified": true,
+    "url": "https://x.com/AOPIRS/status/2082307861460230492",
+    "likes": 21,
+    "retweets": 7,
+    "replies": 3,
+    "views": 369
+   },
+   "analysis": {
+    "event_type": "natural_disaster",
+    "severity": "low",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2084849905487450363",
+    "text": "🇺🇲 The U.S. Marine Corps is racing to build what Ukraine has already proven on the battlefield: an army where small FPV attack drones become standard weapons carried by frontline troops.\nAccording to the Wall Street Journal, the Marines want 10,000 FPV-capable drones in just the next 12 months, with the ability to carry grenades or mortar rounds.\n\nInstead of waiting for artillery or air support, platoons and squads will be able to identify a target, launch a precision strike within minutes, and immediately continue the assault.\n\nThe goal is changing how infantry fights. Ukraine fundamentally changed military thinking.\n\nThe Marines are now training with Neros Archer FPV drones in Australia as part of preparations for a potential Indo-Pacific conflict. The drones cost roughly $2,000–5,000 each, can be operated directly by frontline Marines through FPV goggles, and are expected to complement anti-ship missiles, surveillance assets and distributed island operations.\n\nProduction is accelerating rapidly. Neros says it currently builds around 1,400 drones per week and aims to reach 1 million annually by 2028.\n\nChallenges remain - from logistics and weather to scaling production - but one lesson from Ukraine is now impossible to ignore: the era when only expensive missiles and aircraft delivered precision strikes is ending. Cheap, expendable FPV drones are becoming a core battlefield capability.",
     "date": "2026-08-05",
-    "source": "PRNewswire",
-    "url": "https://www.prnewswire.com/news-releases/strathcona-resources-ltd-reports-second-quarter-2026-financial-and-operating-results-and-announces-quarterly-dividend-302844348.html",
-    "description": "CALGARY, AB, Aug. 5, 2026 /PRNewswire/ -- Strathcona Resources Ltd. (\"Strathcona\" or the \"Company\") (TSX: SCR) today reported its second quarter 2026 financial and operating results. The Board of Directors also declared a quarterly dividend of $0.30 per commo…",
-    "image_url": "https://mmx.prnewswire.com/media/MS1048081/Strathcona-Resources-Ltd-Strathcona-Resources-Ltd-Reports-Seco.jpg?id=OA2798907&p=facebook"
+    "author": "@thetect0nic",
+    "author_name": "The Tectonic",
+    "followers": 4826,
+    "verified": true,
+    "url": "https://x.com/thetect0nic/status/2084849905487450363",
+    "likes": 3,
+    "retweets": 0,
+    "replies": 0,
+    "views": 375
    },
    "analysis": {
     "event_type": "economic",
-    "entities": [
-     "Strathcona Resources Ltd.",
-     "TSX"
-    ],
-    "severity": "low",
-    "location_mentioned": "Calgary, AB",
-    "one_line_summary": "Strathcona Resources Ltd. reported its second quarter 2026 financial and operating results and announced a quarterly dividend of $0.30 per common share.",
-    "credibility": "1"
+    "severity": "medium",
+    "credibility": 3
    }
   },
   {
-   "article": {
-    "title": "Petrus Resources Announces Second Quarter 2026 Financial and Operating Results",
-    "date": "2026-08-06",
-    "source": "Financial Post",
-    "url": "https://financialpost.com/globe-newswire/petrus-resources-announces-second-quarter-2026-financial-and-operating-results",
-    "description": "CALGARY, Alberta, Aug. 06, 2026 (GLOBE NEWSWIRE) — Petrus Resources Ltd. (“Petrus” or the “Company”) (TSX: PRQ) is pleased to report financial and operating results as at and for the three and six months ended June 30, 2026. Q2 2026 HIGHLIGHTS: Operating netb…",
-    "image_url": null
+   "post": {
+    "id": "2084849495745986850",
+    "text": "Another day, another Wildberries warehouse is destroyed in Aleksin, Tula region. \n\nFor a month, Ukraine has been methodically destroying Wildberries logistics hubs in russia, each containing $1-1.5 billion in inventory.\n\nTo make matters worse, after the first strikes on Elektrostal, Wildberries prohibited sellers from withdrawing their products from the warehouses.\n\nOverall, two dozen Wildberries facilities have been hit, resulting in estimated losses of 15 billion. The company is heading to bankruptcy.",
+    "date": "2026-08-05",
+    "author": "@rshereme",
+    "author_name": "Roman Sheremeta 🇺🇸🇺🇦",
+    "followers": 94160,
+    "verified": true,
+    "url": "https://x.com/rshereme/status/2084849495745986850",
+    "likes": 1959,
+    "retweets": 344,
+    "replies": 60,
+    "views": 30026
    },
    "analysis": {
     "event_type": "economic",
-    "entities": [
-     "Petrus Resources Ltd.",
-     "TSX"
-    ],
+    "severity": "high",
+    "credibility": 2
+   }
+  },
+  {
+   "post": {
+    "id": "2084849063883636928",
+    "text": "Tinkov is right, and it's refreshing to hear it raw. Russian business has zero empathy because the entire system runs on imperial entitlement, not humanity. They funded the war machine, cheered the \"special operation,\" and now whine when Ukrainian strikes hit their warehouses. \n\nYou started this. You rejected every off-ramp. The pain stops the day Moscow withdraws, not one second earlier. Stop crying about lost profits and accept the bill your regime ran up. \n\nUkraine isn't obligated to spare your logistics while you bomb our cities.",
+    "date": "2026-08-05",
+    "author": "@LetsArmUKR",
+    "author_name": "medoyid_ua",
+    "followers": 8692,
+    "verified": true,
+    "url": "https://x.com/LetsArmUKR/status/2084849063883636928",
+    "likes": 360,
+    "retweets": 96,
+    "replies": 4,
+    "views": 13184
+   },
+   "analysis": {
+    "event_type": "economic",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2084848368178589903",
+    "text": "#Kyiv region suffers heavy damage in overnight Russian attack\n\nhttps://t.co/CM8kamuZ9S https://t.co/bCQxpSvpv3",
+    "date": "2026-08-05",
+    "author": "@NewsUkraineRBC",
+    "author_name": "RBC-Ukraine",
+    "followers": 2022,
+    "verified": true,
+    "url": "https://x.com/NewsUkraineRBC/status/2084848368178589903",
+    "likes": 3,
+    "retweets": 1,
+    "replies": 0,
+    "views": 221
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 2
+   }
+  },
+  {
+   "post": {
+    "id": "2084848116566831330",
+    "text": "🇺🇸🇺🇦 “A mark of great shame on our country.”\n\nThat’s how Darryl Cooper described America’s role in Ukraine, and he said even that was an understatement.\n\nHe tore into the endless proxy war, the ban on Ukraine’s largest Christian church, priests locked up, and a proud people being ground into dust. \n\nCalled it the same destructive playbook that always ends in misery, with pure raw judgment on what we helped create.\n\nHistory’s going to be merciless on this one.\n\nSource: @tuckercarlson / Writer: Val",
+    "date": "2026-08-05",
+    "author": "@MarioNawfal",
+    "author_name": "Mario Nawfal",
+    "followers": 3822225,
+    "verified": true,
+    "url": "https://x.com/MarioNawfal/status/2084848116566831330",
+    "likes": 89,
+    "retweets": 13,
+    "replies": 19,
+    "views": 46045
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2084847817974009873",
+    "text": "🇷🇺Russia,the most sanctioned country in the world and with a war waged for over 4 years against,Ukraine-NATO,has been officially included in the category of high-income countries by the World Bank. \nThe threshold is $14,375, while Russia has reached the nominal value of $15,960. https://t.co/0diV7lAApJ",
+    "date": "2026-08-05",
+    "author": "@DrNeculai",
+    "author_name": "Real News",
+    "followers": 3638,
+    "verified": false,
+    "url": "https://x.com/DrNeculai/status/2084847817974009873",
+    "likes": 8,
+    "retweets": 3,
+    "replies": 0,
+    "views": 337
+   },
+   "analysis": {
+    "event_type": "economic",
     "severity": "low",
-    "location_mentioned": "Calgary, Alberta",
-    "one_line_summary": "Petrus Resources Ltd. announced its second quarter 2026 financial and operating results",
-    "credibility": "1"
+    "credibility": 5
    }
   },
   {
-   "article": {
-    "title": "Friday’s Mini-Report, 8.7.26",
-    "date": "2026-08-07",
-    "source": "Biztoc.com",
-    "url": "https://biztoc.com/x/00d9a34f3b39dcad",
-    "description": "Today’s edition of quick hits.\n* This bill now moves on to the House, where its fate is uncertain: “The Senate passed a sweeping new package of sanctions targeting Russia and Iran on Friday, approving a measure aimed at supporting Ukraine in its fight against…",
-    "image_url": "https://biztoc.com/cdn/00d9a34f3b39dcad_s.webp"
+   "post": {
+    "id": "2084847700655370522",
+    "text": "Anti-war politician flees Russia amid pre-election crackdown on dissent.\n\nNadezhdin, 63, is one of the last well-known Russian public figures to publicly oppose the war in Ukraine. \n\nhttps://t.co/GyWydZNteC",
+    "date": "2026-08-05",
+    "author": "@WarPowersReform",
+    "author_name": "AWPR",
+    "followers": 6328,
+    "verified": false,
+    "url": "https://x.com/WarPowersReform/status/2084847700655370522",
+    "likes": 8,
+    "retweets": 2,
+    "replies": 2,
+    "views": 350
    },
    "analysis": {
     "event_type": "political",
-    "entities": [
-     "Russia",
-     "Iran",
-     "Ukraine",
-     "The Senate",
-     "The House"
-    ],
     "severity": "medium",
-    "location_mentioned": "Ukraine",
-    "one_line_summary": "The Senate passed a package of sanctions targeting Russia and Iran to support Ukraine",
-    "credibility": "1"
+    "credibility": 3
    }
   },
   {
-   "article": {
-    "title": "US intel sharing rebounds with Ukraine",
-    "date": "2026-08-08",
-    "source": "Freerepublic.com",
-    "url": "https://freerepublic.com/focus/f-news/4391119/posts",
-    "description": "The intelligence-sharing relationship between the U.S. and Ukraine has bounced back to previous highs, according to long-time Ukraine watchers — a welcome boost during a critical window of opportunity for the Ukrainian war effort. Sen. Mark Warner (D-Va.), th…",
-    "image_url": null
+   "post": {
+    "id": "2084847242553221607",
+    "text": "Alexin, Tula region, reports of an attack on a bank.\n\nThe town is located about 60 km northwest of Tula city and roughly 180 km south of Moscow, on the Oka River.\nhttps://t.co/2QM52vyi37 https://t.co/gPfD2Xm2l5",
+    "date": "2026-08-05",
+    "author": "@anno1540",
+    "author_name": "Lew Anno Support#USA#NATO#Ukraine 24/2-22",
+    "followers": 47973,
+    "verified": true,
+    "url": "https://x.com/anno1540/status/2084847242553221607",
+    "likes": 7,
+    "retweets": 2,
+    "replies": 0,
+    "views": 1232
+   },
+   "analysis": {
+    "event_type": "natural_disaster",
+    "severity": "low",
+    "credibility": 4
+   }
+  },
+  {
+   "post": {
+    "id": "2084847233589989671",
+    "text": "Close the sky over Ukraine!\n@NATO",
+    "date": "2026-08-05",
+    "author": "@aurora_diogo",
+    "author_name": "Aurora Diogo 🇵🇹🇺🇦🇬🇪🇨🇦🇪🇺",
+    "followers": 4183,
+    "verified": false,
+    "url": "https://x.com/aurora_diogo/status/2084847233589989671",
+    "likes": 5,
+    "retweets": 1,
+    "replies": 2,
+    "views": 181
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2084846423825355221",
+    "text": "I’ll tell a story from your own life that explains why #FCRA matters to India.\n\nYou used to be the Vice President of the Podesta Group, and your client was the European Centre for a Modern Ukraine 🇺🇦 (ECFMU), remember?\n\nYour firm took millions of dollars to advance Viktor Yanukovych’s political interests, yet it did not register under FARA. \n\nThe registration came only after the U.S. Department of Justice began probing the matter in 2017.\n\nWhy did you register after 2017 ? Because your govt forced you to do so. \n\nSo, you yourself are an example of why governments seek oversight of foreign-funded influence. As an American, you accepted FARA without protesting, but you have a problem when India brings a law with a similar stated objective through the FCRA?\n\n You’re worried that lobbying firms and associated interests could lose their expected revenue if NGOs in India lose their registration or have their assets taken over under the law?\n\nBecause NGOs are the clients of your lobbying firms. 💀",
+    "date": "2026-08-05",
+    "author": "@GurorangriPadme",
+    "author_name": "Sarvagraharoopini 🚩",
+    "followers": 4574,
+    "verified": true,
+    "url": "https://x.com/GurorangriPadme/status/2084846423825355221",
+    "likes": 2323,
+    "retweets": 919,
+    "replies": 42,
+    "views": 61316
    },
    "analysis": {
     "event_type": "political",
-    "entities": [
-     "U.S.",
-     "Ukraine",
-     "Sen. Mark Warner"
-    ],
     "severity": "medium",
-    "location_mentioned": "Ukraine",
-    "one_line_summary": "The US and Ukraine's intelligence-sharing relationship has rebounded to previous highs, boosting the Ukrainian war effort",
-    "credibility": "2"
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2084846335266783552",
+    "text": "Last night, Russia launched another large-scale, combined missile and drone attack on Ukraine.\n\nMissiles launched:\n\n~20 Iskander-M/S-400 ballistic missiles launched from OTRK installations northwest of Klintsy, Bryansk Oblast. \n\n~8 Iskander-M/S-400 ballistic missiles launched from OTRK installations east of Klintsy, Bryansk Oblast.\n\n~2 Iskander-M/S-400 ballistic missiles launched from OTRK installation(s) near Zheleznogorsk, Kursk Oblast.\n\n~2 Iskander-M/S-400 ballistic missiles launched from OTRK installation(s) near Pochep, Bryansk Oblast.\n\n~2 Kn-23 ballistic missiles launched from near Liski, Voronezh Oblast. \n\n ~7 Zircon hypersonic cruise missiles launched from ground-based installations near Manturovo, Kursk Oblast.\n\n~2 Zircon hypersonic cruise missiles launched from ground-based installation(s) near Millerovo, Rostov Oblast.\n\n-----------------------\n\nTotal missiles launched:\n\n~28 Iskander-M/S-400 ballistic missiles.\n~9 Zircon hypersonic cruise missiles.\n~2 Kn-23 ballistic missiles.\n\n~39 missiles in total.\n\n-----------------------\n\nUkrainian air defence work:\n\nUkrainian air defence was unable to shoot down a single missile due to them being entirely out of Patriot PAC-2/3 interceptors. All 39 Russian missiles impacted their targets. \n\n-----------------------\n\nThe main targets for this strike was Ukrainian military targets in Kyiv City and Kyiv Oblast. The following was targeted:\n\nEither the Novus Distribution Centre or Nova Poshta terminal #114 in southwestern Kyiv (50.40343, 30.42095).\n\nNova Poshta Warehouse #2 in northern Kyiv (50.52604, 30.48236).\n\nDniprovskyi Industrial Zone in eastern Kyiv - likely one of the defence enterprises located here (50.45394, 30.65253).\n\nWarehouse complex in Brovary, Kyiv Oblast (50.49125, 30.82877).\n\nNova Poshta Warehouse in Brovary, Kyiv Oblast (50.52829, 30.84463).\n\n\"Raben Ukraine\" Logistics Warehouse in Brovary, Kyiv Oblast (50.55716, 30.85203).\n\nLogistics Centre in Brovary, Kyiv Oblast (50.53543, 30.82694).\n\nUnknown target near Tetiiv, Kyiv Oblast. \n\n-----------------------\n\nKeep in mind, the numbers of missiles launched may be slightly higher than what I've listed, as the number of missiles detected is sometimes lower than actual launches. These numbers may be adjusted in the coming hours as more information comes available.",
+    "date": "2026-08-05",
+    "author": "@AMK_Mapping_",
+    "author_name": "AMK Mapping 🇳🇿",
+    "followers": 170714,
+    "verified": true,
+    "url": "https://x.com/AMK_Mapping_/status/2084846335266783552",
+    "likes": 683,
+    "retweets": 103,
+    "replies": 27,
+    "views": 116351
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2084846134091022617",
+    "text": "260805\n\nRostov: Explosions were heard near one of the local gas stations, and cars are burning one after another.\n\nAbout 100 km from the Ukrainian border.\nA major logistics and military hub supporting Russian operations in Ukraine.\n\nCapital of Russia's Rostov Oblast\nhttps://t.co/SQuiIhM9yp",
+    "date": "2026-08-05",
+    "author": "@anno1540",
+    "author_name": "Lew Anno Support#USA#NATO#Ukraine 24/2-22",
+    "followers": 47973,
+    "verified": true,
+    "url": "https://x.com/anno1540/status/2084846134091022617",
+    "likes": 12,
+    "retweets": 4,
+    "replies": 0,
+    "views": 1140
+   },
+   "analysis": {
+    "event_type": "natural_disaster",
+    "severity": "low",
+    "credibility": 4
+   }
+  },
+  {
+   "post": {
+    "id": "2084846032072933411",
+    "text": "Why do Wildberries warehouses burn bigger and brighter than oil refineries? Feels like Ukraine did one symbolic hit the first time, and then realized the extreme economic damage made them great targets.",
+    "date": "2026-08-05",
+    "author": "@Lorlordylor",
+    "author_name": "Oliver Cromwell",
+    "followers": 1039,
+    "verified": false,
+    "url": "https://x.com/Lorlordylor/status/2084846032072933411",
+    "likes": 10,
+    "retweets": 0,
+    "replies": 1,
+    "views": 728
+   },
+   "analysis": {
+    "event_type": "economic",
+    "severity": "low",
+    "credibility": 5
+   }
+  },
+  {
+   "post": {
+    "id": "2084845775180447842",
+    "text": "🧵\"You can give people without a civilian firearms permit a Kord or DShK machinegun, but not a pump-action shotgun.\"\n\nWhile Ukraine launches sea drones carrying flying motherships toward Crimea, Russian troops are using donations to buy double-barreled shotguns to survive. 1/🧵",
+    "date": "2026-08-05",
+    "author": "@actfast",
+    "author_name": "Prof. Bonk 🇺🇦 Perverse & Unintended Consequences",
+    "followers": 14135,
+    "verified": true,
+    "url": "https://x.com/actfast/status/2084845775180447842",
+    "likes": 206,
+    "retweets": 26,
+    "replies": 2,
+    "views": 23578
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2084845609971048600",
+    "text": "🎯🔥 GUNNY’S THREE-ROUND REPORT\nROUND THREE • EVENING DEBRIEF\nKYIV TAKES MISSILE FIRE AS THE LOGISTICS WAR SPREADS\n\nMission Snapshot: Tonight’s real developments are not the recycled clips and engagement bait flying around social media. Kyiv came under a renewed ballistic-missile attack, Ukraine’s long-range campaign is hitting Russian logistics infrastructure, and a major chemical-facility fire in Brazil created a serious public-safety emergency.\n\n1️⃣ KYIV UNDER RENEWED BALLISTIC-MISSILE ATTACK\n\n✅ Confirmed: Russia launched waves of ballistic-missile attacks against Kyiv early August 5 local time, according to Reuters and Kyiv officials.\n\n🔥 Fires were reported at residential buildings, warehouses, and locations on the city’s outskirts. Air defenses were active as the attack unfolded.\n\n⚠️ Initial reports did not confirm casualties. That can change fast after emergency crews reach damaged sites.\n\nWhy it matters: This is not a symbolic strike. Ballistic missiles compress warning time, put civilian areas at direct risk, and keep pressure on Ukraine’s capital while the war’s political and diplomatic tracks remain unsettled.\n\nWatch next: casualty figures, damage assessments, and whether Russia follows this attack with a wider drone or missile wave.\n\n2️⃣ UKRAINE IS TAKING THE LOGISTICS FIGHT INSIDE RUSSIA\n\n✅ Confirmed: Ukraine has struck Russian warehouse and logistics targets, including a confirmed fire at a Wildberries logistics facility in Krasny Bor, Leningrad Oblast, near St. Petersburg.\n\n🔄 Correction: Do not share the social-media claim that tonight’s footage showed an attack on an Aleksin, Tula Wildberries center. The confirmed warehouse fire was near St. Petersburg—not Aleksin.\n\n🎯 What matters: Both sides are targeting the machinery that keeps war moving: warehouses, transport routes, fuel, production, and distribution hubs. A warehouse is not just boxes on shelves when it can support military supply chains, national commerce, or wartime logistics.\n\n🗣️ Ukrainian adviser Serhii “Flash” Beskrestnov has argued Russia is increasingly targeting commercial and logistical infrastructure in Ukraine. That is his assessment—not independent proof of every claimed target.\n\n3️⃣ CHEMICAL-FACILITY FIRE ROCKS GREATER SÃO PAULO\n\n✅ **Confirmed:** A major fire broke out at Quema Química, a solvent and resin facility in Itaquaquecetuba, Greater São Paulo.\n\n💥 The fire reached solvent storage and triggered multiple secondary explosions. Authorities reported explosions in storm-drain/manhole infrastructure after chemicals entered the drainage system.\n\n🚒 At least 60 firefighters and roughly 30 emergency vehicles responded. Nearby buildings were evacuated, and officials warned of potentially toxic smoke and a possible chemical leak.\n\n✅ No injuries were reported in the latest update.\n\n❓ The cause remains unknown. There is no evidence at this point of sabotage or an attack.\nBottom line: Call this what it is—a chemical-plant fire with multiple explosions. Do not twist it into “the plant exploded” or pretend there is evidence of an attack.\n\n⚡ RAPID-FIRE UPDATES\n\n🇮🇱🇮🇷 Hormuz pressure: Israel is reportedly receiving indirect updates—not direct participation—on negotiations involving Iran and the Strait of Hormuz. An unnamed Israeli official told N12 that Israel fears Washington may push too hard for a deal. That is an Israeli assessment, not confirmation of U.S. policy or a completed agreement.\n\n🇰🇷 Osan Air Base: Eight South Korean students were reportedly detained after allegedly entering Osan Air Base and shouting anti-U.S. slogans. Police are investigating under laws protecting military installations. The allegation remains subject to the investigation.\n\n🌕 SpaceX upper stage: A spent Falcon 9 upper stage is expected to impact the Moon near Einstein Crater overnight. No danger to Earth—and likely not much to see from here.\n\n❓ Dubai smoke/“three explosions”: Still unverified. Videos show smoke near the Jebel Ali industrial area, but there is no confirmed cause, strike, casualty count, or connection to Iran/Hormuz. Hold the line until UAE authorities or reliable reporting confirms it.\n\n🔄 Recycle bin: The Rozetka warehouse footage circulating as “breaking” is old. The facility was struck August 1–2. It does not belong in tonight’s breaking-news feed.\n\n📋 CONFIRMATION BOARD\n\n✅ Newly confirmed: Kyiv ballistic-missile attack; Wildberries logistics fire near St. Petersburg; chemical-facility emergency near São Paulo.\n\n🔄 Corrected: Wildberries fire was not confirmed in Aleksin, Tula. Rozetka footage is not fresh.\n\n⚠️ Still developing: Kyiv damage and casualty assessments; Brazil fire containment and environmental risk.\n\n❓ Unverified: Dubai explosion claims and any claimed link to the regional Iran/Hormuz crisis.\n\n🎯 GUNNY’S TAKE\n\nThe battlefield is no longer just trenches, tanks, and front lines. It is warehouses, freight, drones, fuel, apartment blocks, industrial sites, and the systems that let a country keep functioning under war.\n\nBut that is exactly why accuracy matters. A real strike does not need a fake location. A real fire does not need an invented sabotage story. And smoke in a video is not automatically a missile, an explosion, or the start of World War III.\n\nThe pressure is real. The rumor mill is real too. Learn the damn difference.\nWhat deserves more attention right now: Russia’s attacks on Kyiv, or the expanding war on logistics inside Russia?\n\n👍 Like • 💬 Comment • 🔁 Share\n\nIf you made it this far, you might as well follow the page. We fix the facts and keep the mission. 🫡\n\n☕ Support the mission\n\nhttps://t.co/qijlQsHRIn\n\nYour support helps us break down fast-moving stories into clear, honest, easy-to-digest updates.\n\n— Gunny 🫡\n“Fix the Facts. Keep the Mission.”\n\n#GunnysAdventures #FixTheFacts #KeepTheMission #UkraineWar #Kyiv #RussiaUkraineWar #BreakingNews #NewsUpdate",
+    "date": "2026-08-05",
+    "author": "@DerrickSalas9",
+    "author_name": "Gunnys Adventures",
+    "followers": 1264,
+    "verified": true,
+    "url": "https://x.com/DerrickSalas9/status/2084845609971048600",
+    "likes": 2,
+    "retweets": 1,
+    "replies": 0,
+    "views": 766
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2084845139495907620",
+    "text": "I am pretty much anti-Zelenskyy at this point, but still not quite as much as I'm anti-Putin. Ukraine did not deserve to be invaded, but at this point it's an offensive campaign and I don't see a need for further support. Not that my opinion matters to the great powers involved.",
+    "date": "2026-08-05",
+    "author": "@Apocaloptimist5",
+    "author_name": "Apocaloptimist",
+    "followers": 1848,
+    "verified": false,
+    "url": "https://x.com/Apocaloptimist5/status/2084845139495907620",
+    "likes": 2,
+    "retweets": 0,
+    "replies": 0,
+    "views": 390
+   },
+   "analysis": {
+    "event_type": "political",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2084844743800885376",
+    "text": "Pochaev Lavra, Ukraine 🇺🇦\nLet us all beseech the Mother of God to entreat her Son for peace and an end to the war. Today is the Feast of the Pochaev Icon. 🙏 https://t.co/zKSkr08Xgi",
+    "date": "2026-08-05",
+    "author": "@prekariosstylet",
+    "author_name": "Prekarios Styletes ☦️📿",
+    "followers": 1034,
+    "verified": true,
+    "url": "https://x.com/prekariosstylet/status/2084844743800885376",
+    "likes": 92,
+    "retweets": 10,
+    "replies": 3,
+    "views": 1485
+   },
+   "analysis": {
+    "event_type": "other",
+    "severity": "low",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2084844343085687071",
+    "text": "Russia and Ukraine traded accusations on Tuesday that each side’s attacks caused civilian deaths, with officials in the Moscow region saying five people were killed there while authorities in Ukraine said a similar number, including two children, died at various sites across the country. https://t.co/FizWAQR17i",
+    "date": "2026-08-05",
+    "author": "@NEWSMAX",
+    "author_name": "NEWSMAX",
+    "followers": 3665579,
+    "verified": true,
+    "url": "https://x.com/NEWSMAX/status/2084844343085687071",
+    "likes": 34,
+    "retweets": 10,
+    "replies": 21,
+    "views": 33168
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2084844343068885339",
+    "text": "Small, nimble, versatile: Patrol boats built for the U.S. are helping Ukraine control territory in the Black Sea and transform its small navy into a more agile force.\n\nFrom @svetashko on patrol with one of the Metal Shark \"40 Defiant\" boats near Odesa: https://t.co/xZ5UiU3HFr",
+    "date": "2026-08-05",
+    "author": "@starsandstripes",
+    "author_name": "Stars and Stripes",
+    "followers": 328761,
+    "verified": true,
+    "url": "https://x.com/starsandstripes/status/2084844343068885339",
+    "likes": 3,
+    "retweets": 1,
+    "replies": 0,
+    "views": 2583
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "low",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2084843712861851862",
+    "text": "Ukraine hit bombers and refineries. Russian guided bombs killed two girls and an elderly woman in Sumy.\nㅤ\nAcross 40 days, Ukrainian strikes reached Russian bombers, fighters, refineries, ferries, logistics and air defenses, targeting the systems that sustain Moscow’s war.\nㅤ\nRussia kept attacking Ukrainian civilians, ports and critical infrastructure.\nㅤ\nUkraine is doing this while its air defenses and winter resilience face growing pressure.\nㅤ\nThat is the war stripped bare: Ukraine tries to weaken the machine, while Russia makes civilians pay for it.\n\nhttps://t.co/YtooI6sUrg https://t.co/9lx1i9oz0n",
+    "date": "2026-08-05",
+    "author": "@MeanwhileInUA",
+    "author_name": "Meanwhile in Ukraine",
+    "followers": 7761,
+    "verified": true,
+    "url": "https://x.com/MeanwhileInUA/status/2084843712861851862",
+    "likes": 5,
+    "retweets": 3,
+    "replies": 2,
+    "views": 250
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2084843185692656067",
+    "text": "🚨 DRONE STRIKES CLAIM MASSIVE RUSSIAN LOSSES IN JULY.\n\nUkrainian President Volodymyr Zelensky says Ukrainian drones eliminated 30,272 Russian soldiers in July. He says every case is backed by clear video proof. The figure includes both killed and badly wounded troops.\n\nZelensky shared the numbers after reviewing reports from the Defense Ministry and the Security Service of Ukraine. He said the trend on the front has stayed the same for months, with Russia losing about 30,000 troops monthly. He also praised the SBU’s Alpha unit for leading July’s drone strikes.\n\nUkraine has leaned heavily on drones as the war enters its third year. The country’s unmanned units have hit tens of thousands of targets each month. July’s tally matches earlier reports from May and June, showing a steady pace of drone‑inflicted losses.\n\nZelensky urged partners to keep supplying air‑defense missiles. He said each delivery saves lives as Russia continues heavy missile attacks. He warned that the coming winter could bring more strikes on Ukraine’s energy and water systems.\n\nThe claim highlights how drones have reshaped modern warfare. Ukraine’s drone fleet has grown fast, and its battlefield impact now rivals traditional artillery in some sectors. The July numbers, if accurate, mark one of the largest monthly personnel losses ever recorded in the conflict.",
+    "date": "2026-08-05",
+    "author": "@tcf_updates",
+    "author_name": "The Content Factory",
+    "followers": 707,
+    "verified": true,
+    "url": "https://x.com/tcf_updates/status/2084843185692656067",
+    "likes": 2,
+    "retweets": 2,
+    "replies": 0,
+    "views": 130
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2084841473791647988",
+    "text": "Zaluzhny finally admits what anyone with eyes has known for years: Ukraine will never join NATO.  \nAfter a decade of the alliance feeding Kiev fairy tales while they chase standards that leave them half the force Russia already is.",
+    "date": "2026-08-05",
+    "author": "@Space_PHD",
+    "author_name": "Peter the Great Space Science☀️",
+    "followers": 358,
+    "verified": false,
+    "url": "https://x.com/Space_PHD/status/2084841473791647988",
+    "likes": 3,
+    "retweets": 2,
+    "replies": 1,
+    "views": 126
+   },
+   "analysis": {
+    "event_type": "political",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2086965499297194251",
+    "text": "Up to 50,000 North Korean troops are being deployed to Russia to help Putin destroy Ukraine.  Does the Republic of Korea (South Korea) want to do anything to help Ukraine beyond just humanitarian aid? https://t.co/2TYHGbwYNY",
+    "date": "2026-08-10",
+    "author": "@RealJakeBroe",
+    "author_name": "Jake Broe",
+    "followers": 86231,
+    "verified": true,
+    "url": "https://x.com/RealJakeBroe/status/2086965499297194251",
+    "likes": 47,
+    "retweets": 12,
+    "replies": 1,
+    "views": 1003
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2086964561740025942",
+    "text": "🌾 Record-low Danube River levels are disrupting Ukraine’s grain exports, - Bloomberg\n\nDue to extreme heat and a lack of rainfall, water levels on the Danube have fallen to record lows. Barges are being forced to carry less cargo, driving up shipping costs and causing longer delays in grain deliveries to the Romanian port of Constanta.\n\nThe problem comes amid intensified Russian attacks on Ukrainian port infrastructure, forcing some exports to be rerouted from the Black Sea to the Danube, rail, and road networks.\n\nHowever, alternative routes can handle only about a third of the capacity of Ukraine’s Black Sea ports. This creates additional risks for global food markets, as Russia and Ukraine together account for more than a quarter of global wheat exports.\n\nIf the fighting continues at the current intensity and the Danube’s water levels do not recover, analysts expect grain prices to remain elevated.",
+    "date": "2026-08-10",
+    "author": "@Beefeater_Fella",
+    "author_name": "Beefeater",
+    "followers": 42680,
+    "verified": true,
+    "url": "https://x.com/Beefeater_Fella/status/2086964561740025942",
+    "likes": 8,
+    "retweets": 0,
+    "replies": 1,
+    "views": 280
+   },
+   "analysis": {
+    "event_type": "economic",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2086964410606641578",
+    "text": "BREAKING: Ukrainian drones hit a Wildberries logistics hub in the Voronezh region of Russia. https://t.co/dJSjX3HjuW",
+    "date": "2026-08-10",
+    "author": "@Worldsource24",
+    "author_name": "World Source News",
+    "followers": 121110,
+    "verified": true,
+    "url": "https://x.com/Worldsource24/status/2086964410606641578",
+    "likes": 21,
+    "retweets": 6,
+    "replies": 0,
+    "views": 3072
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2086963859680600391",
+    "text": "It's kind of shocking how the internet autists all knew we didn't have the stockpiles to fight after Ukraine, but the professional warmongers were caught completely off guard.",
+    "date": "2026-08-10",
+    "author": "@CBedfordDC",
+    "author_name": "Christopher Bedford",
+    "followers": 29289,
+    "verified": true,
+    "url": "https://x.com/CBedfordDC/status/2086963859680600391",
+    "likes": 4,
+    "retweets": 1,
+    "replies": 1,
+    "views": 574
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2086963771952795749",
+    "text": "\"One of the most well-documented genocides in modern history\" \n\nSir, this not a genocide. Even if it was, it's not even the worst happening right now on top of the fact it's victims are the only victims of genocide to kill more of their oppressors than be killed.  \nUkraine claims less than 20K civilians have died while touting 1.3-1.5 million Russians dead.",
+    "date": "2026-08-10",
+    "author": "@MK_Foxbat",
+    "author_name": "Дож",
+    "followers": 2473,
+    "verified": true,
+    "url": "https://x.com/MK_Foxbat/status/2086963771952795749",
+    "likes": 7,
+    "retweets": 0,
+    "replies": 1,
+    "views": 132
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2086975976160784813",
+    "text": "Unrestricted Warfare - U.S., China, Russia\n\nWhat we are watching is China’s doctrine of Unrestricted Warfare unfolding across multiple theaters.\n\nThe strongest evidence-based assessment is not that China secretly created every conflict or controls every participant. It is that Beijing is strategically exploiting the Ukraine and Iran wars, sustaining key partners, collecting battlefield intelligence, and allowing its two greatest military competitors to exhaust themselves.\n\nUkraine has become a live military laboratory. Russia’s logistics, command structure, communications, weapons, air defenses, and battlefield vulnerabilities have been exposed. At the same time, China can study NATO intelligence-sharing, Western precision weapons, electronic warfare, satellite systems, sanctions, ammunition consumption, and defense-industrial replacement rates.\n\nThe Pentagon has publicly assessed that Beijing is drawing lessons from Ukraine directly applicable to a future Taiwan conflict.\n\nMeanwhile, China’s economic and industrial support has prevented a decisive Russian collapse while making Moscow increasingly dependent on Beijing. \n\nChina does not need Russia destroyed. A weakened, isolated, resource-rich Russia operating as China’s junior partner is far more valuable.\n\nIran creates the second pressure front. \n\nConflict in the Middle East forces the United States to expend missile-defense interceptors, reposition naval forces, protect regional bases, secure shipping lanes, and expose the electronic signatures and operational limits of advanced American military systems.\n\nChina does not need to command every Iranian attack to benefit from it. It only needs economic leverage, intelligence access, military cooperation, and compatible strategic interests.\n\nThe objective would be global military dispersion: keep America committed in Europe, pressured in the Middle East, and stretched across the Indo-Pacific—all while China strengthens its industrial base and prepares for a potential Taiwan confrontation.\n\nTaiwan is central because advanced AI rests upon data, compute, energy, and semiconductor infrastructure. Chinese control of Taiwan—or even the denial of its semiconductor production to the West—would radically alter the global balance of technological power.\n\nChina is exploiting the conflicts as interconnected instruments of strategic attrition.\n\nUkraine reveals Russia.\n\nIran reveals America.\n\nSanctions reveal Western financial warfare.\n\nExport controls reveal the architecture of the technology war.\n\nEvery critical American weapon consumed outside the Indo-Pacific potentially changes the military calculation surrounding Taiwan.\n\nUnrestricted warfare does not require one decisive attack. It uses economics, technology, energy, information, proxies, supply chains, and regional conflicts to weaken an opponent across the entire system.\n\nThe objective is not necessarily to defeat the United States in a direct war.\n\nIt is to create the moment when the United States can no longer respond decisively everywhere at once.",
+    "date": "2026-08-11",
+    "author": "@realjoshuareid",
+    "author_name": "Joshua Reid | Redpills.tv",
+    "followers": 67006,
+    "verified": true,
+    "url": "https://x.com/realjoshuareid/status/2086975976160784813",
+    "likes": 10,
+    "retweets": 7,
+    "replies": 1,
+    "views": 853
+   },
+   "analysis": {
+    "event_type": "political",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2086975962202210527",
+    "text": "🚨️🇺🇸️🇰🇷️ 한글 아래 - UFS 2026 Sharpens The US-Korea Alliance For A Tougher Fight\n\nThe U.S. and South Korea are preparing Ulchi Freedom Shield 2026 around the battlefield realities now shaping the Korean Peninsula, including drones, electronic warfare, cyberattacks, and North Korea’s Ukraine experience.\n\n🔻 UFS 2026 RUNS AUGUST 17–27\n\nUlchi Freedom Shield 2026 will run from August 17 through August 27 with roughly 18,000 South Korean troops participating alongside U.S. forces. \n\nThe exercise will combine live, virtual, constructive, and field training designed to strengthen allied command, coordination, and combat readiness against the communist North Korean threat.\n\n🔻 UKRAINE WAR LESSONS ENTER NORTH KOREA\n\nThis year’s scenarios incorporate drone warfare, GPS disruption, cyberattacks, and electronic warfare drawn directly from modern combat. \n\nU.S. military spokesman Ryan Donald said North Korean troops fought in Ukraine, learned from that battlefield, and returned to North Korea carrying those lessons. \n\nThat experience gives Pyongyang new knowledge the alliance must prepare to defeat.\n\n🔻 READINESS IS MOVING WITH THE THREAT\n\nThe U.S.–South Korea alliance is adjusting training around an enemy gaining real combat experience. \n\nThat means preparing troops for cheap attack drones, disrupted communications, electronic interference, and rapidly changing battlefield conditions before those tactics are used on the peninsula.\n\n🇰🇷️ UFS 2026 shows the alliance is preparing now for the war North Korea is learning how to fight 🇰🇷️\n\n🇺🇸️🇰🇷️ UFS 2026, 더 치열한 싸움에 대비해 한미동맹을 더욱 날카롭게 벼린다\n\n미국과 한국은 현재 한반도의 전장 현실을 반영해 을지 자유의 방패(UFS) 2026을 준비하고 있습니다. 여기에는 드론, 전자전, 사이버 공격, 그리고 북한의 우크라이나 전쟁 경험이 포함됩니다.\n\n🔻 UFS 2026, 8월 17~27일 실시\n\n을지 자유의 방패 2026은 8월 17일부터 27일까지 실시되며, 약 18,000명의 한국군이 미군과 함께 참가합니다.\n\n이번 훈련은 공산주의 북한의 위협에 맞서 동맹의 지휘, 공조, 전투 대비태세를 강화하기 위해 실기동, 가상, 구성, 야외 훈련을 결합해 실시됩니다.\n\n🔻 우크라이나 전쟁의 교훈이 북한으로 들어갔다\n\n올해 시나리오에는 현대전에서 직접 나온 드론전, GPS 교란, 사이버 공격, 전자전이 반영됩니다.\n\n미군 대변인 라이언 도널드는 북한군이 우크라이나에서 싸우고, 그 전장에서 배운 뒤, 그 교훈을 가지고 북한으로 돌아갔다고 말했습니다.\n\n그 경험은 평양에 새로운 지식을 안겨주며, 한미동맹은 이를 격파할 준비를 해야 합니다.\n\n🔻 위협의 변화에 맞춰 대비태세도 움직인다\n\n한미동맹은 실제 전투 경험을 쌓고 있는 적에 맞춰 훈련을 조정하고 있습니다.\n\n이는 값싼 공격 드론, 통신 두절, 전자 교란, 급변하는 전장 상황에 대비해 병력을 준비시키는 것을 의미합니다. 그 전술들이 한반도에서 사용되기 전에 대비해야 합니다.\n\n🇰🇷️ UFS 2026은 북한이 싸우는 법을 배우고 있는 전쟁에 맞서 한미동맹이 지금부터 준비하고 있음을 보여줍니다 🇰🇷️\n\nsrc:\nhttps://t.co/QYJz0yyskE\nhttps://t.co/FF8CgordYm\nhttps://t.co/R4jfSHQOdc",
+    "date": "2026-08-11",
+    "author": "@ShineShadowNews",
+    "author_name": "Christopher K",
+    "followers": 7238,
+    "verified": true,
+    "url": "https://x.com/ShineShadowNews/status/2086975962202210527",
+    "likes": 2,
+    "retweets": 0,
+    "replies": 0,
+    "views": 49
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2086975323007066470",
+    "text": "BREAKING: Ukraine has once again successfully struck Russian regime assets deep inside Russia.\n\nPutin can end this war whenever he wants. https://t.co/z2MQoGTf0v",
+    "date": "2026-08-11",
+    "author": "@EYakoby",
+    "author_name": "Eyal Yakoby",
+    "followers": 305190,
+    "verified": true,
+    "url": "https://x.com/EYakoby/status/2086975323007066470",
+    "likes": 8,
+    "retweets": 1,
+    "replies": 2,
+    "views": 1083
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2086973865020813513",
+    "text": "🇦🇿🇺🇦 Azerbaijan has always supported and will continue to support the territorial integrity of Ukraine. This was stated by President Aliyev during his speech at the opening ceremony of the IV Shusha Global Media Forum. He noted that Baku's position on the conflict in Ukraine remains unchanged, emphasizing that the war must be stopped immediately.\n\nThe head of state noted that Azerbaijan is always ready to provide support to the Ukrainian people. \"The assistance is not only provided by the state. Ordinary people and private companies are also involved in this. This is an example of universal solidarity. We are trying, to the best of our ability, to support people who are in a difficult situation and who are facing the violation of the territorial integrity of their country,\" he added.\n\nPresident Zelensky thanked Azerbaijan at the NATO summit in Ankara.\n\nThe head of the Azerbaijani Ministry of Foreign Affairs participated in a conference on the restoration of Ukraine.\n\n#UkraineAzerbaijan",
+    "date": "2026-08-11",
+    "author": "@Beefeater_Fella",
+    "author_name": "Beefeater",
+    "followers": 42683,
+    "verified": true,
+    "url": "https://x.com/Beefeater_Fella/status/2086973865020813513",
+    "likes": 4,
+    "retweets": 1,
+    "replies": 0,
+    "views": 160
+   },
+   "analysis": {
+    "event_type": "political",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2086973370151977186",
+    "text": "Al Jazeera’s Audrey MacAlpine reports from a secret launch site in eastern Ukraine, where soldiers prepare long-range drones capable of flying 2,000 km into Russia. The launch sites become Russian targets the moment the drones take off. https://t.co/iuUxXjHlgR",
+    "date": "2026-08-11",
+    "author": "@AJEnglish",
+    "author_name": "Al Jazeera English",
+    "followers": 10000469,
+    "verified": true,
+    "url": "https://x.com/AJEnglish/status/2086973370151977186",
+    "likes": 14,
+    "retweets": 5,
+    "replies": 0,
+    "views": 16122
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2086973241768472628",
+    "text": "GERMANY HAS EXPELLED MORE THAN 80 RUSSIAN DIPLOMATS AND DEPORTED 313 RUSSIAN CITIZENS SINCE THE 2022 INVASION OF UKRAINE. || MOST EXPELLED DIPLOMATS WERE ASSESSED AS RUSSIAN INTELLIGENCE OFFICERS OPERATING UNDER DIPLOMATIC COVER, ACCORDING TO BILD.",
+    "date": "2026-08-11",
+    "author": "@FirstSquawk",
+    "author_name": "First Squawk",
+    "followers": 555679,
+    "verified": true,
+    "url": "https://x.com/FirstSquawk/status/2086973241768472628",
+    "likes": 5,
+    "retweets": 4,
+    "replies": 1,
+    "views": 9613
+   },
+   "analysis": {
+    "event_type": "political",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2086973174927728912",
+    "text": "**Ukraine is turning millions of hours of battlefield footage into fuel for its defense industry's AI. **Ukraine's Defense Ministry has [announced](https://t.co/sqSzySFcxY) that it has opened Avengers Labs, a platform for training artificial intelligence models, to Ukrainian defense companies.\n\nThe platform is a new piece of the defense-tech ecosystem Ukraine has built around its war. Alongside the Brave1 cluster that funds and codifies weapons and the Test in Ukraine framework that trials them in combat, Avengers Labs supplies the raw material for AI, a vast, curated dataset of Russian military targets that a single private company could never assemble on its own.\n\nThe data comes from the battlefield\n\nAvengers Labs was developed by the Center for Innovation and Development of Defense Technologies, the team behind the DELTA battle-management system, and most of its data comes from DELTA and is",
+    "date": "2026-08-11",
+    "author": "@Beefeater_Fella",
+    "author_name": "Beefeater",
+    "followers": 42683,
+    "verified": true,
+    "url": "https://x.com/Beefeater_Fella/status/2086973174927728912",
+    "likes": 4,
+    "retweets": 0,
+    "replies": 0,
+    "views": 175
+   },
+   "analysis": {
+    "event_type": "economic",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2086972294077833372",
+    "text": "**Iran is using the war in Ukraine to make its attack drones deadlier.** Iran has been refining its Shahed-107 kamikaze drones based on the experience of the war in Ukraine, military analyst Oleksandr Kovalenko said.\n\nUkraine has become the testing ground where Iran improves the weapons, and Russia then fires at it. The Shahed-107's warheads have received additional shrapnel elements, and a detailed aerodynamic study shows a significant improvement in the drone's structure, Kovalenko explains.\n\nThe Shahed is being upgraded from combat experience\n\nKovalenko said the modifications come directly from how the drones perform in Ukraine. The warheads now carry extra fragmentation elements, increasing their lethality against people and soft targets, and the airframe's aerodynamics have been reworked.\n\nA new loitering munition may be coming\n\nKovalenko also warned about a weapon already appearing over Ukraine. Karar drones have recently begun reaching Ukraine, not yet on a large scale, but enough to cause some confusion in identifying the weapon. He said he would not be surprised if they appear more widely soon.\n\nHe described its specifications. The Karar is a loitering munition, more a flying bomb than a drone by classification, equipped with a DLE 111 gasoline engine, with a range of about 300 kilometers on a 28-liter tank and a 15-kilogram warhead. Kovalenko said.\n\nHe called it an extremely cheap means of terror for the middle rear zone.\n\nThe warning is about the rear\n\nKovalenko's concern is where such a weapon reaches. A cheap loitering munition with a 300-kilometer range could strike areas well behind the front that have been relatively safe, extending the threat deeper into Ukraine.\n\nKovalenko framed the weapon's arrival in stark terms, saying that when it appears, people should simply accept what will happen, and declining even to name the region where he expects it to appear. That is his characterization: a single analyst's warning about a weapon whose wider use he anticipates but that has not yet reached scale. EP cannot independently verify Karar's specifications or its deployment.",
+    "date": "2026-08-11",
+    "author": "@Beefeater_Fella",
+    "author_name": "Beefeater",
+    "followers": 42683,
+    "verified": true,
+    "url": "https://x.com/Beefeater_Fella/status/2086972294077833372",
+    "likes": 6,
+    "retweets": 1,
+    "replies": 0,
+    "views": 265
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2086971971175059649",
+    "text": "BREAKING:\n\nAt least 5 Ukrainian civilians killed and 20+ wounded after Russia strikes the city of Zaporizhzhia with North Korean ballistic missiles and glide bombs https://t.co/bQwMlXwSMT",
+    "date": "2026-08-11",
+    "author": "@visegrad24",
+    "author_name": "Visegrád 24",
+    "followers": 2014080,
+    "verified": false,
+    "url": "https://x.com/visegrad24/status/2086971971175059649",
+    "likes": 76,
+    "retweets": 27,
+    "replies": 6,
+    "views": 10762
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 2
+   }
+  },
+  {
+   "post": {
+    "id": "2086971316402335762",
+    "text": "A Russian fighter’s missile hit his Su-25 near Kramatorsk.\n\nThe damaged aircraft was rapidly losing altitude. Directly ahead lay Shabelkivka — houses, civilians, and people who had gathered that day to receive humanitarian aid.\n\nUkrainian pilot Danylo Murashko had seconds to decide.\n\nHe turned the burning aircraft away from the settlement.\n\n“I turned away!”\n\nThose were the last words his comrades heard over the radio.\n\nThere was no longer enough altitude to eject safely.\n\nDanylo saved people he had never met.\n\nHe paid for those few seconds with his life.\n\nToday, he would have turned 28.\n\nDanylo was born in Nizhyn, Chernihiv region, the only child in his family. He played football for nine years and spent hours training on pull-up bars. As a boy, he decided he would become a military officer — and never changed his mind.\n\nIn 2013, he entered a military lyceum in Chernihiv and later graduated from the Ivan Kozhedub Kharkiv National Air Force University.\n\nThe apartment where he lived with his mother was filled with model aircraft.\n\nThe sky had become his dream long before it became his profession.\n\nFrom November 2020, Danylo served with Ukraine’s 299th Tactical Aviation Brigade. He began as a pilot, became a senior pilot and eventually a flight commander.\n\nWhen Russia launched its full-scale invasion, Murashko was a young third-class pilot with relatively limited experience.\n\nWithin months, he became one of his unit’s strongest combat pilots.\n\nHe learned extraordinarily quickly, studied Russian tactics and constantly volunteered for difficult missions.\n\n“Palych, let me fly! The guys are there! We have to help them!”\n\nHis comrades called him “Mura” and the “combat Cossack.” He joked constantly and was almost always smiling.\n\nBut when there was a combat mission and another pilot couldn't fly, his attitude was simple:\n\n“There’s still a combat mission. Who’s going to fly? Mura will.”\n\nDuring just eleven months of the full-scale war, Danylo flew 141 combat missions.\n\nAccording to Ukrainian military accounts, his missions resulted in the destruction of around 70 armored vehicles, more than 80 other vehicles, roughly 30 fuel trucks and hundreds of Russian troops.\n\nBetween missions, he studied English.\n\nDanylo dreamed of flying the F-16 and was expected to be among the young Ukrainian pilots considered for conversion to Western fighter aircraft.\n\nHe never got that chance.\n\nOn January 27, 2023, Danylo Murashko took off on his 141st combat mission.\n\nHe was 24.\n\nHis Su-25 was hit near Kramatorsk. With the aircraft falling toward civilians, he chose not to save the few seconds he had left for himself.\n\nHe used them to save others.\n\nDanylo was a full recipient of all three classes of Ukraine’s Order of Bohdan Khmelnytsky and had received the Steel Cross. Posthumously, he was promoted to major and awarded Ukraine’s highest title:\n\nHero of Ukraine, with the Order of the Gold Star.\n\nToday Danylo Murashko should have been celebrating his 28th birthday.\n\nPerhaps he would be flying an F-16 now.\n\nPerhaps training younger Ukrainian pilots.\n\nPerhaps returning from another mission to his wife and parents.\n\nInstead, the final words of a 24-year-old pilot remain in Ukraine’s sky:\n\n“I turned away.”\n\nHe did.\n\nAnd because he did, other people lived.\n\nEternal memory and glory to Hero of Ukraine Danylo Murashko. 🇺🇦",
+    "date": "2026-08-11",
+    "author": "@OlenaRohoza",
+    "author_name": "Olena Rohoza",
+    "followers": 55997,
+    "verified": true,
+    "url": "https://x.com/OlenaRohoza/status/2086971316402335762",
+    "likes": 3,
+    "retweets": 3,
+    "replies": 0,
+    "views": 134
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 2
+   }
+  },
+  {
+   "post": {
+    "id": "2086971230595236249",
+    "text": "Ukraine claims attack on \"TANEKO\" oil refinery in Tatarstan and damage to primary processing unit at the Ilsky oil refinery in the Krasnodar region.\n\nOn the night of August 10, the Armed Forces of Ukraine struck the \"TANEKO\" oil refinery in Nizhnekamsk (Tatarstan), according to a statement from the General Staff of the Armed Forces of Ukraine. \n\nA fire broke out at the plant, which is owned by \"Tatneft,\" the statement added. Authorities in Tatarstan reported that as a result of the drone attack on Nizhnekamsk, 13 people were killed, including a child, and 78 were injured. Of those, 25 were hospitalized, and two are in serious condition. Among the dead are seven citizens of Uzbekistan and one citizen of Tajikistan. \n\nAccording to the press service of the head of Tatarstan, the foreign nationals were staying in a hostel in the industrial zone that was hit by the drone. \"TANEKO\" is the largest oil refinery owned by \"Tatneft.\" In 2024, it processed 17 million tons of oil, producing 2.7 million tons of gasoline and 8.5 million tons of diesel fuel. Prior to this, the plant was attacked on June 12, after which it temporarily suspended operations.\n\nThe General Staff of the Armed Forces of Ukraine also reported that the Ilsky oil refinery in the Krasnodar region was hit on August 8. According to their information, drones damaged the AVT-6 primary oil processing unit. \n\nA fire at the plant, which started as a result of the \"fall of drone debris,\" was also confirmed by the regional operational headquarters. They also reported six injured. The Ilsky oil refinery has a processing capacity of 6.6 million tons of oil per year. Prior to this, it was attacked in July, June, February, and January.",
+    "date": "2026-08-11",
+    "author": "@Beefeater_Fella",
+    "author_name": "Beefeater",
+    "followers": 42683,
+    "verified": true,
+    "url": "https://x.com/Beefeater_Fella/status/2086971230595236249",
+    "likes": 3,
+    "retweets": 0,
+    "replies": 0,
+    "views": 238
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2086970167871901939",
+    "text": "Ukraine strikes at Sibur gas processing facility near Tobolsk\n\nOn August 10, the Ukrainian armed forces attacked an industrial facility in the Tyumen region with drones, according to Governor Alexander Moor. He stated that \"as a result of the fall of several drones,\" a fire broke out on the territory of the facility. \n\nThe largest petrochemical complex in Russia, \"ZapSibNeftekhim\" in Tobolsk, which belongs to Sibur, was hit, according to Astra, based on footage from eyewitnesses. \n\nAccording to their information, the drones struck the central gas fractionation unit (GFU), which is capable of processing 3.8 million tons of raw materials per year. The total capacity of the plant is 8 million tons per year. Approximately 3,300 people are employed there.\n\nUkrainian monitoring channels, Exilenova+ and Supernova+, published footage of the fire. According to their information, the fire started in the industrial zone in Tobolsk, near the Denisovka railway station, which is also confirmed by footage on \"Yandex.Maps.\" \n\nIn this area are located the petrochemical and gas chemical enterprises \"Tobolsk-Neftekhim\" and \"Tobolsk-Polymer,\" which are part of \"ZapSibNeftekhim.\" The distance from the city to the border with Ukraine is more than 2,000 kilometers.",
+    "date": "2026-08-11",
+    "author": "@Beefeater_Fella",
+    "author_name": "Beefeater",
+    "followers": 42683,
+    "verified": true,
+    "url": "https://x.com/Beefeater_Fella/status/2086970167871901939",
+    "likes": 13,
+    "retweets": 1,
+    "replies": 0,
+    "views": 296
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2086969003423961368",
+    "text": "From the inside, the meat grinder looks like this. Russian soldier Sergei Moshchenko was born in 1990. He serves in the 4th Separate Motorized Rifle Brigade, unit 40318, under the 3rd Combined Arms Army. His spine is shattered and held together with a disc prosthesis. His left hand is fractured. Nerves in his right arm are shredded. He suffers from elbow contracture, constant pain, and a hand that no longer straightens.\n\nHis mother Svetlana says that after the assault in December 2025 they held him in a basement for two months. No family contact. When they finally pulled him out for a medical board in June 2026 the neurologist simply stamped “B-3” again. The political officer repeated the same line: we do not look at the man. We look at the documents.\n\nBattalion commander Captain Rostislav Sapozhkov, callsign “Rosan,” stands accused of feeding broken men into the assault lines anyway. Svetlana says at least ten others he sent forward in similar condition are now listed as missing. It's not throwing a command error. It is deliberate disposal of human material once it has outlived its usefulness to the meat wave.\n\nEvery new recruitment ad promising millions of rubles, every lowered medical standard, every desperate search for contract soldiers from prisons to Central Asia exists because the Russian system has already burned through the healthy ones. They are now cannibalizing their own wounded. The math no longer adds up. Moscow cannot win the war it started, so it grinds its own people to paste simply to delay the obvious.\n\nThe only question left is how many more Russians will let themselves be fed into this machine before the regime collapses under the weight of its own corpses. Ukraine did not create this horror. Russia did. It will keep doing it until it is stopped on the battlefield.",
+    "date": "2026-08-11",
+    "author": "@LetsArmUKR",
+    "author_name": "medoyid_ua",
+    "followers": 8692,
+    "verified": true,
+    "url": "https://x.com/LetsArmUKR/status/2086969003423961368",
+    "likes": 2,
+    "retweets": 2,
+    "replies": 0,
+    "views": 120
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 2
+   }
+  },
+  {
+   "post": {
+    "id": "2086969002530636007",
+    "text": "I remember when Russia invaded Ukraine, @Claudia_Sahm warned Democrats that they would have to move Heaven and Earth to prevent gas prices from spiking. Welp, the earth has already moved under the Republicans on Iran. Now they have to pray to Heaven for help.",
+    "date": "2026-08-11",
+    "author": "@EricMGarcia",
+    "author_name": "Eric Michael Garcia",
+    "followers": 44919,
+    "verified": true,
+    "url": "https://x.com/EricMGarcia/status/2086969002530636007",
+    "likes": 12,
+    "retweets": 1,
+    "replies": 2,
+    "views": 1568
+   },
+   "analysis": {
+    "event_type": "political",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2086967759284699521",
+    "text": "🚨 BREAKING: Ukrainian drones reportedly struck a Wildberries logistics hub in Russia’s Voronezh region.\n\n#BREAKING #Russia #Ukraine #Voronezh #Wildberries #DroneAttack #UkraineWar #RussiaUkraineWar #WorldNews https://t.co/pSihkl2dF8",
+    "date": "2026-08-11",
+    "author": "@WNewsRankX",
+    "author_name": "WorldNewsRank",
+    "followers": 150,
+    "verified": true,
+    "url": "https://x.com/WNewsRankX/status/2086967759284699521",
+    "likes": 2,
+    "retweets": 0,
+    "replies": 0,
+    "views": 94
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2086967124510331302",
+    "text": "🚨 BREAKING: Russian forces have launched a missile attack on Kyiv, Ukraine.\n\n#BREAKING #Kyiv #Ukraine #Russia #RussianMissiles #UkraineWar #MissileStrike #WorldNews https://t.co/TOp0mvC5my",
+    "date": "2026-08-11",
+    "author": "@WNewsRankX",
+    "author_name": "WorldNewsRank",
+    "followers": 150,
+    "verified": true,
+    "url": "https://x.com/WNewsRankX/status/2086967124510331302",
+    "likes": 2,
+    "retweets": 0,
+    "replies": 0,
+    "views": 121
+   },
+   "analysis": {
+    "event_type": "conflict",
+    "severity": "high",
+    "credibility": 2
+   }
+  },
+  {
+   "post": {
+    "id": "2086966324031316055",
+    "text": "🏒 Czech hockey legend Dominik Hašek compared Russian President Vladimir Putin to Adolf Hitler following a deadly Russian attack on Kharkiv, calling for tougher international action against Moscow\nhttps://t.co/RQQCfkfyvh",
+    "date": "2026-08-11",
+    "author": "@NewVoiceUkraine",
+    "author_name": "The New Voice of Ukraine",
+    "followers": 197554,
+    "verified": true,
+    "url": "https://x.com/NewVoiceUkraine/status/2086966324031316055",
+    "likes": 11,
+    "retweets": 2,
+    "replies": 0,
+    "views": 721
+   },
+   "analysis": {
+    "event_type": "political",
+    "severity": "medium",
+    "credibility": 3
+   }
+  },
+  {
+   "post": {
+    "id": "2086965857406615779",
+    "text": "Iran and Ukraine share the same enemy: tyranny, occupation, and the belief that nations can be robbed of their sovereignty.\n\nUkraine belongs to Ukrainians. Iran belongs to Iranians.\n\nIran’s territorial integrity, including its rights in the Caspian Sea, is not for dictators to bargain away.\n\nFree nations must stand together against Putin and the Islamic Republic.\n\n#EndTheIslamicRepublic #KingRezaPahlaviForIran",
+    "date": "2026-08-11",
+    "author": "@EllaDghn",
+    "author_name": "Elham👑",
+    "followers": 2053,
+    "verified": true,
+    "url": "https://x.com/EllaDghn/status/2086965857406615779",
+    "likes": 4,
+    "retweets": 0,
+    "replies": 0,
+    "views": 71
+   },
+   "analysis": {
+    "event_type": "political",
+    "severity": "medium",
+    "credibility": 3
    }
   }
  ]

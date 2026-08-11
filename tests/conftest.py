@@ -31,6 +31,32 @@ def sample_event(sample_article, sample_analysis):
 
 
 @pytest.fixture
+def sample_x_events():
+    """List of 6 classified X post events with mixed severities."""
+    severities = ["high", "high", "medium", "medium", "low", "critical"]
+    event_types = ["conflict", "conflict", "political", "economic", "other", "terrorism"]
+    x_events = []
+    for i, (sev, etype) in enumerate(zip(severities, event_types)):
+        post = {
+            "id": str(1000 + i),
+            "text": f"Post {i + 1}: reports of {etype} activity in the region tonight.",
+            "date": f"2026-05-{i + 2:02d}",
+            "author": f"@osint_user{i + 1}",
+            "author_name": f"OSINT User {i + 1}",
+            "followers": 1000 * (i + 1),
+            "verified": i % 2 == 0,
+            "url": f"https://x.com/osint_user{i + 1}/status/{1000 + i}",
+            "likes": 100 * (i + 1),
+            "retweets": 10 * (i + 1),
+            "replies": 5 * (i + 1),
+            "views": 10000 * (i + 1),
+        }
+        analysis = {"event_type": etype, "severity": sev, "credibility": 3 + (i % 3)}
+        x_events.append({"post": post, "analysis": analysis})
+    return x_events
+
+
+@pytest.fixture
 def sample_events():
     """List of 10 events with mixed severities: 2 critical, 3 high, 3 medium, 2 low."""
     severities = ["critical", "critical", "high", "high", "high", "medium", "medium", "medium", "low", "low"]

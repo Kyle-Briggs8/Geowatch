@@ -7,11 +7,12 @@ from concurrent.futures import ThreadPoolExecutor
 
 from flask import Flask, Response, jsonify, render_template_string, request
 
-from analyzer import analyze_article
+from analyzer import analyze_article, analyze_posts
 from demo import load_demo_events
 from fetcher import get_news
 from mapper import REGION_COORDS
 from visualizer import build_dashboard, build_comparison_dashboard
+from xfetcher import get_x_posts, has_x_token
 
 app = Flask(__name__)
 
@@ -251,6 +252,11 @@ _INDEX_HTML = """<!DOCTYPE html>
       <label for="demo">Cached demo data &mdash; no live API calls</label>
     </div>
 
+    <div class="demo-row">
+      <input type="checkbox" id="include_x" name="include_x" value="1">
+      <label for="include_x">Include X (social) data &mdash; adds an X Pulse tab</label>
+    </div>
+
     <button type="button" id="submitBtn" onclick="submitWithLoader()">Run Analysis</button>
 
     <div class="known">Pre-mapped regions: {{ regions }}</div>
@@ -408,18 +414,48 @@ def _subsample(raw: list, max_n: int) -> list:
     return [raw[int(i * step)] for i in range(max_n)]
 
 
-def _do_analyze(location: str, days: int, max_articles: int, demo: bool = False) -> str:
+def _do_analyze(location: str, days: int, max_articles: int, demo: bool = False,
+                include_x: bool = False) -> str:
     """Fetch, analyze, and render a single-location dashboard. Returns HTML string.
 
     With demo=True, renders from the cached dataset in demo_data/ — no API calls.
+    With include_x=True, adds an X Pulse tab (live Apify fetch, or cached posts in demo).
     """
     if demo:
-        payload = load_demo_events(location)
-        return build_dashboard(payload["events"], location, payload.get("days", days))
+        payload  = load_demo_events(location)
+        x_events = payload.get("x_events") if include_x else None
+        x_status = "ok" if x_events is not None else ("error" if include_x else None)
+        return build_dashboard(payload["events"], location, payload.get("days", days),
+                               x_events=x_events, x_status=x_status)
+
+    x_fut = None
+    x_executor = None
+    x_status = None
+    if include_x:
+        if not has_x_token():
+            x_status = "no_token"
+        else:
+            x_executor = ThreadPoolExecutor(max_workers=1)
+            x_fut = x_executor.submit(get_x_posts, location, days)
+
     raw      = get_news(location, days)
     articles = _subsample(raw, max_articles)
     events   = [{"article": art, "analysis": analyze_article(art)} for art in articles]
-    return build_dashboard(events, location, days)
+
+    x_events = None
+    if x_fut is not None:
+        posts, _ = x_fut.result()
+        x_executor.shutdown(wait=False)
+        if posts:
+            analyses = analyze_posts(posts, location)
+            x_events = [{"post": p, "analysis": a}
+                        for p, a in zip(posts, analyses) if a]
+            x_status = "ok"
+        else:
+            x_status = "error"
+
+    return build_dashboard(events, location, days,
+                           x_events=x_events, x_status=x_status)
 
 
 def _do_compare(loc_a: str, loc_b: str, days: int, max_articles: int) -> str:
@@ -454,6 +490,7 @@ def analyze() -> str:
     days         = int(request.form.get("days") or 30)
     max_articles = max(1, min(int(request.form.get("max_articles") or 5), 100))
     demo         = request.form.get("demo") == "1"
+    include_x    = request.form.get("include_x") == "1"
     regions      = ", ".join(sorted(REGION_COORDS.keys()))
 
     if not location:
@@ -461,7 +498,7 @@ def analyze() -> str:
             _INDEX_HTML, error="Please enter a location.", regions=regions
         )
 
-    job_id = _start_job(_do_analyze, location, days, max_articles, demo)
+    job_id = _start_job(_do_analyze, location, days, max_articles, demo, include_x)
     return render_template_string(_WAITING_HTML, job_id=job_id, title=location)
 
 

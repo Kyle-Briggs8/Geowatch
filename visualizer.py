@@ -14,7 +14,7 @@ from folium.plugins import MarkerCluster
 
 from mapper import REGION_COORDS, _LEGEND_HTML
 from entities import build_entity_cooccurrence, render_entity_graph_html
-from grading import assess_confidence, describe_grade, grade_event
+from grading import assess_confidence, describe_grade, grade_event, grade_post
 
 _SEV_ORDER = ["low", "medium", "high", "critical"]
 _SEV_WEIGHT = {"low": 1, "medium": 2, "high": 3, "critical": 4}
@@ -342,6 +342,167 @@ def _sourcing_table_html(events: list[dict]) -> str:
     digit on individual events: information credibility (1–6). Estimative language per ICD 203.</div>"""
 
 
+# ── X Pulse tab components ───────────────────────────────────────────────────
+
+def _fmt_count(n: int) -> str:
+    """Format an engagement count: 999 → '999', 1200 → '1.2K', 2400000 → '2.4M'."""
+    n = int(n or 0)
+    if n >= 1_000_000:
+        return f"{n / 1_000_000:.1f}M".replace(".0M", "M")
+    if n >= 1_000:
+        return f"{n / 1_000:.1f}K".replace(".0K", "K")
+    return str(n)
+
+
+def _x_stats_html(x_events: list[dict]) -> str:
+    """Headline stats row for the X Pulse tab."""
+    authors = {e["post"].get("author") for e in x_events if e["post"].get("author")}
+    engagement = sum(
+        (e["post"].get("likes") or 0) + (e["post"].get("retweets") or 0)
+        + (e["post"].get("replies") or 0)
+        for e in x_events
+    )
+    high_crit = sum(
+        1 for e in x_events
+        if (e["analysis"].get("severity") or "").lower() in ("high", "critical")
+    )
+    return f"""
+    <div class="stats">
+      <div class="stat"><div class="stat-num">{len(x_events)}</div><div class="stat-label">Relevant posts</div></div>
+      <div class="stat"><div class="stat-num">{len(authors)}</div><div class="stat-label">Unique accounts</div></div>
+      <div class="stat"><div class="stat-num">{_fmt_count(engagement)}</div><div class="stat-label">Total engagement</div></div>
+      <div class="stat"><div class="stat-num" style="color:#c2410c">{high_crit}</div><div class="stat-label">High or critical</div></div>
+    </div>"""
+
+
+def _x_volume_html(x_events: list[dict], days: int) -> str:
+    """Posts-per-day strip: bar height = post count, color = dominant severity."""
+    end = datetime.utcnow().date()
+    start = end - timedelta(days=days - 1)
+
+    day_counts: dict = defaultdict(Counter)
+    for e in x_events:
+        try:
+            d = datetime.strptime(e["post"].get("date", ""), "%Y-%m-%d").date()
+        except (ValueError, TypeError):
+            continue
+        if start <= d <= end:
+            sev = (e["analysis"].get("severity") or "low").lower()
+            day_counts[d][sev if sev in _SEV_CSS else "low"] += 1
+
+    max_total = max((sum(c.values()) for c in day_counts.values()), default=0) or 1
+    unit = max(4, min(14, round(52 / max_total)))
+
+    bars = ""
+    cur = start
+    while cur <= end:
+        dc = day_counts.get(cur)
+        label = f"{cur.strftime('%b')} {cur.day}"
+        if dc:
+            total = sum(dc.values())
+            dominant = max(dc, key=lambda s: (dc[s], _SEV_WEIGHT[s]))
+            tip = f"{label} · " + ", ".join(f"{dc[s]} {s}" for s in _SEV_ORDER if dc.get(s))
+            bars += (f'<div class="xp-day" title="{tip}">'
+                     f'<i style="background:{_SEV_CSS[dominant]};height:{total * unit}px"></i></div>')
+        else:
+            bars += (f'<div class="xp-day" title="{label} · no posts">'
+                     f'<i style="background:#e7e5e0;height:3px"></i></div>')
+        cur += timedelta(days=1)
+
+    def _fmt(d):
+        return f"{d.strftime('%b')} {d.day}"
+    mid = start + (end - start) / 2
+
+    return f"""
+    <div class="density">
+      <div class="xp-strip">{bars}</div>
+      <div class="density-axis"><span>{_fmt(start)}</span><span>{_fmt(mid)}</span><span>{_fmt(end)}</span></div>
+      <div class="density-legend">
+        <span><i style="background:{_SEV_CSS['low']}"></i>Low</span>
+        <span><i style="background:{_SEV_CSS['medium']}"></i>Medium</span>
+        <span><i style="background:{_SEV_CSS['high']}"></i>High</span>
+        <span><i style="background:{_SEV_CSS['critical']}"></i>Critical</span>
+        <span style="margin-left:auto;color:#98a1ab">Bar height = posts that day · color = dominant severity</span>
+      </div>
+    </div>"""
+
+
+def _x_feed_html(x_events: list[dict]) -> str:
+    """Post feed styled like the news event log (newest first)."""
+    def _key(e):
+        return e["post"].get("date") or ""
+    rows = ""
+    for e in sorted(x_events, key=_key, reverse=True):
+        p, a  = e["post"], e["analysis"]
+        sev   = (a.get("severity") or "low").lower()
+        if sev not in _SEV_PILL:
+            sev = "low"
+        pt, pb = _SEV_PILL[sev]
+        etype = (a.get("event_type") or "other").replace("_", " ").capitalize()
+        text  = _html.escape(p.get("text") or "")
+        url   = _html.escape(p.get("url") or "#")
+        grade = grade_post(e)
+        gdesc = _html.escape(describe_grade(grade))
+        date_s = "—"
+        try:
+            d = datetime.strptime(p.get("date", ""), "%Y-%m-%d")
+            date_s = f"{d.strftime('%b')} {d.day}"
+        except (ValueError, TypeError):
+            pass
+        author = _html.escape(p.get("author") or "@unknown")
+        vbadge = ' <span class="xp-verified" title="Verified account">&#10004;</span>' if p.get("verified") else ""
+        meta = (f"{author}{vbadge} &middot; {_fmt_count(p.get('followers', 0))} followers &middot; "
+                f"&#9829; {_fmt_count(p.get('likes', 0))} &middot; "
+                f"&#10561; {_fmt_count(p.get('retweets', 0))}")
+        rows += f"""
+      <a class="ev xp-post" href="{url}" target="_blank" rel="noopener">
+        <span class="ev-date">{date_s}</span>
+        <span class="ev-mark" style="background:{_SEV_CSS[sev]}"></span>
+        <span class="ev-main">
+          <span class="ev-title xp-text">{text}</span>
+          <span class="ev-tags"><span class="sev-pill" style="color:{pt};background:{pb}">{sev.upper()}</span><span class="type-tag">{etype}</span></span>
+        </span>
+        <span class="ev-meta">{meta} <span class="grade" title="{gdesc}">{grade}</span></span>
+      </a>"""
+    return f'<div class="feed">{rows}</div>'
+
+
+def _x_empty_html(message: str) -> str:
+    """A single card with an empty-state message for the X Pulse pane."""
+    return (f'<div class="card full"><div style="padding:40px 22px;text-align:center;'
+            f'color:#98a1ab;font-size:13.5px;">{message}</div></div>')
+
+
+def _x_tab_html(x_events: list[dict] | None, days: int, x_status: str | None) -> str:
+    """Assemble the X Pulse pane content (cards inside a <main> grid)."""
+    if x_status == "no_token":
+        return _x_empty_html(
+            "X data is not configured — add APIFY_TOKEN to your .env "
+            "(free at apify.com) to enable X Pulse.")
+    if x_status == "error":
+        return _x_empty_html("X data was unavailable this run — see terminal warnings. "
+                             "The news analysis is unaffected.")
+    if not x_events:
+        return _x_empty_html("No relevant X posts found in this window.")
+
+    return f"""
+    <div class="card full">
+      <div class="card-head"><span class="card-title">Social Tempo</span><span class="card-sub">Posts per day &middot; classified by LLM triage</span></div>
+      {_x_volume_html(x_events, days)}
+    </div>
+    <div class="card full">
+      <div class="card-head"><span class="card-title">Signal Summary</span><span class="card-sub">This reporting period</span></div>
+      {_x_stats_html(x_events)}
+      <div class="table-note">Social posts are graded F on the Admiralty reliability scale —
+      individual account reliability cannot be judged. The digit (1–6) is per-post information
+      credibility assessed by LLM triage. Treat as leads, not confirmation.</div>
+    </div>
+    <div class="card full">
+      <div class="card-head"><span class="card-title">Post Feed</span><span class="card-sub">Newest first &middot; click a post to open on X</span></div>
+      {_x_feed_html(x_events)}
+    </div>"""
+
+
 def _map_iframe(events: list[dict], location: str) -> str:
     """Build a Folium map with MarkerCluster. Returns a self-contained <iframe> string."""
     center = REGION_COORDS.get(location, (20.0, 0.0))
@@ -654,6 +815,25 @@ _SHARED_CSS = """
     td.num { font-family: 'Cascadia Mono', Consolas, monospace; text-align: right; font-size: 12px; }
     .table-note { padding: 12px 18px 14px; font-size: 10.5px; color: #98a1ab; line-height: 1.5; }
     footer { color: #98a1ab; font-size: 11px; padding: 10px 32px 26px; text-align: center; }
+    /* tabs (X Pulse) */
+    .tabs { background: #fff; border-bottom: 1px solid #e7e5e0; padding: 10px 32px 0;
+      display: flex; gap: 4px; }
+    .tab { background: transparent; border: none; border-bottom: 2.5px solid transparent;
+      color: #55606c; cursor: pointer; font-family: inherit; font-size: 13.5px; font-weight: 600;
+      padding: 8px 18px 10px; transition: color .15s, border-color .15s; }
+    .tab:hover { color: #16365c; }
+    .tab.active { color: #16365c; border-bottom-color: #2563eb; }
+    .tab-n { font-size: 10.5px; font-weight: 700; color: #2563eb; background: #e4edfb;
+      border-radius: 999px; padding: 1px 8px; margin-left: 6px; vertical-align: 1px; }
+    .tabpane { display: none; }
+    .tabpane.open { display: block; }
+    /* X Pulse pane */
+    .xp-strip { display: flex; gap: 2px; align-items: flex-end; height: 64px;
+      border-bottom: 1px solid #e7e5e0; padding: 0 2px 1px; }
+    .xp-day { flex: 1; display: flex; flex-direction: column-reverse; }
+    .xp-day i { display: block; border-radius: 1.5px 1.5px 0 0; }
+    .xp-post .ev-title.xp-text { white-space: normal; line-height: 1.45; }
+    .xp-verified { color: #2563eb; font-size: 10px; }
 """
 
 _DASH_TMPL = """\
@@ -679,6 +859,9 @@ _DASH_TMPL = """\
 
   __ASSESSMENT__
 
+  __TABS__
+
+  <div id="pane-news" class="tabpane open">
   <main>
     <div class="card">
       <div class="card-head"><span class="card-title">Operational Map</span><span class="card-sub">Clustered &middot; click a marker for the article</span></div>
@@ -702,6 +885,9 @@ _DASH_TMPL = """\
       __SOURCING__
     </div>
   </main>
+  </div>
+
+  __XPANE__
 
   <footer>Generated by GeoWatch &mdash; open-source geospatial intelligence &mdash; __TIMESTAMP__</footer>
 </body>
@@ -799,9 +985,40 @@ def _assessment_html(events: list[dict], days: int) -> str:
 
 
 def build_dashboard(events: list[dict], location: str, days: int,
-                    alert: dict | None = None) -> str:
-    """Return a fully self-contained dashboard HTML string (no external dependencies)."""
+                    alert: dict | None = None,
+                    x_events: list[dict] | None = None,
+                    x_status: str | None = None) -> str:
+    """Return a fully self-contained dashboard HTML string (no external dependencies).
+
+    When x_events/x_status are provided, the dashboard gains a tab bar with an
+    "X Pulse" social-signal pane; when both are None, output is unchanged.
+    """
     timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+
+    tabs_html, xpane_html = "", ""
+    if x_events is not None or x_status is not None:
+        n_posts = len(x_events or [])
+        tabs_html = (
+            '<nav class="tabs">'
+            '<button class="tab active" data-pane="pane-news">News Analysis</button>'
+            f'<button class="tab" data-pane="pane-xpulse">X Pulse'
+            f'<span class="tab-n">{n_posts}</span></button>'
+            '</nav>'
+        )
+        xpane_html = (
+            '<div id="pane-xpulse" class="tabpane">'
+            f'<main>{_x_tab_html(x_events, days, x_status)}</main>'
+            '</div>'
+            '<script>'
+            'document.querySelectorAll(".tab").forEach(function(t){'
+            't.addEventListener("click",function(){'
+            'document.querySelectorAll(".tab").forEach(function(o){o.classList.remove("active");});'
+            'document.querySelectorAll(".tabpane").forEach(function(p){p.classList.remove("open");});'
+            't.classList.add("active");'
+            'document.getElementById(t.dataset.pane).classList.add("open");'
+            '});});'
+            '</script>'
+        )
 
     alert_html = ""
     if alert:
@@ -825,6 +1042,8 @@ def build_dashboard(events: list[dict], location: str, days: int,
         _DASH_TMPL
         .replace("__ALERT__",      alert_html)
         .replace("__ASSESSMENT__", _assessment_html(events, days))
+        .replace("__TABS__",       tabs_html)
+        .replace("__XPANE__",      xpane_html)
         .replace("__LOCATION__",   location)
         .replace("__DAYS__",       str(days))
         .replace("__NREPORTS__",   str(len(analyzed)))
