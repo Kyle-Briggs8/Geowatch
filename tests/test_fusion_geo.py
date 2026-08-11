@@ -82,12 +82,15 @@ class TestCorrelate:
 
 class TestCorrelationUI:
 
-    def test_badge_and_early_pill_render(self, sample_events):
+    def test_badge_dropdown_and_early_pill_render(self, sample_events):
         events = [_news_event("u1", "2026-08-05", ["Taneco Refinery"])]
         x = [_x_event("p1", "2026-08-04", "fire at the taneco refinery confirmed")]
         html = build_dashboard(events, "Ukraine", 30, x_events=x, x_status="ok")
         assert "corr-badge" in html
-        assert 'data-ids="p1"' in html
+        assert 'data-target="corr-0"' in html          # badge toggles the panel
+        assert 'id="corr-0"' in html                   # inline dropdown panel
+        assert "taneco refinery confirmed" in html     # post text inside panel
+        assert 'class="corr-jump" data-ids="p1"' in html  # jump link to X tab
         assert "led by social" in html
         assert "EARLY SIGNAL" in html
         assert 'data-xid="p1"' in html

@@ -112,19 +112,59 @@ def _week_day_lists(days: int) -> list[list]:
     return day_lists
 
 
+def _corr_panel_html(panel_id: str, wk: str, match: dict,
+                     x_by_id: dict, early_ids: set) -> str:
+    """Inline dropdown listing the social posts that corroborate one news event."""
+    post_rows = ""
+    for pid in match["post_ids"]:
+        e = x_by_id.get(pid)
+        if not e:
+            continue
+        p = e["post"]
+        text = _html.escape((p.get("text") or "")[:180])
+        purl = _html.escape(p.get("url") or "#")
+        date_s = "—"
+        try:
+            pd = datetime.strptime(p.get("date", ""), "%Y-%m-%d")
+            date_s = f"{pd.strftime('%b')} {pd.day}"
+        except (ValueError, TypeError):
+            pass
+        author = _html.escape(p.get("author") or "@unknown")
+        grade  = grade_post(e)
+        early  = ('<span class="early-pill">&#9888; EARLY</span> '
+                  if pid in early_ids else "")
+        post_rows += f"""
+        <a class="corr-post" href="{purl}" target="_blank" rel="noopener">
+          <span class="cp-date">{date_s}</span>
+          <span class="cp-text">{text}</span>
+          <span class="cp-meta">{early}{author} &middot; &#9829; {_fmt_count(p.get('likes', 0))} <span class="grade">{grade}</span></span>
+        </a>"""
+
+    ids = ",".join(match["post_ids"])
+    return f"""
+      <div class="corr-panel" id="{panel_id}" data-wk="{wk}">
+        <div class="corr-panel-head">Corroborating social posts — independent accounts naming the same entities within 48h
+          <a class="corr-jump" data-ids="{ids}">View in X Pulse &rarr;</a></div>
+        {post_rows}
+      </div>"""
+
+
 def _event_log_rows(events: list[dict], day_to_week: dict,
-                    corr: dict | None = None) -> str:
+                    corr: dict | None = None,
+                    x_events: list[dict] | None = None) -> str:
     """Render the chronological event log rows (newest first), tagged by week id.
 
     When cross-INT correlation data is provided, corroborated events get a
-    clickable badge that jumps to the matching posts in the X Pulse tab.
+    badge that expands an inline dropdown of the matching social posts.
     """
-    by_event = (corr or {}).get("by_event", {})
+    by_event  = (corr or {}).get("by_event", {})
+    early_ids = (corr or {}).get("early_ids") or set()
+    x_by_id   = {e["post"].get("id"): e for e in (x_events or [])}
     analyzed = [(e, _parse_event_date(e)) for e in events if e.get("analysis")]
     analyzed.sort(key=lambda t: (t[1] is None, t[1]), reverse=True)
 
     rows = ""
-    for ev, d in analyzed:
+    for i, (ev, d) in enumerate(analyzed):
         a     = ev["analysis"]
         art   = ev["article"]
         sev   = (a.get("severity") or "low").lower()
@@ -140,17 +180,18 @@ def _event_log_rows(events: list[dict], day_to_week: dict,
         wk     = day_to_week.get(d, "none")
         date_s = _fmt_day(d) if d else "—"
 
-        corr_html = ""
+        corr_html, panel_html = "", ""
         match = by_event.get(art.get("url") or "")
         if match:
-            n     = len(match["post_ids"])
-            ids   = ",".join(match["post_ids"])
-            early = " · led by social" if match.get("early") else ""
+            n        = len(match["post_ids"])
+            panel_id = f"corr-{i}"
+            early    = " · led by social" if match.get("early") else ""
             corr_html = (
-                f'<button class="corr-badge" data-ids="{ids}" '
-                f'title="Independent social posts naming the same entities within 48h — click to view in X Pulse">'
-                f'&#8644; {n} social{early}</button>'
+                f'<button class="corr-badge" data-target="{panel_id}" '
+                f'title="Independent social posts naming the same entities within 48h — click to expand">'
+                f'&#8644; {n} social{early} &#9662;</button>'
             )
+            panel_html = _corr_panel_html(panel_id, wk, match, x_by_id, early_ids)
 
         rows += f"""
       <a class="ev" data-wk="{wk}" href="{url}" target="_blank" rel="noopener">
@@ -161,11 +202,12 @@ def _event_log_rows(events: list[dict], day_to_week: dict,
           <span class="ev-tags"><span class="sev-pill" style="color:{pt};background:{pb}">{sev.upper()}</span><span class="type-tag">{etype}</span>{corr_html}</span>
         </span>
         <span class="ev-meta">{src} <span class="grade" title="{gdesc}">{grade}</span></span>
-      </a>"""
+      </a>{panel_html}"""
     return rows
 
 
-def _timeline_html(events: list[dict], days: int, corr: dict | None = None) -> str:
+def _timeline_html(events: list[dict], days: int, corr: dict | None = None,
+                   x_events: list[dict] | None = None) -> str:
     """Weekly stacked-severity bars with click-to-expand daily breakdown and a
     chronological event log that filters to the selected week. Self-contained HTML/JS."""
     day_lists = _week_day_lists(days)
@@ -226,7 +268,7 @@ def _timeline_html(events: list[dict], days: int, corr: dict | None = None) -> s
         <div class="day-axis">{day_axis}</div>
       </div>"""
 
-    log_rows = _event_log_rows(events, day_to_week, corr=corr)
+    log_rows = _event_log_rows(events, day_to_week, corr=corr, x_events=x_events)
     if not log_rows:
         log_rows = '<div style="padding:18px 22px;color:#98a1ab;font-size:12px;">No analyzed events in this window.</div>'
 
@@ -254,6 +296,7 @@ def _timeline_html(events: list[dict], days: int, corr: dict | None = None) -> s
         weeks.forEach(function(w){{ w.classList.remove('sel'); }});
         feed.classList.remove('filtered');
         feed.querySelectorAll('.ev').forEach(function(e){{ e.classList.remove('show'); }});
+        feed.querySelectorAll('.corr-panel').forEach(function(p){{ p.classList.remove('wkshow'); }});
         current = null;
       }}
       function open(id, wkEl){{
@@ -264,6 +307,7 @@ def _timeline_html(events: list[dict], days: int, corr: dict | None = None) -> s
         if (panel) panel.classList.add('open');
         feed.classList.add('filtered');
         feed.querySelectorAll('.ev[data-wk="' + id + '"]').forEach(function(e){{ e.classList.add('show'); }});
+        feed.querySelectorAll('.corr-panel[data-wk="' + id + '"]').forEach(function(p){{ p.classList.add('wkshow'); }});
       }}
       weeks.forEach(function(w){{
         w.addEventListener('click', function(){{
@@ -273,6 +317,13 @@ def _timeline_html(events: list[dict], days: int, corr: dict | None = None) -> s
       }});
       document.querySelectorAll('[data-close]').forEach(function(a){{
         a.addEventListener('click', function(ev){{ ev.stopPropagation(); ev.preventDefault(); close(); }});
+      }});
+      document.querySelectorAll('.corr-badge').forEach(function(b){{
+        b.addEventListener('click', function(ev){{
+          ev.preventDefault(); ev.stopPropagation();
+          var p = document.getElementById(b.dataset.target);
+          if (p) p.classList.toggle('open');
+        }});
       }});
     }})();
     </script>"""
@@ -926,6 +977,21 @@ _SHARED_CSS = """
     .early-pill { font-size: 9.5px; letter-spacing: 0.5px; font-weight: 700;
       color: #7c2d12; background: #ffedd5; padding: 1px 8px; border-radius: 999px; }
     .xp-post.hl { background: #eef3fa; box-shadow: inset 3px 0 0 #2563eb; }
+    .corr-panel { display: none; background: #f7f9fc; border-bottom: 1px solid #f1efeb;
+      border-left: 3px solid #2563eb; padding: 6px 22px 10px 100px; }
+    .corr-panel.open { display: block; animation: openup .2s ease; }
+    .feed.filtered .corr-panel { display: none; }
+    .feed.filtered .corr-panel.open.wkshow { display: block; }
+    .corr-panel-head { font-size: 10.5px; font-weight: 700; color: #16365c;
+      padding: 6px 0 4px; display: flex; justify-content: space-between; gap: 12px; }
+    .corr-panel-head a { cursor: pointer; font-weight: 600; white-space: nowrap; }
+    .corr-post { display: grid; grid-template-columns: 52px 1fr auto; gap: 0 12px;
+      align-items: baseline; padding: 6px 0; border-top: 1px solid #edf0f4; color: inherit; }
+    .corr-post:hover .cp-text { color: #2563eb; }
+    .cp-date { font-size: 10.5px; color: #98a1ab; font-weight: 600; white-space: nowrap; }
+    .cp-text { font-size: 12px; color: #55606c; line-height: 1.4; }
+    .cp-meta { font-size: 10.5px; color: #98a1ab; white-space: nowrap;
+      display: flex; gap: 6px; align-items: baseline; }
 """
 
 _DASH_TMPL = """\
@@ -1113,7 +1179,7 @@ def build_dashboard(events: list[dict], location: str, days: int,
             '}'
             'document.querySelectorAll(".tab").forEach(function(t){'
             't.addEventListener("click",function(){gwShowPane(t.dataset.pane);});});'
-            'document.querySelectorAll(".corr-badge").forEach(function(b){'
+            'document.querySelectorAll(".corr-jump").forEach(function(b){'
             'b.addEventListener("click",function(ev){'
             'ev.preventDefault();ev.stopPropagation();'
             'gwShowPane("pane-xpulse");'
@@ -1156,7 +1222,8 @@ def build_dashboard(events: list[dict], location: str, days: int,
         .replace("__NOUTLETS__",   str(len(outlets)))
         .replace("__MAP__",             _map_iframe(events, location))
         .replace("__GLANCE__",          _glance_html(events))
-        .replace("__TIMELINE__",        _timeline_html(events, days, corr=corr))
+        .replace("__TIMELINE__",        _timeline_html(events, days, corr=corr,
+                                                       x_events=x_events))
         .replace("__SOURCING__",        _sourcing_table_html(events))
         .replace("__ENTITY_SECTION__",  _entity_section_html(events))
         .replace("__TIMESTAMP__",       timestamp)
