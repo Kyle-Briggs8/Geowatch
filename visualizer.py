@@ -637,17 +637,36 @@ def _x_tab_html(x_events: list[dict] | None, days: int, x_status: str | None,
     </div>"""
 
 
-def _marker_location(ev: dict, center: tuple[float, float]) -> tuple[float, float]:
-    """Real geocoded coords if present, else region centroid with deterministic
-    jitter so co-located fallback markers don't stack into one dot."""
-    coords = ev.get("coords")
-    if coords and len(coords) == 2:
-        return (coords[0], coords[1])
+def _jitter(ev: dict) -> tuple[float, float]:
+    """Deterministic per-event offset (±0.4°) so co-located markers don't stack."""
     seed = (ev.get("article", {}).get("url") or "") + (ev.get("article", {}).get("title") or "")
     h = hashlib.md5(seed.encode("utf-8")).digest()
-    jit_lat = (h[0] / 255 - 0.5) * 0.8
-    jit_lon = (h[1] / 255 - 0.5) * 0.8
-    return (center[0] + jit_lat, center[1] + jit_lon)
+    return ((h[0] / 255 - 0.5) * 0.8, (h[1] / 255 - 0.5) * 0.8)
+
+
+def _marker_location(ev: dict, center: tuple[float, float]) -> tuple[float, float]:
+    """Marker position honoring geocode precision.
+
+    Point/region precision → exact geocoded coords. Country precision → the
+    country's coords with jitter (several country-level events shouldn't stack
+    on one centroid dot). No coords at all → AOI centroid with jitter.
+    """
+    coords = ev.get("coords")
+    if coords and len(coords) == 2:
+        if ev.get("loc_precision") == "country":
+            jl, jn = _jitter(ev)
+            return (coords[0] + jl, coords[1] + jn)
+        return (coords[0], coords[1])
+    jl, jn = _jitter(ev)
+    return (center[0] + jl, center[1] + jn)
+
+
+def _is_approx(ev: dict) -> bool:
+    """True when the marker position is not point-precise (country-level or
+    AOI-centroid fallback) and should be drawn as an approximate marker."""
+    if not (ev.get("coords") and len(ev["coords"]) == 2):
+        return True
+    return ev.get("loc_precision") == "country"
 
 
 def _map_iframe(events: list[dict], location: str) -> str:
@@ -680,14 +699,24 @@ def _map_iframe(events: list[dict], location: str) -> str:
                 "etype":  analysis.get("event_type", ""),
                 "grade":  grade_event(ev),
                 "gradedesc": describe_grade(grade_event(ev)),
+                "approx": "1" if _is_approx(ev) else "",
             }.items()
         )
-        icon_html = (
-            f'<div class="gw-marker" {data_attrs} '
-            f'style="width:14px;height:14px;border-radius:50%;cursor:pointer;'
-            f'background:{color};border:2px solid #fff;'
-            f'box-shadow:0 1px 4px rgba(28,32,36,0.35);"></div>'
-        )
+        if _is_approx(ev):
+            icon_html = (
+                f'<div class="gw-marker" {data_attrs} '
+                f'style="width:14px;height:14px;border-radius:50%;cursor:pointer;'
+                f'background:#fff;border:2px dashed {color};'
+                f'box-shadow:0 1px 4px rgba(28,32,36,0.3);" '
+                f'title="Approximate — no specific place named"></div>'
+            )
+        else:
+            icon_html = (
+                f'<div class="gw-marker" {data_attrs} '
+                f'style="width:14px;height:14px;border-radius:50%;cursor:pointer;'
+                f'background:{color};border:2px solid #fff;'
+                f'box-shadow:0 1px 4px rgba(28,32,36,0.35);"></div>'
+            )
         folium.Marker(
             location=_marker_location(ev, center),
             icon=folium.DivIcon(html=icon_html, icon_size=(14, 14), icon_anchor=(7, 7)),
@@ -797,8 +826,9 @@ def _map_iframe(events: list[dict], location: str) -> str:
     badge.style.color=SEV[d.sev]||'#888';
     document.getElementById('gw-title').textContent=d.title||'';
     var meta=document.getElementById('gw-meta');
-    meta.textContent=(d.source||'')+(d.date?' · '+d.date:'')+(d.grade?' · '+d.grade:'');
-    meta.title=d.gradedesc||'';
+    meta.textContent=(d.source||'')+(d.date?' · '+d.date:'')+(d.grade?' · '+d.grade:'')
+      +(d.approx?' · approx. location':'');
+    meta.title=(d.gradedesc||'')+(d.approx?' — position approximate: the article did not name a specific place':'');
     var col=SEV[d.sev]||'#888';
 
     card.style.display='block';card.style.visibility='hidden';
@@ -1434,20 +1464,24 @@ def _combined_map_iframe(
                     "etype":  analysis.get("event_type", ""),
                     "grade":  grade_event(ev),
                     "gradedesc": describe_grade(grade_event(ev)),
+                    "approx": "1" if _is_approx(ev) else "",
                 }.items()
             )
+            dash = "dashed" if _is_approx(ev) else "solid"
             if style == "solid":
+                fill = "#fff" if _is_approx(ev) else color
+                edge = f"2px {dash} {color}" if _is_approx(ev) else "2px solid #fff"
                 icon_html = (
                     f'<div class="gw-marker" {data_attrs} '
                     f'style="width:13px;height:13px;border-radius:50%;cursor:pointer;'
-                    f'background:{color};border:2px solid #fff;'
+                    f'background:{fill};border:{edge};'
                     f'box-shadow:0 1px 4px rgba(28,32,36,0.35);"></div>'
                 )
             else:  # ring
                 icon_html = (
                     f'<div class="gw-marker" {data_attrs} '
                     f'style="width:15px;height:15px;border-radius:50%;cursor:pointer;'
-                    f'background:#fff;border:3px solid {color};'
+                    f'background:#fff;border:3px {dash} {color};'
                     f'box-shadow:0 1px 4px rgba(28,32,36,0.35);"></div>'
                 )
             folium.Marker(
@@ -1482,6 +1516,9 @@ def _combined_map_iframe(
         f'<div><span style="display:inline-block;width:12px;height:12px;'
         f'border-radius:50%;background:transparent;border:3px solid #98a1ab;'
         f'margin-right:6px;vertical-align:middle;"></span>{loc_b} (ring)</div>'
+        '<div><span style="display:inline-block;width:11px;height:11px;'
+        'border-radius:50%;border:2px dashed #98a1ab;'
+        'margin-right:6px;vertical-align:middle;"></span>Approximate location</div>'
         '</div>'
     )
     m.get_root().html.add_child(Element(legend_html))
@@ -1578,8 +1615,9 @@ def _combined_map_iframe(
     badge.style.color=SEV[d.sev]||'#888';
     document.getElementById('gw-title').textContent=d.title||'';
     var meta=document.getElementById('gw-meta');
-    meta.textContent=(d.source||'')+(d.date?' · '+d.date:'')+(d.grade?' · '+d.grade:'');
-    meta.title=d.gradedesc||'';
+    meta.textContent=(d.source||'')+(d.date?' · '+d.date:'')+(d.grade?' · '+d.grade:'')
+      +(d.approx?' · approx. location':'');
+    meta.title=(d.gradedesc||'')+(d.approx?' — position approximate: the article did not name a specific place':'');
     var col=SEV[d.sev]||'#888';
     card.style.display='block';card.style.visibility='hidden';
     var popH=card.offsetHeight;

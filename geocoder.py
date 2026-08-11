@@ -58,9 +58,23 @@ def _throttle() -> None:
     _last_request = time.time()
 
 
-def _query(q: str) -> tuple[bool, tuple[float, float] | None]:
-    """One Nominatim lookup. Returns (ok, coords) — ok=False means a network
-    error (retryable), while (True, None) means a definitive 'not found'."""
+# Nominatim addresstypes that are broader than a point location
+_REGION_TYPES = {"state", "region", "province", "county", "sea", "ocean", "bay", "state_district"}
+
+
+def _precision(addresstype: str) -> str:
+    """Map a Nominatim addresstype to a GeoWatch precision label."""
+    if addresstype == "country":
+        return "country"
+    if addresstype in _REGION_TYPES:
+        return "region"
+    return "point"
+
+
+def _query(q: str) -> tuple[bool, dict | None]:
+    """One Nominatim lookup. Returns (ok, hit) — ok=False means a network
+    error (retryable), while (True, None) means a definitive 'not found'.
+    A hit is {"coords": [lat, lon], "precision": "point"|"region"|"country"}."""
     with _lock:
         _throttle()
         try:
@@ -73,21 +87,27 @@ def _query(q: str) -> tuple[bool, tuple[float, float] | None]:
             resp.raise_for_status()
             results = resp.json()
             if results:
-                return True, (float(results[0]["lat"]), float(results[0]["lon"]))
+                r = results[0]
+                return True, {
+                    "coords": [float(r["lat"]), float(r["lon"])],
+                    "precision": _precision(r.get("addresstype") or r.get("type") or ""),
+                }
             return True, None
         except Exception as exc:  # broad: geocoding is best-effort, never fatal
             print(f"  [WARN] Geocode failed for '{q}': {exc}", file=sys.stderr)
             return False, None
 
 
-def geocode_place(place: str, region: str | None = None) -> tuple[float, float] | None:
+def geocode_place(place: str, region: str | None = None) -> dict | None:
     """Geocode a place name, optionally with a region fallback.
 
-    The bare place name goes first — Nominatim's importance ranking correctly
-    resolves prominent names (Krakow → Poland, Baku → Azerbaijan) whereas a
-    "<place>, <region>" hint fuzzy-matches foreign names to spurious in-region
-    locations. The hinted form is only a fallback for obscure local places the
-    bare query can't find. Results — including misses — are cached persistently.
+    Returns {"coords": [lat, lon], "precision": "point"|"region"|"country"}
+    or None. The bare place name goes first — Nominatim's importance ranking
+    correctly resolves prominent names (Krakow → Poland, Baku → Azerbaijan)
+    whereas a "<place>, <region>" hint fuzzy-matches foreign names to spurious
+    in-region locations. The hinted form is only a fallback for obscure local
+    places the bare query can't find. Results — including misses — are cached
+    persistently; legacy list-valued cache entries are upgraded on read.
     """
     if not place or not place.strip():
         return None
@@ -95,34 +115,36 @@ def geocode_place(place: str, region: str | None = None) -> tuple[float, float] 
     key = f"{place.strip().lower()}|{(region or '').strip().lower()}"
     if key in cache:
         hit = cache[key]
-        return tuple(hit) if hit else None
+        if isinstance(hit, list):  # legacy format: bare coords
+            hit = {"coords": hit, "precision": "point"}
+        return hit or None
 
     queries = [place]
     if region and region.strip().lower() not in place.lower():
         queries.append(f"{place}, {region}")
 
-    coords = None
+    hit = None
     definitive = True
     for q in queries:
-        ok, coords = _query(q)
+        ok, hit = _query(q)
         if not ok:
-            ok, coords = _query(q)  # one retry on network trouble
+            ok, hit = _query(q)  # one retry on network trouble
         if not ok:
             # network failure: don't degrade to the weaker hinted query,
             # and don't cache — a later run should try again
             definitive = False
             break
-        if coords:
+        if hit:
             break
 
-    if definitive or coords:
-        cache[key] = list(coords) if coords else None
+    if definitive or hit:
+        cache[key] = hit
         _save_cache()
-    return coords
+    return hit
 
 
 def geocode_events(events: list[dict], region: str) -> int:
-    """Attach coords to analyzed events from their location_mentioned. Mutates.
+    """Attach coords + loc_precision to analyzed events. Mutates.
 
     Returns the number of events that received coordinates. Events without a
     usable location (or failed lookups) get coords=None and fall back to the
@@ -136,9 +158,11 @@ def geocode_events(events: list[dict], region: str) -> int:
         place = analysis.get("location_mentioned")
         if not place or not isinstance(place, str) or place.strip().lower() in ("null", "none"):
             ev["coords"] = None
+            ev["loc_precision"] = None
             continue
-        coords = geocode_place(place, region)
-        ev["coords"] = list(coords) if coords else None
-        if coords:
+        hit = geocode_place(place, region)
+        ev["coords"] = hit["coords"] if hit else None
+        ev["loc_precision"] = hit["precision"] if hit else None
+        if hit:
             placed += 1
     return placed

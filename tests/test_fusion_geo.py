@@ -123,6 +123,25 @@ class TestMarkerLocation:
         b = _marker_location({"article": {"url": "https://a.com/2", "title": "y"}}, (48, 31))
         assert a != b
 
+    def test_country_precision_jitters_around_country_coords(self):
+        ev = {"article": {"url": "u", "title": "t"},
+              "coords": [49.48, 31.27], "loc_precision": "country"}
+        loc = _marker_location(ev, (48.0, 31.0))
+        assert loc != (49.48, 31.27)                       # not the bare centroid
+        assert abs(loc[0] - 49.48) <= 0.45 and abs(loc[1] - 31.27) <= 0.45
+
+    def test_approx_marker_rendered_dashed(self, sample_events):
+        from visualizer import _map_iframe
+        import base64, re
+        ev = dict(sample_events[0])
+        ev["coords"] = [49.48, 31.27]
+        ev["loc_precision"] = "country"
+        html = _map_iframe([ev], "Ukraine")
+        inner = base64.b64decode(
+            re.search(r"base64,([A-Za-z0-9+/=]+)", html).group(1)).decode("utf-8")
+        assert "dashed" in inner
+        assert "data-approx" in inner
+
 
 class TestGeocoder:
 
@@ -142,18 +161,34 @@ class TestGeocoder:
     def test_bare_query_first(self):
         # bare name first: importance ranking resolves prominent places correctly
         with patch("geocoder.requests.get",
-                   return_value=self._resp([{"lat": "50.06", "lon": "19.94"}])) as g:
-            coords = geocoder.geocode_place("Krakow", "Ukraine")
-        assert coords == (50.06, 19.94)
+                   return_value=self._resp([{"lat": "50.06", "lon": "19.94",
+                                            "addresstype": "city"}])) as g:
+            hit = geocoder.geocode_place("Krakow", "Ukraine")
+        assert hit == {"coords": [50.06, 19.94], "precision": "point"}
         assert g.call_args_list[0].kwargs["params"]["q"] == "Krakow"
 
     def test_falls_back_to_region_hint(self):
         empty, hit = self._resp([]), self._resp([{"lat": "48.71", "lon": "37.53"}])
         with patch("geocoder.requests.get", side_effect=[empty, hit]) as g:
-            coords = geocoder.geocode_place("Mykolaivka", "Ukraine")
-        assert coords == (48.71, 37.53)
+            result = geocoder.geocode_place("Mykolaivka", "Ukraine")
+        assert result["coords"] == [48.71, 37.53]
         assert g.call_count == 2
         assert g.call_args_list[1].kwargs["params"]["q"] == "Mykolaivka, Ukraine"
+
+    def test_country_and_region_precision(self):
+        with patch("geocoder.requests.get",
+                   return_value=self._resp([{"lat": "49.48", "lon": "31.27",
+                                            "addresstype": "country"}])):
+            assert geocoder.geocode_place("Ukraine")["precision"] == "country"
+        with patch("geocoder.requests.get",
+                   return_value=self._resp([{"lat": "47.5", "lon": "34.6",
+                                            "addresstype": "state"}])):
+            assert geocoder.geocode_place("Zaporizhzhia oblast")["precision"] == "region"
+
+    def test_legacy_list_cache_entry_upgraded(self):
+        geocoder._load_cache()["kyiv|ukraine"] = [50.45, 30.52]
+        hit = geocoder.geocode_place("Kyiv", "Ukraine")
+        assert hit == {"coords": [50.45, 30.52], "precision": "point"}
 
     def test_cache_prevents_second_request(self):
         with patch("geocoder.requests.get",
@@ -175,19 +210,21 @@ class TestGeocoder:
         # a later attempt retries — the failure was not cached
         with patch("geocoder.requests.get",
                    return_value=self._resp([{"lat": "50.45", "lon": "30.52"}])) as g2:
-            assert geocoder.geocode_place("Kyiv", "Ukraine") == (50.45, 30.52)
+            assert geocoder.geocode_place("Kyiv", "Ukraine")["coords"] == [50.45, 30.52]
         assert g2.call_count == 1
 
-    def test_geocode_events_assigns_coords(self):
+    def test_geocode_events_assigns_coords_and_precision(self):
         events = [
             {"article": {"url": "u1"}, "analysis": {"location_mentioned": "Kharkiv"}},
             {"article": {"url": "u2"}, "analysis": {"location_mentioned": None}},
             {"article": {"url": "u3"}, "analysis": None},
         ]
         with patch("geocoder.requests.get",
-                   return_value=self._resp([{"lat": "49.99", "lon": "36.23"}])):
+                   return_value=self._resp([{"lat": "49.99", "lon": "36.23",
+                                            "addresstype": "city"}])):
             placed = geocoder.geocode_events(events, "Ukraine")
         assert placed == 1
         assert events[0]["coords"] == [49.99, 36.23]
+        assert events[0]["loc_precision"] == "point"
         assert events[1]["coords"] is None
         assert "coords" not in events[2]

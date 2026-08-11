@@ -47,7 +47,9 @@ _LEGEND_HTML = """
   <span style="color:#dc2626;">&#9679;</span>&nbsp; Critical<br>
   <span style="color:#ea7317;">&#9679;</span>&nbsp; High<br>
   <span style="color:#d4a72c;">&#9679;</span>&nbsp; Medium<br>
-  <span style="color:#1a7f37;">&#9679;</span>&nbsp; Low
+  <span style="color:#1a7f37;">&#9679;</span>&nbsp; Low<br>
+  <span style="display:inline-block;width:9px;height:9px;border-radius:50%;
+    border:2px dashed #98a1ab;vertical-align:middle;"></span>&nbsp; Approximate location
 </div>
 """
 
