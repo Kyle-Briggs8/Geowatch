@@ -85,7 +85,10 @@ class TestCorrelationUI:
     def test_badge_dropdown_and_early_pill_render(self, sample_events):
         events = [_news_event("u1", "2026-08-05", ["Taneco Refinery"])]
         x = [_x_event("p1", "2026-08-04", "fire at the taneco refinery confirmed")]
+        x[0]["post"]["media"] = [
+            {"type": "video", "thumb": "https://pbs.twimg.com/amplify_video_thumb/9/img/z.jpg"}]
         html = build_dashboard(events, "Ukraine", 30, x_events=x, x_status="ok")
+        assert "cp-thumb" in html and "cp-play" in html   # media thumb in dropdown
         assert "corr-badge" in html
         assert 'data-target="corr-0"' in html          # badge toggles the panel
         assert 'id="corr-0"' in html                   # inline dropdown panel

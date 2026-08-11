@@ -133,10 +133,30 @@ def _corr_panel_html(panel_id: str, wk: str, match: dict,
         grade  = grade_post(e)
         early  = ('<span class="early-pill">&#9888; EARLY</span> '
                   if pid in early_ids else "")
+
+        thumb_html = '<span class="cp-thumb"></span>'
+        media = p.get("media") or []
+        if media:
+            first = media[0]
+            thumb = _html.escape(first["thumb"])
+            if "/media/" in thumb and "?" not in thumb:
+                thumb += "?name=thumb"
+            play = ('<span class="cp-play">&#9654;</span>'
+                    if first["type"] == "video" else "")
+            more = (f'<span class="cp-more">+{len(media) - 1}</span>'
+                    if len(media) > 1 else "")
+            thumb_html = (
+                f'<span class="cp-thumb">'
+                f'<img src="{thumb}" alt="" loading="lazy" referrerpolicy="no-referrer" '
+                f'onerror="this.parentNode.style.display=\'none\'">'
+                f'{play}{more}</span>'
+            )
+
         post_rows += f"""
         <a class="corr-post" href="{purl}" target="_blank" rel="noopener">
           <span class="cp-date">{date_s}</span>
           <span class="cp-text">{text}</span>
+          {thumb_html}
           <span class="cp-meta">{early}{author} &middot; &#9829; {_fmt_count(p.get('likes', 0))} <span class="grade">{grade}</span></span>
         </a>"""
 
@@ -985,13 +1005,21 @@ _SHARED_CSS = """
     .corr-panel-head { font-size: 10.5px; font-weight: 700; color: #16365c;
       padding: 6px 0 4px; display: flex; justify-content: space-between; gap: 12px; }
     .corr-panel-head a { cursor: pointer; font-weight: 600; white-space: nowrap; }
-    .corr-post { display: grid; grid-template-columns: 52px 1fr auto; gap: 0 12px;
-      align-items: baseline; padding: 6px 0; border-top: 1px solid #edf0f4; color: inherit; }
+    .corr-post { display: grid; grid-template-columns: 52px 1fr auto auto; gap: 0 12px;
+      align-items: center; padding: 6px 0; border-top: 1px solid #edf0f4; color: inherit; }
     .corr-post:hover .cp-text { color: #2563eb; }
     .cp-date { font-size: 10.5px; color: #98a1ab; font-weight: 600; white-space: nowrap; }
     .cp-text { font-size: 12px; color: #55606c; line-height: 1.4; }
     .cp-meta { font-size: 10.5px; color: #98a1ab; white-space: nowrap;
       display: flex; gap: 6px; align-items: baseline; }
+    .cp-thumb { position: relative; display: inline-block; }
+    .cp-thumb img { display: block; height: 44px; max-width: 78px; object-fit: cover;
+      border-radius: 5px; border: 1px solid #e7e5e0; }
+    .cp-play { position: absolute; inset: 0; display: flex; align-items: center;
+      justify-content: center; color: #fff; font-size: 13px; border-radius: 5px;
+      background: rgba(0,0,0,0.28); text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
+    .cp-more { position: absolute; right: 2px; bottom: 2px; background: rgba(0,0,0,0.65);
+      color: #fff; font-size: 9px; font-weight: 600; border-radius: 999px; padding: 0 5px; }
 """
 
 _DASH_TMPL = """\
