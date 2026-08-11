@@ -12,7 +12,7 @@ _SYSTEM_PROMPT = """You are an intelligence analyst. Given a news article, extra
 No preamble, no markdown, just raw JSON.
 
 {
-  "relevant": "true/false — is the article primarily about events in, or directly concerning, the stated location of interest? News round-ups where the location is only one brief item among unrelated stories, and articles that merely name-drop the location, are false. If no location of interest is stated, always true.",
+  "relevant": "true/false — is the article primarily about security, political, conflict, economic, or disaster events in or directly concerning the stated location of interest? FALSE for: news round-ups where the location is one brief item among unrelated stories; sports fixtures and results; ceremonies and honors; culture or lifestyle pieces; other countries' domestic politics that merely mention the location; opinion columns that use the location as a rhetorical talking point. If no location of interest is stated, always true.",
   "event_type": "one of: conflict, political, natural_disaster, economic, protest, terrorism, other",
   "entities": ["list of key people or organizations mentioned"],
   "severity": "one of: low, medium, high, critical",
@@ -101,7 +101,10 @@ def analyze_posts(posts: list[dict], location: str) -> list[dict | None]:
                     continue
                 if not 0 <= idx < len(chunk):
                     continue
-                if obj.get("relevant") is False:
+                rel = obj.get("relevant")
+                if isinstance(rel, str):
+                    rel = rel.strip().lower() not in ("false", "no")
+                if rel is False:
                     results[start + idx] = None
                 else:
                     results[start + idx] = {
@@ -165,5 +168,11 @@ def analyze_article(article: dict, location: str | None = None) -> dict | None:
         return None
     finally:
         time.sleep(0.1)
+
+    # Models sometimes emit booleans as strings — normalize so the pipeline's
+    # `relevant is False` check actually fires
+    rel = result.get("relevant") if isinstance(result, dict) else None
+    if isinstance(rel, str):
+        result["relevant"] = rel.strip().lower() not in ("false", "no")
 
     return result

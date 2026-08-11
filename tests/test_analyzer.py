@@ -140,6 +140,24 @@ class TestAnalyzeArticle:
             assert result is not None
             assert result["severity"] == sev
 
+    def test_string_relevant_coerced_to_bool(self):
+        """A 'relevant' value emitted as a string is normalized to a real boolean."""
+        for raw_val, expected in [("false", False), ("true", True), ("no", False)]:
+            payload = json.dumps({
+                "relevant": raw_val,
+                "event_type": "other",
+                "entities": [],
+                "severity": "low",
+                "location_mentioned": None,
+                "one_line_summary": "s",
+            })
+            mock_client = _make_groq_mock(payload)
+            with patch("analyzer.Groq", return_value=mock_client), \
+                 patch.dict(os.environ, {"GROQ_API_KEY": "test-groq-key"}):
+                import analyzer
+                result = analyzer.analyze_article(self._sample_article(), "Ukraine")
+            assert result["relevant"] is expected
+
     def test_returns_none_on_empty_json_object(self):
         """analyze_article() still returns a dict even for an empty JSON object ({})."""
         mock_client = _make_groq_mock("{}")

@@ -61,6 +61,18 @@ class TestAnalyzePosts:
         assert all(r == {"event_type": "other", "severity": "low", "credibility": 6}
                    for r in results)
 
+    def test_string_false_relevance_is_coerced(self):
+        content = json.dumps([
+            {"index": 0, "relevant": "false", "event_type": "other",
+             "severity": "low", "credibility": 6},
+            {"index": 1, "relevant": "true", "event_type": "conflict",
+             "severity": "high", "credibility": 2},
+        ])
+        with patch("analyzer._get_client", return_value=_mock_client(content)):
+            results = analyzer.analyze_posts(_posts(2), "Ukraine")
+        assert results[0] is None          # string "false" must screen out
+        assert results[1] is not None
+
     def test_out_of_range_index_ignored(self):
         content = json.dumps([
             {"index": 0, "relevant": True, "event_type": "conflict",

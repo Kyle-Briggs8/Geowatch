@@ -1,7 +1,7 @@
 {
  "location": "Ukraine",
  "days": 30,
- "captured_at": "2026-08-11 16:01 UTC",
+ "captured_at": "2026-08-11 16:11 UTC",
  "events": [
   {
    "article": {
@@ -21,12 +21,66 @@
     ],
     "severity": "high",
     "location_mentioned": "Ukraine",
-    "one_line_summary": "Ukraine and its allies are forming a coalition to counter Russia's increased ballistic missile attacks",
+    "one_line_summary": "Ukraine and its allies are forming a coalition to counter Russia's escalated ballistic missile attacks",
     "credibility": 2
    },
    "coords": [
     50.4500336,
     30.5241361
+   ],
+   "loc_precision": "country"
+  },
+  {
+   "article": {
+    "title": "Starmer becomes first UK PM to receive top French honour",
+    "date": "2026-07-14",
+    "source": "BBC News",
+    "url": "https://www.bbc.co.uk/news/articles/c33y3rxezxdo",
+    "description": "France's President Emmanuel Macron praised Starmer's \"decency\" and contribution to Ukraine and the security of Europe.",
+    "image_url": "https://ichef.bbci.co.uk/ace/branded_news/1200/cpsprodpb/97df/live/7d859a10-7fb2-11f1-9c5f-190f51e64b46.jpg"
+   },
+   "analysis": {
+    "relevant": "false",
+    "event_type": "other",
+    "entities": [
+     "Emmanuel Macron",
+     "Starmer"
+    ],
+    "severity": "low",
+    "location_mentioned": "France",
+    "one_line_summary": "French President Emmanuel Macron awards a top honour to UK PM Starmer, praising his decency and contribution to Ukraine and European security",
+    "credibility": "2"
+   },
+   "coords": [
+    48.8534951,
+    2.3483915
+   ],
+   "loc_precision": "country"
+  },
+  {
+   "article": {
+    "title": "Germany: Chancellor Merz makes appeal to AfD voters",
+    "date": "2026-07-15",
+    "source": "DW (English)",
+    "url": "https://www.dw.com/en/germany-chancellor-merz-makes-appeal-to-afd-voters/a-77973735",
+    "description": "Chancellor Friedrich Merz insists that his coalition has \"regained its footing\" — despite dismal poll numbers. The chancellor also cautioned against voting for a party that is in part right-wing extremist. The annual summer press conference with the chancello…",
+    "image_url": "https://static.dw.com/image/77971456_6.jpg"
+   },
+   "analysis": {
+    "relevant": "false",
+    "event_type": "other",
+    "entities": [
+     "Friedrich Merz",
+     "AfD"
+    ],
+    "severity": "low",
+    "location_mentioned": "Germany",
+    "one_line_summary": "German Chancellor Friedrich Merz attempts to appeal to AfD voters amidst poor poll numbers for his coalition",
+    "credibility": "2"
+   },
+   "coords": [
+    52.5173885,
+    13.3951309
    ],
    "loc_precision": "country"
   },
@@ -41,14 +95,14 @@
    },
    "analysis": {
     "relevant": "false",
-    "event_type": "political",
+    "event_type": "other",
     "entities": [
      "Burnham",
-     "Labour"
+     "UK Labour"
     ],
     "severity": "low",
     "location_mentioned": "UK",
-    "one_line_summary": "Burnham is set to become the new Labour leader and will outline his vision for government in a speech",
+    "one_line_summary": "Burnham to outline his vision for government as he prepares to become the new Labour leader",
     "credibility": "2"
    },
    "coords": [
@@ -93,15 +147,15 @@
     "image_url": "https://ichef.bbci.co.uk/ace/branded_news/1200/cpsprodpb/c416/live/685838d0-81b2-11f1-bc34-d11e2a8fe857.jpg"
    },
    "analysis": {
-    "relevant": "false",
+    "relevant": true,
     "event_type": "economic",
     "entities": [
      "Russians"
     ],
     "severity": "medium",
     "location_mentioned": "Russia",
-    "one_line_summary": "Russians face economic strain and mobile internet shutdowns amid ongoing war with Ukraine",
-    "credibility": "2"
+    "one_line_summary": "Russians are turning to cash and businesses are seeking to dodge tax due to wartime economic strain after over four years of conflict with Ukraine.",
+    "credibility": 2
    },
    "coords": [
     55.625578,
@@ -127,7 +181,7 @@
      "DW",
      "Astra"
     ],
-    "severity": "medium",
+    "severity": "low",
     "location_mentioned": "Germany",
     "one_line_summary": "Russian army deserters in Germany are having their asylum applications denied, fearing they will be sent back to fight on the front lines",
     "credibility": "2"
@@ -137,6 +191,34 @@
     13.3951309
    ],
    "loc_precision": "country"
+  },
+  {
+   "article": {
+    "title": "Northern Ireland to play Ukraine in Slovakia",
+    "date": "2026-07-20",
+    "source": "BBC News",
+    "url": "https://www.bbc.com/sport/football/articles/c4g37gp2z0yo?xtor=AL-72-%5Bpartner%5D-%5Byahoo.north.america%5D-%5Bheadline%5D-%5Bsport%5D-%5Bbizdev%5D-%5Bisapi%5D",
+    "description": "Northern Ireland will play their away Nations League fixture against Ukraine at Stadion Antona Malatinskeho in Trnava, Slovakia, on Friday 2 October, the Irish Football Association confirm.",
+    "image_url": "https://s.yimg.com/os/en/bbc_us_articles_995/f5afa976ccfbe777c6ceaef6791b9539"
+   },
+   "analysis": {
+    "relevant": "false",
+    "event_type": "other",
+    "entities": [
+     "Northern Ireland",
+     "Ukraine",
+     "Irish Football Association"
+    ],
+    "severity": "low",
+    "location_mentioned": "Stadion Antona Malatinskeho, Trnava, Slovakia",
+    "one_line_summary": "Northern Ireland will play Ukraine in a Nations League fixture in Slovakia on October 2",
+    "credibility": "2"
+   },
+   "coords": [
+    48.3736471,
+    17.5917263
+   ],
+   "loc_precision": "point"
   },
   {
    "article": {
@@ -185,7 +267,7 @@
     ],
     "severity": "medium",
     "location_mentioned": "Russia",
-    "one_line_summary": "Ukrainian drones have attacked several Wildberries retail warehouses in Russia",
+    "one_line_summary": "Ukrainian drones have attacked several Russian retail warehouses belonging to Wildberries",
     "credibility": 2
    },
    "coords": [
@@ -244,7 +326,7 @@
     ],
     "severity": "high",
     "location_mentioned": "Kyiv",
-    "one_line_summary": "Russia struck a drone demonstration near Kyiv, killing 10 and injuring around 100 people",
+    "one_line_summary": "Russia struck a drone demonstration near Kyiv, killing 10 people and injuring around 100, a day after Ukrainian President Zelenskyy met with US arms officials",
     "credibility": 2
    },
    "coords": [
@@ -272,7 +354,7 @@
     ],
     "severity": "medium",
     "location_mentioned": "Ukraine",
-    "one_line_summary": "Ukraine's drone strikes on Wildberries warehouses have affected Russian sellers and consumers",
+    "one_line_summary": "Ukraine's drone strikes on Wildberries warehouses have negatively impacted Russian sellers and consumers",
     "credibility": 2
    },
    "coords": [
@@ -300,7 +382,7 @@
     ],
     "severity": "low",
     "location_mentioned": "Ukraine",
-    "one_line_summary": "The Ukrainian president will visit, with the PM pledging continued support for Ukraine",
+    "one_line_summary": "The Ukrainian president will visit, marking Andy Burnham's first international visitor since taking office",
     "credibility": "2"
    },
    "coords": [
@@ -321,14 +403,11 @@
    "analysis": {
     "relevant": "false",
     "event_type": "other",
-    "entities": [
-     "Ukraine",
-     "Israel"
-    ],
+    "entities": [],
     "severity": "low",
     "location_mentioned": "Ukraine",
-    "one_line_summary": "The article explores the differing levels of global support for Ukraine and Israel through various analytical lenses",
-    "credibility": "3"
+    "one_line_summary": "The article explores why the world supports Ukraine but not Israel through a comparative analysis of the two countries' situations",
+    "credibility": "6"
    },
    "coords": [
     50.4500336,
@@ -353,9 +432,9 @@
      "Ukraine",
      "Russia"
     ],
-    "severity": "low",
+    "severity": "medium",
     "location_mentioned": "Kyiv",
-    "one_line_summary": "Ukraine's top negotiator Sergiy Kyslytsya believes Ukraine has the upper hand to force Russia into serious negotiations",
+    "one_line_summary": "Ukraine's top negotiator Sergiy Kyslytsya believes Ukraine has the upper hand in negotiations with Russia",
     "credibility": 2
    },
    "coords": [
@@ -382,7 +461,7 @@
     ],
     "severity": "high",
     "location_mentioned": "Ukraine",
-    "one_line_summary": "At least eight people have been killed in air strikes across Ukraine after President Volodymyr Zelenskyy warned of a massive Russian attack",
+    "one_line_summary": "At least eight people have been killed in air strikes across Ukraine after President Zelenskyy warned of a massive Russian attack",
     "credibility": 2
    },
    "coords": [
@@ -401,7 +480,7 @@
     "image_url": "https://static.dw.com/image/71157443_6.jpg"
    },
    "analysis": {
-    "relevant": "true",
+    "relevant": true,
     "event_type": "conflict",
     "entities": [
      "Ukraine",
@@ -410,8 +489,8 @@
     ],
     "severity": "medium",
     "location_mentioned": "Caspian Sea",
-    "one_line_summary": "Ukraine has struck an Iranian cargo ship in the Caspian Sea, allegedly carrying weapons to Russia, prompting a threat of response from Tehran",
-    "credibility": "2"
+    "one_line_summary": "Ukraine has struck an Iranian cargo ship in the Caspian Sea, allegedly carrying weapons to Russia, prompting threats of a response from Tehran",
+    "credibility": 2
    },
    "coords": [
     41.7789772,
@@ -436,9 +515,9 @@
      "Ukraine",
      "US"
     ],
-    "severity": "low",
+    "severity": "medium",
     "location_mentioned": "Ukraine",
-    "one_line_summary": "US President Trump expressed uncertainty about allowing Ukraine to build Patriot missiles, weeks after initially offering the opportunity",
+    "one_line_summary": "US President Trump expressed uncertainty about allowing Ukraine to build Patriot missiles, contradicting his previous offer to Kyiv",
     "credibility": 2
    },
    "coords": [
@@ -487,7 +566,7 @@
      "Russia",
      "Moscow"
     ],
-    "severity": "high",
+    "severity": "medium",
     "location_mentioned": "Russia",
     "one_line_summary": "Ukrainian drone strikes inside Russia killed eight people, targeting military and civilian infrastructure",
     "credibility": 2
@@ -597,13 +676,13 @@
      "Russia"
     ],
     "severity": "high",
-    "location_mentioned": "Russia",
+    "location_mentioned": "Ukraine",
     "one_line_summary": "Ukraine has launched strikes targeting key economic and military supply chains in Russia",
     "credibility": 2
    },
    "coords": [
-    55.625578,
-    37.6063916
+    50.4500336,
+    30.5241361
    ],
    "loc_precision": "country"
   },
@@ -626,7 +705,7 @@
     ],
     "severity": "low",
     "location_mentioned": "Lithuania",
-    "one_line_summary": "Lithuania's border guards discovered tunnels used by migrants to enter from Belarus, sparking concerns of destabilization efforts",
+    "one_line_summary": "Lithuania's border guards have discovered tunnels used by migrants to enter the country from Belarus, sparking concerns of destabilization efforts",
     "credibility": "2"
    },
    "coords": [
@@ -682,7 +761,7 @@
     ],
     "severity": "medium",
     "location_mentioned": "Kyiv",
-    "one_line_summary": "Ukraine and Russia exchanged overnight drone and missile attacks, resulting in casualties, as Ukraine finalizes a deal to buy US missile systems from Turkey",
+    "one_line_summary": "Ukraine and Russia exchange overnight drone and missile attacks, resulting in casualties, as Kyiv finalizes a deal to buy US missile systems from Turkey",
     "credibility": 2
    },
    "coords": [
@@ -729,7 +808,7 @@
     "image_url": "https://mf.b37mrtl.ru/files/2026.07/article/6a55053985f5406ce76e752a.png"
    },
    "analysis": {
-    "relevant": "true",
+    "relevant": true,
     "event_type": "political",
     "entities": [
      "Marianna Schreiber",
@@ -738,7 +817,7 @@
     "severity": "low",
     "location_mentioned": "Krakow",
     "one_line_summary": "A Polish politician, Marianna Schreiber, threw a portrait of Ukrainian leader Vladimir Zelensky into the trash, accusing him of glorifying Nazi collaborators",
-    "credibility": "2"
+    "credibility": 2
    },
    "coords": [
     50.0469432,
