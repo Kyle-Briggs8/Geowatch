@@ -315,32 +315,6 @@
   },
   {
    "article": {
-    "title": "News Wrap: Death toll from Japan earthquake rises to 34",
-    "date": "2026-07-31",
-    "source": "Biztoc.com",
-    "url": "https://biztoc.com/x/a716a1a9e0596111",
-    "description": "In our news wrap Friday, this week's powerful earthquake in Japan has claimed at least 34 lives, a sweltering heat dome descended over much of the West, a Marine Corps fighter jet crashed at Miramar Air Station in California and President Trump says the U.S. …",
-    "image_url": "https://biztoc.com/cdn/a716a1a9e0596111_s.webp"
-   },
-   "analysis": {
-    "event_type": "natural_disaster",
-    "entities": [
-     "Japan",
-     "President Trump",
-     "Marine Corps"
-    ],
-    "severity": "medium",
-    "location_mentioned": "Japan",
-    "one_line_summary": "A powerful earthquake in Japan has claimed at least 34 lives",
-    "credibility": "2"
-   },
-   "coords": [
-    36.5748441,
-    139.2394179
-   ]
-  },
-  {
-   "article": {
     "title": "Russia destroys 1.5M Ukrainian books in drone strike targeting culture",
     "date": "2026-08-01",
     "source": "Crypto Briefing",
@@ -362,31 +336,6 @@
    "coords": [
     49.4871968,
     31.2718321
-   ]
-  },
-  {
-   "article": {
-    "title": "News Wrap: Michigan reports 2 deaths related to cyclosporiasis outbreak",
-    "date": "2026-08-03",
-    "source": "PBS",
-    "url": "https://www.pbs.org/newshour/show/news-wrap-michigan-reports-2-deaths-related-to-cyclosporiasis-outbreak",
-    "description": "In our news wrap Monday, health officials in Michigan reported the first deaths in the U.S. related to a cyclosporiasis outbreak, more than two dozen states are suing the Trump administration over its latest tariffs and officials in southern Ukraine say Russi…",
-    "image_url": "https://d3i6fh83elv35t.cloudfront.net/static/2026/08/newswrapaugust3-1024x683.jpg"
-   },
-   "analysis": {
-    "event_type": "natural_disaster",
-    "entities": [
-     "Michigan",
-     "Trump administration"
-    ],
-    "severity": "medium",
-    "location_mentioned": "Michigan",
-    "one_line_summary": "Michigan reports 2 deaths related to a cyclosporiasis outbreak",
-    "credibility": "2"
-   },
-   "coords": [
-    43.6211955,
-    -84.6824346
    ]
   },
   {

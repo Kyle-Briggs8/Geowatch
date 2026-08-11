@@ -12,6 +12,7 @@ _SYSTEM_PROMPT = """You are an intelligence analyst. Given a news article, extra
 No preamble, no markdown, just raw JSON.
 
 {
+  "relevant": "true/false — is the article primarily about events in, or directly concerning, the stated location of interest? News round-ups where the location is only one brief item among unrelated stories, and articles that merely name-drop the location, are false. If no location of interest is stated, always true.",
   "event_type": "one of: conflict, political, natural_disaster, economic, protest, terrorism, other",
   "entities": ["list of key people or organizations mentioned"],
   "severity": "one of: low, medium, high, critical",
@@ -131,14 +132,19 @@ def _get_client() -> Groq:
     return Groq(api_key=api_key)
 
 
-def analyze_article(article: dict) -> dict | None:
+def analyze_article(article: dict, location: str | None = None) -> dict | None:
     """Send a news article to Groq and return structured intelligence as a dict.
 
-    Returns None if the API call fails or the response cannot be parsed as JSON.
+    When a location is given, the analysis includes a relevance judgment so the
+    pipeline can drop round-ups and name-drop articles that slipped past the
+    keyword filter. Returns None if the API call fails or the response cannot
+    be parsed as JSON.
     """
     client = _get_client()
 
-    user_content = f"Title: {article.get('title', '')}\n\nDescription: {article.get('description', '')}"
+    loc_line = f"Location of interest: {location}\n\n" if location else ""
+    user_content = (f"{loc_line}Title: {article.get('title', '')}\n\n"
+                    f"Description: {article.get('description', '')}")
 
     try:
         response = client.chat.completions.create(

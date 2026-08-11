@@ -204,7 +204,10 @@ def _run_single(args: argparse.Namespace) -> None:
     events: list[dict] = []
     for i, art in enumerate(articles, 1):
         print(f"  Analyzing article {i}/{len(articles)}: {art['title'][:60]}...")
-        analysis = analyze_article(art)
+        analysis = analyze_article(art, args.location)
+        if analysis and analysis.get("relevant") is False:
+            print(f"    └─ [SKIP] Not primarily about {args.location} — dropped")
+            continue
         events.append({"article": art, "analysis": analysis})
         if analysis:
             sev     = analysis.get("severity", "?").upper()
@@ -286,8 +289,10 @@ def _run_compare(args: argparse.Namespace) -> None:
             articles = _subsample(raw, max_articles)
             print(f"[{location}] Analyzing {len(articles)} articles...")
             evts = [
-                {"article": art, "analysis": analyze_article(art)}
+                {"article": art, "analysis": a}
                 for art in articles
+                if not ((a := analyze_article(art, location))
+                        and a.get("relevant") is False)
             ]
             geocode_events(evts, location)
             return location, evts

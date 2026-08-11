@@ -441,7 +441,11 @@ def _do_analyze(location: str, days: int, max_articles: int, demo: bool = False,
 
     raw      = get_news(location, days)
     articles = _subsample(raw, max_articles)
-    events   = [{"article": art, "analysis": analyze_article(art)} for art in articles]
+    events   = [
+        {"article": art, "analysis": a}
+        for art in articles
+        if not ((a := analyze_article(art, location)) and a.get("relevant") is False)
+    ]
     geocode_events(events, location)
 
     x_events = None
@@ -464,8 +468,11 @@ def _do_compare(loc_a: str, loc_b: str, days: int, max_articles: int) -> str:
     """Fetch, analyze, and render a two-location comparison dashboard. Returns HTML string."""
     def _pipeline(loc: str) -> list:
         raw = get_news(loc, days)
-        evts = [{"article": art, "analysis": analyze_article(art)}
-                for art in _subsample(raw, max_articles)]
+        evts = [
+            {"article": art, "analysis": a}
+            for art in _subsample(raw, max_articles)
+            if not ((a := analyze_article(art, loc)) and a.get("relevant") is False)
+        ]
         geocode_events(evts, loc)
         return evts
 
