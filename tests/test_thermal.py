@@ -143,8 +143,9 @@ class TestDashboardThermal:
         import re, base64
         inner = base64.b64decode(
             re.search(r"base64,([A-Za-z0-9+/=]+)", html).group(1)).decode()
-        assert "Thermal anomalies (VIIRS)" in inner
-        assert "VIIRS thermal detections" in inner  # count note
+        assert "Thermal" in inner and "major fires" in inner   # signal layer
+        assert "all detections" in inner                        # background layer
+        assert "significant thermal detections" in inner        # count note
 
     FIRES = TestCorrelateFires.FIRES
 

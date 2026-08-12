@@ -672,9 +672,11 @@ def _is_approx(ev: dict) -> bool:
     return ev.get("loc_precision") == "country"
 
 
-def _fire_layer(fires: list[dict]) -> "folium.FeatureGroup":
-    """Toggleable overlay of VIIRS thermal detections, styled by radiative power."""
-    group = folium.FeatureGroup(name="Thermal anomalies (VIIRS)", show=True)
+_SIGNIFICANT_FRP = 50.0   # MW — major fires (fuel/industrial-scale) shown by default
+_EVENT_NEAR_KM = 25.0     # detections this close to an event count as signal
+
+
+def _add_fire_markers(fires: list[dict], group: "folium.FeatureGroup") -> None:
     for f in fires:
         frp = f.get("frp") or 0
         radius = 2.5 + min(6.0, frp / 40.0)
@@ -692,7 +694,24 @@ def _fire_layer(fires: list[dict]) -> "folium.FeatureGroup":
             opacity=opacity,
             tooltip=tip,
         ).add_to(group)
-    return group
+
+
+def _split_fires(fires: list[dict], events: list[dict]) -> tuple[list[dict], list[dict]]:
+    """Split detections into signal (near an event, or major-fire FRP) and
+    background. A country full of mid-size agricultural burns is visual noise —
+    the default view shows only what carries analytic meaning."""
+    from fusion import _haversine_km
+    pts = [e["coords"] for e in events
+           if e.get("coords") and len(e["coords"]) == 2]
+    signal, background = [], []
+    for f in fires:
+        near = any(_haversine_km(f["lat"], f["lon"], p[0], p[1]) <= _EVENT_NEAR_KM
+                   for p in pts)
+        if near or (f.get("frp") or 0) >= _SIGNIFICANT_FRP:
+            signal.append(f)
+        else:
+            background.append(f)
+    return signal, background
 
 
 def _map_iframe(events: list[dict], location: str,
@@ -702,8 +721,18 @@ def _map_iframe(events: list[dict], location: str,
     zoom   = 6 if location in REGION_COORDS else 2
 
     m = folium.Map(location=center, zoom_start=zoom, tiles="CartoDB positron")
+    n_signal = 0
     if fires:
-        _fire_layer(fires).add_to(m)
+        signal, background = _split_fires(fires, events)
+        n_signal = len(signal)
+        sig_group = folium.FeatureGroup(
+            name=f"Thermal — event-linked &amp; major fires ({len(signal)})", show=True)
+        _add_fire_markers(signal, sig_group)
+        sig_group.add_to(m)
+        bg_group = folium.FeatureGroup(
+            name=f"Thermal — all detections ({len(fires)})", show=False)
+        _add_fire_markers(background, bg_group)
+        bg_group.add_to(m)
     cluster = MarkerCluster(name="News events").add_to(m)
 
     for ev in events:
@@ -753,14 +782,15 @@ def _map_iframe(events: list[dict], location: str,
         ).add_to(cluster)
 
     if fires:
-        folium.LayerControl(collapsed=True).add_to(m)
+        folium.LayerControl(collapsed=False).add_to(m)
         m.get_root().html.add_child(Element(
             '<div style="position:fixed;bottom:24px;right:24px;z-index:1000;'
             'background:rgba(255,255,255,0.94);border:1px solid #e7e5e0;border-radius:8px;'
             'padding:8px 13px;font-family:\'Segoe UI\',system-ui,sans-serif;font-size:11.5px;'
             'color:#55606c;box-shadow:0 2px 8px rgba(28,32,36,0.1);">'
             '<span style="color:#ff6b35;">&#9679;</span> '
-            f'{len(fires)} VIIRS thermal detections &middot; size = radiative power</div>'
+            f'{n_signal} significant thermal detections shown '
+            f'(event-linked or &ge;50 MW) &middot; {len(fires)} total in layers</div>'
         ))
 
     m.get_root().html.add_child(Element(_LEGEND_HTML))
