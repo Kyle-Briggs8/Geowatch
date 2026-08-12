@@ -677,21 +677,22 @@ _EVENT_NEAR_KM = 25.0     # detections this close to an event count as signal
 
 
 def _add_fire_markers(fires: list[dict], group: "folium.FeatureGroup") -> None:
+    # White halo ring + hot fill reads clearly on the light basemap, satellite
+    # imagery, and the night-lights layer alike, at any zoom
     for f in fires:
         frp = f.get("frp") or 0
-        radius = 2.5 + min(6.0, frp / 40.0)
-        opacity = 0.75 if f.get("confidence") == "high" else 0.45
+        high = f.get("confidence") == "high"
         tip = (f"{f.get('date', '?')} · FRP {frp:.0f} MW · "
                f"{f.get('confidence', '?')} confidence · VIIRS")
         folium.CircleMarker(
             location=(f["lat"], f["lon"]),
-            radius=radius,
-            color="#c2410c",
-            weight=1,
+            radius=4.5 + min(9.0, frp / 25.0),
+            color="#ffffff",
+            weight=2,
             fill=True,
-            fill_color="#ff6b35",
-            fill_opacity=opacity,
-            opacity=opacity,
+            fill_color="#ff4d00" if high else "#ff8347",
+            fill_opacity=0.95 if high else 0.75,
+            opacity=0.9,
             tooltip=tip,
         ).add_to(group)
 
