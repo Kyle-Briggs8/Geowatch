@@ -724,6 +724,27 @@ def _map_iframe(events: list[dict], location: str,
     # control=False keeps the base map's internal name (cartodbpositron)
     # out of the layer-control UI
     folium.TileLayer("CartoDB positron", name="Base map", control=False).add_to(m)
+
+    # NASA GIBS satellite overlays (keyless public WMTS). True color lags ~1
+    # day; the nighttime band needs ~2 days for complete swath coverage —
+    # wartime grid blackouts are visible in it directly.
+    img_date   = (datetime.utcnow() - timedelta(days=1)).strftime("%Y-%m-%d")
+    night_date = (datetime.utcnow() - timedelta(days=2)).strftime("%Y-%m-%d")
+    folium.TileLayer(
+        tiles=("https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/"
+               f"VIIRS_SNPP_CorrectedReflectance_TrueColor/default/{img_date}/"
+               "GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg"),
+        attr="NASA EOSDIS GIBS", name=f"Satellite imagery ({img_date})",
+        overlay=True, show=False, max_native_zoom=9, max_zoom=18,
+    ).add_to(m)
+    folium.TileLayer(
+        tiles=("https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/"
+               f"VIIRS_SNPP_DayNightBand_At_Sensor_Radiance/default/{night_date}/"
+               "GoogleMapsCompatible_Level8/{z}/{y}/{x}.png"),
+        attr="NASA EOSDIS GIBS", name=f"Night lights ({night_date})",
+        overlay=True, show=False, max_native_zoom=8, max_zoom=18,
+    ).add_to(m)
+
     n_signal = 0
     if fires:
         signal, background = _split_fires(fires, events)
@@ -784,8 +805,8 @@ def _map_iframe(events: list[dict], location: str,
             tooltip=analysis.get("one_line_summary", article.get("title", "")),
         ).add_to(cluster)
 
+    folium.LayerControl(collapsed=False).add_to(m)
     if fires:
-        folium.LayerControl(collapsed=False).add_to(m)
         m.get_root().html.add_child(Element(
             '<div style="position:fixed;bottom:24px;right:24px;z-index:1000;'
             'background:rgba(255,255,255,0.94);border:1px solid #e7e5e0;border-radius:8px;'

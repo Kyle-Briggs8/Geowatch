@@ -146,6 +146,8 @@ class TestDashboardThermal:
         assert "Thermal" in inner and "major fires" in inner   # signal layer
         assert "all detections" in inner                        # background layer
         assert "significant thermal detections" in inner        # count note
+        assert "gibs.earthdata.nasa.gov" in inner               # satellite overlays
+        assert "Night lights" in inner
 
     FIRES = TestCorrelateFires.FIRES
 
