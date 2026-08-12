@@ -10,8 +10,9 @@ from flask import Flask, Response, jsonify, render_template_string, request
 from analyzer import analyze_article, analyze_posts
 from demo import load_demo_events
 from fetcher import get_news, rank_articles
-from geocoder import geocode_events
+from geocoder import geocode_events, get_bbox
 from mapper import REGION_COORDS
+from thermal import get_fires, has_firms_key
 from visualizer import build_dashboard, build_comparison_dashboard
 from xfetcher import get_x_posts, has_x_token
 
@@ -419,7 +420,8 @@ def _do_analyze(location: str, days: int, max_articles: int, demo: bool = False,
         x_events = payload.get("x_events") if include_x else None
         x_status = "ok" if x_events is not None else ("error" if include_x else None)
         return build_dashboard(payload["events"], location, payload.get("days", days),
-                               x_events=x_events, x_status=x_status)
+                               x_events=x_events, x_status=x_status,
+                               fires=payload.get("fires"))
 
     x_fut = None
     x_executor = None
@@ -444,6 +446,14 @@ def _do_analyze(location: str, days: int, max_articles: int, demo: bool = False,
     events.sort(key=lambda e: e["article"].get("date") or "")
     geocode_events(events, location)
 
+    fires = None
+    if has_firms_key():
+        bbox = get_bbox(location)
+        if bbox:
+            focus = [e["coords"] for e in events
+                     if e.get("coords") and e.get("loc_precision") in ("point", "region")]
+            fires = get_fires(bbox, days, focus_points=focus) or None
+
     x_events = None
     if x_fut is not None:
         posts, _ = x_fut.result()
@@ -457,7 +467,7 @@ def _do_analyze(location: str, days: int, max_articles: int, demo: bool = False,
             x_status = "error"
 
     return build_dashboard(events, location, days,
-                           x_events=x_events, x_status=x_status)
+                           x_events=x_events, x_status=x_status, fires=fires)
 
 
 def _do_compare(loc_a: str, loc_b: str, days: int, max_articles: int) -> str:

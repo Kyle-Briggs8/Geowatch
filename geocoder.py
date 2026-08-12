@@ -195,6 +195,44 @@ def geocode_place(place: str, region: str | None = None) -> dict | None:
     return hit
 
 
+def get_bbox(place: str) -> tuple[float, float, float, float] | None:
+    """Return the (west, south, east, north) bounding box for a place, cached.
+
+    Used to scope the FIRMS thermal query to the AOI. Nominatim returns
+    boundingbox as [south, north, west, east] strings.
+    """
+    if not place or not place.strip():
+        return None
+    cache = _load_cache()
+    key = f"__bbox__|{place.strip().lower()}"
+    if key in cache:
+        hit = cache[key]
+        return tuple(hit) if hit else None
+
+    with _lock:
+        _throttle()
+        try:
+            resp = requests.get(
+                _NOMINATIM_URL,
+                params={"q": place, "format": "json", "limit": 1},
+                headers={"User-Agent": _USER_AGENT},
+                timeout=20,
+            )
+            resp.raise_for_status()
+            results = resp.json()
+        except Exception as exc:  # broad: best-effort, never fatal, don't cache failures
+            print(f"  [WARN] Bounding-box lookup failed for '{place}': {exc}", file=sys.stderr)
+            return None
+
+    bbox = None
+    if results and results[0].get("boundingbox"):
+        s, n, w, e = (float(v) for v in results[0]["boundingbox"])
+        bbox = [w, s, e, n]
+    cache[key] = bbox
+    _save_cache()
+    return tuple(bbox) if bbox else None
+
+
 def geocode_events(events: list[dict], region: str) -> int:
     """Attach coords + loc_precision to analyzed events. Mutates.
 

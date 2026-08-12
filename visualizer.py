@@ -169,14 +169,17 @@ def _corr_panel_html(panel_id: str, wk: str, match: dict,
 
 def _event_log_rows(events: list[dict], day_to_week: dict,
                     corr: dict | None = None,
-                    x_events: list[dict] | None = None) -> str:
+                    x_events: list[dict] | None = None,
+                    fire_corr: dict | None = None) -> str:
     """Render the chronological event log rows (newest first), tagged by week id.
 
     When cross-INT correlation data is provided, corroborated events get a
-    badge that expands an inline dropdown of the matching social posts.
+    badge that expands an inline dropdown of the matching social posts; events
+    with matching satellite thermal detections get a fire badge.
     """
     by_event  = (corr or {}).get("by_event", {})
     early_ids = (corr or {}).get("early_ids") or set()
+    fire_corr = fire_corr or {}
     x_by_id   = {e["post"].get("id"): e for e in (x_events or [])}
     analyzed = [(e, _parse_event_date(e)) for e in events if e.get("analysis")]
     analyzed.sort(key=lambda t: (t[1] is None, t[1]), reverse=True)
@@ -198,6 +201,16 @@ def _event_log_rows(events: list[dict], day_to_week: dict,
         wk     = day_to_week.get(d, "none")
         date_s = _fmt_day(d) if d else "—"
 
+        fire_html = ""
+        fm = fire_corr.get(art.get("url") or "")
+        if fm:
+            fire_html = (
+                f'<span class="fire-badge" title="{fm["count"]} VIIRS satellite thermal '
+                f'detection(s) within 20km and ±1 day (peak radiative power '
+                f'{fm["peak_frp"]:.0f} MW — {", ".join(fm["dates"])})">'
+                f'&#128293; {fm["count"]} thermal</span>'
+            )
+
         corr_html, panel_html = "", ""
         match = by_event.get(art.get("url") or "")
         if match:
@@ -217,7 +230,7 @@ def _event_log_rows(events: list[dict], day_to_week: dict,
         <span class="ev-mark" style="background:{_SEV_CSS[sev]}"></span>
         <span class="ev-main">
           <span class="ev-title">{title}</span>
-          <span class="ev-tags"><span class="sev-pill" style="color:{pt};background:{pb}">{sev.upper()}</span><span class="type-tag">{etype}</span>{corr_html}</span>
+          <span class="ev-tags"><span class="sev-pill" style="color:{pt};background:{pb}">{sev.upper()}</span><span class="type-tag">{etype}</span>{corr_html}{fire_html}</span>
         </span>
         <span class="ev-meta">{src} <span class="grade" title="{gdesc}">{grade}</span></span>
       </a>{panel_html}"""
@@ -225,7 +238,8 @@ def _event_log_rows(events: list[dict], day_to_week: dict,
 
 
 def _timeline_html(events: list[dict], days: int, corr: dict | None = None,
-                   x_events: list[dict] | None = None) -> str:
+                   x_events: list[dict] | None = None,
+                   fire_corr: dict | None = None) -> str:
     """Weekly stacked-severity bars with click-to-expand daily breakdown and a
     chronological event log that filters to the selected week. Self-contained HTML/JS."""
     day_lists = _week_day_lists(days)
@@ -286,7 +300,8 @@ def _timeline_html(events: list[dict], days: int, corr: dict | None = None,
         <div class="day-axis">{day_axis}</div>
       </div>"""
 
-    log_rows = _event_log_rows(events, day_to_week, corr=corr, x_events=x_events)
+    log_rows = _event_log_rows(events, day_to_week, corr=corr, x_events=x_events,
+                               fire_corr=fire_corr)
     if not log_rows:
         log_rows = '<div style="padding:18px 22px;color:#98a1ab;font-size:12px;">No analyzed events in this window.</div>'
 
@@ -657,13 +672,39 @@ def _is_approx(ev: dict) -> bool:
     return ev.get("loc_precision") == "country"
 
 
-def _map_iframe(events: list[dict], location: str) -> str:
+def _fire_layer(fires: list[dict]) -> "folium.FeatureGroup":
+    """Toggleable overlay of VIIRS thermal detections, styled by radiative power."""
+    group = folium.FeatureGroup(name="Thermal anomalies (VIIRS)", show=True)
+    for f in fires:
+        frp = f.get("frp") or 0
+        radius = 2.5 + min(6.0, frp / 40.0)
+        opacity = 0.75 if f.get("confidence") == "high" else 0.45
+        tip = (f"{f.get('date', '?')} · FRP {frp:.0f} MW · "
+               f"{f.get('confidence', '?')} confidence · VIIRS")
+        folium.CircleMarker(
+            location=(f["lat"], f["lon"]),
+            radius=radius,
+            color="#c2410c",
+            weight=1,
+            fill=True,
+            fill_color="#ff6b35",
+            fill_opacity=opacity,
+            opacity=opacity,
+            tooltip=tip,
+        ).add_to(group)
+    return group
+
+
+def _map_iframe(events: list[dict], location: str,
+                fires: list[dict] | None = None) -> str:
     """Build a Folium map with MarkerCluster. Returns a self-contained <iframe> string."""
     center = REGION_COORDS.get(location, (20.0, 0.0))
     zoom   = 6 if location in REGION_COORDS else 2
 
     m = folium.Map(location=center, zoom_start=zoom, tiles="CartoDB positron")
-    cluster = MarkerCluster().add_to(m)
+    if fires:
+        _fire_layer(fires).add_to(m)
+    cluster = MarkerCluster(name="News events").add_to(m)
 
     for ev in events:
         analysis = ev.get("analysis")
@@ -710,6 +751,17 @@ def _map_iframe(events: list[dict], location: str) -> str:
             icon=folium.DivIcon(html=icon_html, icon_size=(14, 14), icon_anchor=(7, 7)),
             tooltip=analysis.get("one_line_summary", article.get("title", "")),
         ).add_to(cluster)
+
+    if fires:
+        folium.LayerControl(collapsed=True).add_to(m)
+        m.get_root().html.add_child(Element(
+            '<div style="position:fixed;bottom:24px;right:24px;z-index:1000;'
+            'background:rgba(255,255,255,0.94);border:1px solid #e7e5e0;border-radius:8px;'
+            'padding:8px 13px;font-family:\'Segoe UI\',system-ui,sans-serif;font-size:11.5px;'
+            'color:#55606c;box-shadow:0 2px 8px rgba(28,32,36,0.1);">'
+            '<span style="color:#ff6b35;">&#9679;</span> '
+            f'{len(fires)} VIIRS thermal detections &middot; size = radiative power</div>'
+        ))
 
     m.get_root().html.add_child(Element(_LEGEND_HTML))
 
@@ -1014,6 +1066,9 @@ _SHARED_CSS = """
     .corr-badge:hover { background: #d5e2f0; }
     .early-pill { font-size: 9.5px; letter-spacing: 0.5px; font-weight: 700;
       color: #7c2d12; background: #ffedd5; padding: 1px 8px; border-radius: 999px; }
+    .fire-badge { font-size: 9.5px; letter-spacing: 0.5px; font-weight: 700;
+      color: #c2410c; background: #ffe8dd; padding: 1px 9px; border-radius: 999px;
+      cursor: help; }
     .xp-post.hl { background: #eef3fa; box-shadow: inset 3px 0 0 #2563eb; }
     .corr-panel { display: none; background: #f7f9fc; border-bottom: 1px solid #f1efeb;
       border-left: 3px solid #2563eb; padding: 6px 22px 10px 100px; }
@@ -1191,13 +1246,21 @@ def _assessment_html(events: list[dict], days: int) -> str:
 def build_dashboard(events: list[dict], location: str, days: int,
                     alert: dict | None = None,
                     x_events: list[dict] | None = None,
-                    x_status: str | None = None) -> str:
+                    x_status: str | None = None,
+                    fires: list[dict] | None = None) -> str:
     """Return a fully self-contained dashboard HTML string (no external dependencies).
 
     When x_events/x_status are provided, the dashboard gains a tab bar with an
-    "X Pulse" social-signal pane; when both are None, output is unchanged.
+    "X Pulse" social-signal pane. When fires (VIIRS thermal detections) are
+    provided, the map gains a toggleable thermal overlay and matching events
+    get tri-INT fire badges. With all extras None, output is unchanged.
     """
     timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+
+    fire_corr = None
+    if fires:
+        from fusion import correlate_fires
+        fire_corr = correlate_fires(events, fires)
 
     corr = None
     tabs_html, xpane_html = "", ""
@@ -1266,10 +1329,11 @@ def build_dashboard(events: list[dict], location: str, days: int,
         .replace("__DAYS__",       str(days))
         .replace("__NREPORTS__",   str(len(analyzed)))
         .replace("__NOUTLETS__",   str(len(outlets)))
-        .replace("__MAP__",             _map_iframe(events, location))
+        .replace("__MAP__",             _map_iframe(events, location, fires=fires))
         .replace("__GLANCE__",          _glance_html(events))
         .replace("__TIMELINE__",        _timeline_html(events, days, corr=corr,
-                                                       x_events=x_events))
+                                                       x_events=x_events,
+                                                       fire_corr=fire_corr))
         .replace("__SOURCING__",        _sourcing_table_html(events))
         .replace("__ENTITY_SECTION__",  _entity_section_html(events))
         .replace("__TIMESTAMP__",       timestamp)

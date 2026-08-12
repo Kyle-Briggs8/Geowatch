@@ -13,7 +13,8 @@ from briefer import generate_brief
 from demo import load_demo_events, save_demo_events
 from entities import build_entity_cooccurrence
 from fetcher import get_news, rank_articles
-from geocoder import geocode_events
+from geocoder import geocode_events, get_bbox
+from thermal import get_fires, has_firms_key
 from visualizer import build_dashboard, build_comparison_dashboard, _compute_trend
 from xfetcher import get_x_posts, has_x_token
 
@@ -132,6 +133,7 @@ def _run_single(args: argparse.Namespace) -> None:
         days     = payload.get("days", args.days)
         x_events = payload.get("x_events") if args.x else None
         x_status = "ok" if x_events is not None else None
+        fires    = payload.get("fires")
         print(f'\n[DEMO] Using cached dataset for "{args.location}" '
               f'(captured {payload.get("captured_at", "unknown")}, '
               f'{len(events)} events'
@@ -143,7 +145,8 @@ def _run_single(args: argparse.Namespace) -> None:
         if alert:
             _print_alert_box(alert, args.location)
         dashboard_html = build_dashboard(events, args.location, days, alert=alert,
-                                         x_events=x_events, x_status=x_status)
+                                         x_events=x_events, x_status=x_status,
+                                         fires=fires)
         with open(output, "w", encoding="utf-8") as f:
             f.write(dashboard_html)
         _print_summary(args.location, days, events, output)
@@ -219,6 +222,19 @@ def _run_single(args: argparse.Namespace) -> None:
     print(f"  Placed {placed}/{len(events)} events at real coordinates "
           "(rest fall back to region centroid)")
 
+    # ── Satellite thermal detections (VIIRS via FIRMS) ───────────────────────
+    fires = None
+    if has_firms_key():
+        bbox = get_bbox(args.location)
+        if bbox:
+            print("\nFetching VIIRS thermal detections (FIRMS)...")
+            focus = [e["coords"] for e in events
+                     if e.get("coords") and e.get("loc_precision") in ("point", "region")]
+            fires = get_fires(bbox, args.days, focus_points=focus) or None
+        else:
+            print("  [WARN] No bounding box for AOI — skipping thermal layer",
+                  file=sys.stderr)
+
     # ── Collect + classify X posts (fetch has been running in the background) ─
     x_events: list[dict] | None = None
     if x_fut is not None:
@@ -236,7 +252,8 @@ def _run_single(args: argparse.Namespace) -> None:
             x_status = "error"
 
     if args.save_demo:
-        demo_path = save_demo_events(args.location, args.days, events, x_events=x_events)
+        demo_path = save_demo_events(args.location, args.days, events,
+                                     x_events=x_events, fires=fires)
         print(f"\n  Demo dataset saved to → {demo_path}")
 
     # ── Alert threshold check ─────────────────────────────────────────────────
@@ -252,7 +269,8 @@ def _run_single(args: argparse.Namespace) -> None:
     print()
     print("Building dashboard (map + charts)...")
     dashboard_html = build_dashboard(events, args.location, args.days, alert=alert,
-                                     x_events=x_events, x_status=x_status)
+                                     x_events=x_events, x_status=x_status,
+                                     fires=fires)
     with open(output, "w", encoding="utf-8") as f:
         f.write(dashboard_html)
 

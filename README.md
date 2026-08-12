@@ -9,7 +9,8 @@ Open-source geospatial intelligence from live news. GeoWatch fetches recent news
 ## Features
 
 - **Interactive Folium map** — every event geocoded to real coordinates (Nominatim, from the LLM-extracted location per article) with severity-colored markers, cluster expansion, and article popups
-- **Cross-INT corroboration** — news events corroborated by independent X posts naming the same entities within 48h get a clickable badge that jumps to the matching posts; social posts that preceded the news reporting are flagged as early signals
+- **Cross-INT corroboration** — news events corroborated by independent X posts naming the same entities within 48h get a clickable badge that expands the matching posts inline; social posts that preceded the news reporting are flagged as early signals
+- **Satellite thermal layer (VIIRS/FIRMS)** — NASA FIRMS active-fire detections over the AOI as a toggleable map overlay (filtered to confident, high-radiative-power signal); news events with detections within 20km/±1 day get a 🔥 tri-INT badge — news + social + remote sensing corroborating each other
 - **Interactive event timeline** — weekly severity-stacked bars; click a week to expand its daily breakdown and filter the chronological event log
 - **Situation at a glance** — headline stats (events, high/critical count, outlets, best source grade) and event-type breakdown
 - **Comparison mode** — run two locations in parallel on a single combined map with side-by-side charts and event logs
@@ -34,12 +35,14 @@ Create a `.env` file with your API keys:
 ```
 NEWSAPI_KEY=your_key_here
 GROQ_API_KEY=your_key_here
-APIFY_TOKEN=your_apify_token_here   # optional — enables the X Pulse tab
+APIFY_TOKEN=your_apify_token_here     # optional — enables the X Pulse tab
+FIRMS_MAP_KEY=your_firms_map_key_here # optional — enables the satellite thermal layer
 ```
 
 - Free NewsAPI key: https://newsapi.org/register
 - Free Groq key: https://console.groq.com
 - Free Apify token: https://apify.com (no card; the free plan's $5/month credit covers ~150 X fetches at $0.25 per 1,000 posts via the [pay-per-result tweet scraper](https://apify.com/kaitoeasyapi/twitter-x-data-tweet-scraper-pay-per-result-cheapest))
+- Free NASA FIRMS key: https://firms.modaps.eosdis.nasa.gov/api/map_key/ (email only; 5,000 requests per 10 minutes)
 
 ---
 

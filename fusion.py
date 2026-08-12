@@ -12,6 +12,7 @@ Posts dated before the article are flagged as early signals: social chatter
 that led the news reporting.
 """
 
+import math
 from datetime import datetime
 
 # Entities appearing in more than this share of events are too generic to
@@ -19,6 +20,67 @@ from datetime import datetime
 _GENERIC_DF = 0.5
 _MIN_ENTITY_LEN = 4
 _WINDOW_DAYS = 2
+
+# Thermal corroboration: a satellite detection supports an event when it sits
+# within this radius and day window of the event's point-precision coordinates
+_FIRE_RADIUS_KM = 20.0
+_FIRE_WINDOW_DAYS = 1
+
+
+def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """Great-circle distance in km."""
+    r = 6371.0
+    p1, p2 = math.radians(lat1), math.radians(lat2)
+    dp, dl = math.radians(lat2 - lat1), math.radians(lon2 - lon1)
+    a = math.sin(dp / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dl / 2) ** 2
+    return 2 * r * math.asin(math.sqrt(a))
+
+
+def correlate_fires(events: list[dict], fires: list[dict]) -> dict:
+    """Match satellite thermal detections to point-precision news events.
+
+    A detection corroborates an event when it lies within _FIRE_RADIUS_KM of
+    the event's geocoded coordinates and within ±_FIRE_WINDOW_DAYS of the
+    article date. Country-level and un-geocoded events are excluded — a
+    country-wide match would be meaningless.
+
+    Returns {event_url: {"count": int, "peak_frp": float, "dates": [..]}}.
+    """
+    result: dict = {}
+    if not fires:
+        return result
+
+    parsed_fires = []
+    for f in fires:
+        d = _parse_date(f.get("date"))
+        if d and f.get("lat") is not None and f.get("lon") is not None:
+            parsed_fires.append((f["lat"], f["lon"], d, f.get("frp") or 0.0))
+
+    for ev in events:
+        if not ev.get("analysis"):
+            continue
+        if ev.get("loc_precision") not in ("point", "region"):
+            continue
+        coords = ev.get("coords")
+        if not coords or len(coords) != 2:
+            continue
+        ev_date = _parse_date(ev.get("article", {}).get("date"))
+        if not ev_date:
+            continue
+
+        count, peak, dates = 0, 0.0, set()
+        for lat, lon, f_date, frp in parsed_fires:
+            if abs((f_date - ev_date).days) > _FIRE_WINDOW_DAYS:
+                continue
+            if _haversine_km(coords[0], coords[1], lat, lon) <= _FIRE_RADIUS_KM:
+                count += 1
+                peak = max(peak, frp)
+                dates.add(f_date.strftime("%b %d"))
+
+        if count:
+            url = ev.get("article", {}).get("url") or ""
+            result[url] = {"count": count, "peak_frp": peak, "dates": sorted(dates)}
+    return result
 
 
 def _parse_date(s: str | None):

@@ -24,10 +24,12 @@ def has_demo(location: str) -> bool:
 
 
 def save_demo_events(location: str, days: int, events: list[dict],
-                     x_events: list[dict] | None = None) -> str:
-    """Write analyzed events (and optionally X posts) to the demo cache.
+                     x_events: list[dict] | None = None,
+                     fires: list[dict] | None = None) -> str:
+    """Write analyzed events (and optionally X posts and thermal detections)
+    to the demo cache.
 
-    Returns the file path. The x_events key is only present when captured,
+    Returns the file path. Optional keys are only present when captured,
     so older cache files remain valid.
     """
     os.makedirs(DEMO_DIR, exist_ok=True)
@@ -40,6 +42,8 @@ def save_demo_events(location: str, days: int, events: list[dict],
     }
     if x_events is not None:
         payload["x_events"] = x_events
+    if fires is not None:
+        payload["fires"] = fires
     with open(path, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=1)
     return path

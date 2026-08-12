@@ -10,7 +10,8 @@ app.py           Flask web UI, background-thread job runner, status polling
 fetcher.py       Dual-source news ingestion (NewsAPI + GDELT), synonym filtering, date-windowed parallel fetch
 xfetcher.py      X/Twitter ingestion via Apify pay-per-result actor (sync run endpoint, non-fatal on failure)
 geocoder.py      Nominatim geocoding of LLM-extracted locations (1 req/s, persistent JSON cache, coords stored on events)
-fusion.py        Cross-INT correlation: X posts ↔ news events by distinctive-entity overlap within ±2 days
+fusion.py        Cross-INT correlation: X posts ↔ news events (entity overlap ±2d); VIIRS fires ↔ events (20km/±1d haversine)
+thermal.py       NASA FIRMS VIIRS thermal detections (FIRMS_MAP_KEY, 5-day windows, event-aware top-N retention)
 analyzer.py      Groq LLM article classification (event type, severity, entities, summary, Admiralty credibility)
 grading.py       IC tradecraft: NATO Admiralty source grading (A–F/1–6), ICD 203 confidence assessment
 demo.py          Demo-mode cache: save/load analyzed event sets as JSON in demo_data/
@@ -34,6 +35,7 @@ render.yaml      Render service definition
 - **Demo mode:** `--save-demo` caches a live run's analyzed events to demo_data/ (committed); `--demo` (CLI) or the web checkbox replays it with zero API calls. Use for live demos so NewsAPI/GDELT/Groq flakiness can't break a presentation.
 - **Geocoding:** Bare place name queried first (Nominatim importance ranking resolves prominent names correctly); "<place>, <region>" only as fallback for obscure local places — hinting first fuzzy-matches foreign names to spurious in-region spots. Network failures are never cached and never degrade to the hinted query. Coords live on the event dict so demo replays are offline.
 - **Cross-INT corroboration:** A post corroborates an event only via *distinctive* entity overlap (IDF-style: entities in >50% of events, and the AOI name itself, are excluded) within ±2 days. Posts preceding the article date are "early signals". Computed at render time in fusion.correlate; badges jump from the news log to highlighted posts in the X tab.
+- **Thermal layer (tri-INT):** VIIRS detections filtered to nominal/high confidence + FRP ≥ 5 MW, capped at 300 with *event-aware retention* (detections within 25km of geocoded events are always kept — otherwise big agricultural burns crowd out the urban detections that corroborate strikes). Fire↔event matching: ≤20km and ±1 day, point/region-precision events only. Rendered as a toggleable Folium FeatureGroup; matched events get a 🔥 badge. Demo cache carries `fires` (NRT data ages out of the API after ~2 months, so cached capture matters).
 - **X Pulse (social signal):** X posts fetched via Apify actor (APIFY_TOKEN), date range split into up to 4 windows queried separately — a single "Latest" query clusters all posts into the newest hours on high-volume topics. Classified in one batched Groq call, rendered in a separate dashboard tab. Deliberately NOT merged into the news event log: social posts are a different sourcing class, always graded F reliability on the Admiralty scale. Event shape is `{"post": {...}, "analysis": {event_type, severity, credibility}}` parallel to news `{"article", "analysis"}`. X failure is non-fatal (GDELT-style). Comparison mode has no X tab.
 
 ## Conventions
