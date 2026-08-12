@@ -720,7 +720,10 @@ def _map_iframe(events: list[dict], location: str,
     center = REGION_COORDS.get(location, (20.0, 0.0))
     zoom   = 6 if location in REGION_COORDS else 2
 
-    m = folium.Map(location=center, zoom_start=zoom, tiles="CartoDB positron")
+    m = folium.Map(location=center, zoom_start=zoom, tiles=None)
+    # control=False keeps the base map's internal name (cartodbpositron)
+    # out of the layer-control UI
+    folium.TileLayer("CartoDB positron", name="Base map", control=False).add_to(m)
     n_signal = 0
     if fires:
         signal, background = _split_fires(fires, events)
