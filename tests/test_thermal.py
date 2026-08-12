@@ -62,11 +62,38 @@ class TestGetFires:
         header = _CSV.splitlines()[0]
         rows = "\n".join(
             f"50.{i:04d},30.5,340,0.4,0.4,2026-08-05,{i:04d},N,VIIRS,h,2.0NRT,295,{10 + i},N"
-            for i in range(400)
+            for i in range(500)
         )
         with patch("thermal.requests.get", return_value=_resp(header + "\n" + rows)):
             fires = thermal.get_fires((22, 44, 40, 52), 5)
         assert len(fires) == thermal._MAX_FIRES
+
+    def test_stratified_fill_represents_quiet_regions(self):
+        # one cell packed with huge fires, another cell with a few small ones —
+        # a plain FRP sort would drop the quiet cell entirely
+        big   = [{"lat": 45.5, "lon": 23.5, "frp": 1000 + i, "date": "2026-08-05"}
+                 for i in range(50)]
+        small = [{"lat": 51.5, "lon": 39.5, "frp": 6, "date": "2026-08-05"},
+                 {"lat": 51.6, "lon": 39.6, "frp": 7, "date": "2026-08-05"}]
+        picked = thermal._stratified_fill(big + small, (22, 44, 40, 52), 10)
+        assert any(f["frp"] < 10 for f in picked)   # quiet region survives
+        assert len(picked) == 10
+
+    def test_cross_border_events_get_mini_bbox_queries(self, monkeypatch):
+        monkeypatch.setenv("FIRMS_MAP_KEY", "test-key")
+        with patch("thermal.requests.get", return_value=_resp(_CSV)) as g:
+            thermal.get_fires((22, 44, 40, 52), 5,
+                              focus_points=[[55.75, 37.61]])  # Moscow, outside bbox
+        called_bboxes = [c.args[0].split("/")[-3] for c in g.call_args_list]
+        assert any(b.startswith("37.2") for b in called_bboxes)  # mini-box around Moscow
+
+    def test_nearby_outside_points_share_one_mini_bbox(self, monkeypatch):
+        monkeypatch.setenv("FIRMS_MAP_KEY", "test-key")
+        with patch("thermal.requests.get", return_value=_resp(_CSV)) as g:
+            thermal.get_fires((22, 44, 40, 52), 5,
+                              focus_points=[[55.75, 37.61], [55.76, 37.62]])
+        # 2 AOI windows + 2 windows for ONE shared mini-box (not two boxes = 6)
+        assert g.call_count == 4
 
 
 def _event(url, date, coords, precision="point"):
