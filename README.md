@@ -11,7 +11,7 @@ Open-source geospatial intelligence from live news. GeoWatch fetches recent news
 - **Interactive Folium map** — every event geocoded to real coordinates (Nominatim, from the LLM-extracted location per article) with severity-colored markers, cluster expansion, and article popups
 - **Cross-INT corroboration** — news events corroborated by independent X posts naming the same entities within 48h get a clickable badge that expands the matching posts inline; social posts that preceded the news reporting are flagged as early signals
 - **Satellite thermal layer (VIIRS/FIRMS)** — NASA FIRMS active-fire detections over the AOI as a toggleable map overlay (filtered to confident, high-radiative-power signal); news events with detections within 20km/±1 day get a 🔥 tri-INT badge — news + social + remote sensing corroborating each other
-- **Satellite imagery overlays (NASA GIBS)** — daily VIIRS true-color imagery and nighttime-lights layers on the map, keyless public WMTS; grid blackouts after infrastructure strikes are directly visible in the night-lights band
+- **Satellite imagery overlays** — daily VIIRS true-color and nighttime-lights layers (NASA GIBS, keyless) plus a sub-meter high-res archive layer (Esri World Imagery) for site inspection; grid blackouts after infrastructure strikes are directly visible in the night-lights band
 - **Interactive event timeline** — weekly severity-stacked bars; click a week to expand its daily breakdown and filter the chronological event log
 - **Situation at a glance** — headline stats (events, high/critical count, outlets, best source grade) and event-type breakdown
 - **Comparison mode** — run two locations in parallel on a single combined map with side-by-side charts and event logs

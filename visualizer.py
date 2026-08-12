@@ -744,6 +744,15 @@ def _map_iframe(events: list[dict], location: str,
         attr="NASA EOSDIS GIBS", name=f"Night lights ({night_date})",
         overlay=True, show=False, max_native_zoom=8, max_zoom=18,
     ).add_to(m)
+    # Sub-meter archive imagery for site inspection when zoomed in — VIIRS is
+    # daily but ~375m/px; this is the complement: high-res but not current
+    folium.TileLayer(
+        tiles=("https://server.arcgisonline.com/ArcGIS/rest/services/"
+               "World_Imagery/MapServer/tile/{z}/{y}/{x}"),
+        attr="Esri, Maxar, Earthstar Geographics",
+        name="High-res imagery (archive)",
+        overlay=True, show=False, max_zoom=19,
+    ).add_to(m)
 
     n_signal = 0
     if fires:
