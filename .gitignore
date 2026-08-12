@@ -15,3 +15,4 @@ flask_response*.html
 geowatch_session.md
 .claude/
 geo_cache.json
+_dash_shot*.png
