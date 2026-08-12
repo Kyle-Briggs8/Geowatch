@@ -744,13 +744,15 @@ def _map_iframe(events: list[dict], location: str,
         attr="NASA EOSDIS GIBS", name=f"Night lights ({night_date})",
         overlay=True, show=False, max_native_zoom=8, max_zoom=18,
     ).add_to(m)
-    # Sub-meter archive imagery for site inspection when zoomed in — VIIRS is
-    # daily but ~375m/px; this is the complement: high-res but not current
+    # Sub-meter mosaic of mixed vintages (can be years old — may predate
+    # current events entirely). Named as BASELINE so nobody mistakes it for
+    # current collection: it answers "what is this facility", not "what does
+    # it look like now".
     folium.TileLayer(
         tiles=("https://server.arcgisonline.com/ArcGIS/rest/services/"
                "World_Imagery/MapServer/tile/{z}/{y}/{x}"),
-        attr="Esri, Maxar, Earthstar Geographics",
-        name="High-res imagery (archive)",
+        attr="Esri, Maxar, Earthstar Geographics — mosaic of mixed dates",
+        name="High-res BASELINE (undated archive — may predate events)",
         overlay=True, show=False, max_zoom=19,
     ).add_to(m)
 

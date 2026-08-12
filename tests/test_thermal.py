@@ -148,7 +148,7 @@ class TestDashboardThermal:
         assert "significant thermal detections" in inner        # count note
         assert "gibs.earthdata.nasa.gov" in inner               # satellite overlays
         assert "Night lights" in inner
-        assert "High-res imagery" in inner                      # Esri archive layer
+        assert "High-res BASELINE" in inner                     # Esri archive layer
 
     FIRES = TestCorrelateFires.FIRES
 
